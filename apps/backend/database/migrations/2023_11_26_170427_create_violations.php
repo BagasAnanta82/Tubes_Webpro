@@ -18,6 +18,7 @@ class CreateViolations extends Migration
             $table->string("name");
             $table->string("violation_code");
             $table->integer("score");
+            $table->boolean("active_status")->default(true);
             $table->timestamps();
             $table->softDeletes();
         });

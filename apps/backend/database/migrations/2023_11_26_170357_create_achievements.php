@@ -19,6 +19,7 @@ class CreateAchievements extends Migration
             $table->string("achievement_code");
             $table->string("description")->nullable();
             $table->integer("score");
+            $table->boolean("active_status")->default(true);
             $table->timestamps();
             $table->softDeletes();
         });

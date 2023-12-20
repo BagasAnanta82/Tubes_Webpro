@@ -16,6 +16,7 @@ class CreateClassrooms extends Migration
         Schema::create('classrooms', function (Blueprint $table) {
             $table->id();
             $table->string("name");
+            $table->boolean("active_status")->default(true);
             $table->timestamps();
             $table->softDeletes();
         });

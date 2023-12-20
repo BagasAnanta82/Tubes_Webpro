@@ -16,6 +16,7 @@ class CreateAttandences extends Migration
         Schema::create('attandences', function (Blueprint $table) {
             $table->id();
             $table->foreignId("student_id");
+            $table->boolean("is_late")->default(false);
             $table->timestamps();
             $table->softDeletes();
         });

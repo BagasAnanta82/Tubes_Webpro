@@ -17,3 +17,29 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::group([
+    "prefix" => "v1",
+    "middleware" => ["cors"]
+], function(){
+    Route::group(
+        ["middleware" => []
+    ], function(){
+        Route::prefix("classroom")->group(function(){
+            Route::get("/", [\App\Http\Controllers\ReadController::class, "getAllClassroom"]);
+        });
+
+        Route::prefix("attandence")->group(function(){
+            Route::get("/records", [\App\Http\Controllers\ReadController::class, "getAllAttadenceRecords"]);
+        });
+
+        Route::prefix("excel")->group(function(){
+            Route::get("/attandence", [App\Http\Controllers\ReadController::class, "exportExcelStudentAttandence"]);
+        });
+    });
+
+    Route::prefix("user")->group(function(){
+        Route::post("auth", [App\Http\Controllers\ReadController::class, "authenticateUser"]);
+        Route::post("create", [App\Http\Controllers\CreateController::class, "createUser"]);
+    });
+});

@@ -15,11 +15,12 @@ class CreateStudents extends Migration
     {
         Schema::create('students', function (Blueprint $table) {
             $table->id();
-            $table->foreignId("gender_id");
+            $table->foreignId("gender_id")->nullable();
             $table->foreignId("classroom_id")->nullable();
-            $table->string("NIS");
-            $table->string("NISN");
+            $table->string("NIS")->nullable();
+            $table->string("NISN")->nullable();
             $table->string("Name");
+            $table->boolean("active_status")->default(true);
             $table->timestamps();
             $table->softDeletes();
         });

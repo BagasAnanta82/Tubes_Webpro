@@ -16,7 +16,8 @@ const Dashboard = () => {
                 <br /><br /><br />
                 <div className="columns is-vcentered is-mobile is-centered">
                     <div className="column is-half">
-                        <h1 className='title is-1'>Daftar Absensi</h1>
+                        <h1 className='title is-1'>Daftar Presensi SMAN24 Bandung</h1>
+                        
                         <br />
                         <table className="table">
                             <thead>
