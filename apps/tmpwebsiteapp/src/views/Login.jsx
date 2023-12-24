@@ -1,16 +1,57 @@
-import React, { useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
+import { redirect } from 'react-router-dom'
+import Swal from 'sweetalert2'
 
 const Login = () => {
     const email = useRef()
     const password = useRef()
 
-    const handleLogin = () => {
+    useEffect(() => {
+        if (window.localStorage.getItem("token") != null) {
+            redirect("/")
+        }
+    }, [])
 
+    const handleLogin = async () => {
+        const URL = import.meta.env.VITE_API_URL_V1;
+        const emailInp = email.current.value;
+        const passwordInp = password.current.value;
+
+        const getAuthToAPI = await fetch(`${URL}user/auth`, {
+            method: "POST",
+            headers : {
+                "Accept" : "*/*",
+                "Content-Type" : "application/json"
+            },
+            body : JSON.stringify({
+                "email" : emailInp,
+                "password" : passwordInp
+            })
+        })
+        const json = await getAuthToAPI.json()
+
+        if (json.status == false) {
+            Swal.fire(
+                "Gagal Authentikasi",
+                json.message,
+                "error"
+            )
+            return
+        }
+
+        Swal.fire(
+            "Berhasil Authentikasi",
+            "Anda Akan Diarahkan Ke Halaman Utama",
+            "success"
+        )
+
+        window.localStorage.setItem("token", JSON.stringify(json.data))
+        window.location.href = "/"
     }
 
     return (
         <>
-            <div className="container" style={{ justifyContent: "center", alignContent : "center" }}>
+            <div className="container" style={{ justifyContent: "center", alignContent: "center" }}>
                 <br /><br /><br /><br /><br />
                 <div className="columns is-vcentered is-mobile is-centered">
                     <div className="column is-half">

@@ -90,15 +90,16 @@ class ReadController extends Controller
             }
 
             $data = \App\Models\Attandence::select(
-                "attadences.is_late",
+                "attandences.is_late",
                 "s.name",
                 "s.NIS",
                 "s.NISN",
-                "g.code"
+                "g.code",
+                "attandences.created_at as timestamp"
             )
-             ->join("students as s", "s.id", "=", "attadences.student_id")
-             ->join("genders as g", "g.id", "=", "s.gender_id")
-             ->where($classroom_id)
+             ->leftJoin("students as s", "s.id", "=", "attandences.student_id")
+             ->leftJoin("genders as g", "g.id", "=", "s.gender_id")
+             ->where([$classroom_id])
              ->where("s.active_status", true)
              ->get();
             

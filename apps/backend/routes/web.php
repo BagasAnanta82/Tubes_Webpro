@@ -16,3 +16,12 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get("login", function(){
+    return response()->json(
+        [
+            "message" => "please auth first.....",
+            "status" => false
+        ], 500
+    );
+})->name("login");

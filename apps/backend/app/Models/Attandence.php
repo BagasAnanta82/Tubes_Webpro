@@ -14,4 +14,5 @@ class Attandence extends Model
         "student_id",
         "is_late"
     ];
+    protected $primaryKey = "id";
 }

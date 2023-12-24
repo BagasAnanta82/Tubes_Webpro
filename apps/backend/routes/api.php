@@ -18,6 +18,15 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::get("/login", function(){
+    return response()->json(
+        [
+            "message" => "please auth first.....",
+            "status" => false
+        ], 500
+    );
+});
+
 Route::group([
     "prefix" => "v1",
     "middleware" => ["cors"]

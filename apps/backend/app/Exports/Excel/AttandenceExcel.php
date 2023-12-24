@@ -5,8 +5,9 @@ namespace App\Exports\Excel;
 use App\Models\Attandence;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\WithHeadings;
 
-class AttandenceExcel implements FromCollection
+class AttandenceExcel implements FromCollection, WithHeadings
 {
     /**
     * @return \Illuminate\Support\Collection
@@ -14,9 +15,9 @@ class AttandenceExcel implements FromCollection
     public function collection()
     {
         $data = Attandence::select(
-            "s.NIS",
-            "s.NISN",
-            "s.name",
+            "s.NIS as NIS",
+            "s.NISN as NISN",
+            "s.name as Name",
             "g.code as Gender",
             "c.name as kelas",
             DB::raw("CASE WHEN attandences.is_late = 1 THEN 'Terlambat' ELSE 'Tepat' END as status"),
@@ -29,5 +30,18 @@ class AttandenceExcel implements FromCollection
          ->get();
 
         return $data;
+    }
+
+    public function headings(): array
+    {
+        return [
+            "NIS",
+            "NISN",
+            "Nama",
+            "Kelamin",
+            "Kelas",
+            "Status_Presensi_Siswa",
+            "Timestamp"
+        ];   
     }
 }
