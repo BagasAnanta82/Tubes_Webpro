@@ -16,11 +16,15 @@ const Dashboard = () => {
         if (isLoading) {
             $("table").dataTable()
         }
-    })
+    }, [])
 
     const handleLogOut = async () => {
         window.localStorage.removeItem("token")
         window.location.href = "/login"
+    }
+
+    const handleDownloadExcelFile = async () => {
+        window.open(`${URL}excel/attandence`, "_blank")
     }
 
     const getAllAttandenceRecordsData = async (url) => {
@@ -67,7 +71,7 @@ const Dashboard = () => {
 
                         <br />
                         <div className="buttons">
-                            <button class="button is-info is-light">Export Excel</button>
+                            <button class="button is-info is-light" onClick={handleDownloadExcelFile}>Export Excel</button>
                             <button class="button is-warning is-light" onClick={handleLogOut}>Log Out</button>
                         </div>
                         <table className="table">
@@ -82,14 +86,6 @@ const Dashboard = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {/* <tr>
-                                    <th>1</th>
-                                    <td>38</td>
-                                    <td>23</td>
-                                    <td>12</td>
-                                    <td>3</td>
-                                    <td>68</td>
-                                </tr> */}
                                 {
                                     data.map((val, idx) => {
                                         return (
