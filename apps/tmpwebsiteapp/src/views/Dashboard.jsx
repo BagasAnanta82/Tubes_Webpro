@@ -16,7 +16,7 @@ const Dashboard = () => {
         if (isLoading) {
             $("table").dataTable()
         }
-    }, [])
+    }, [isLoading])
 
     const handleLogOut = async () => {
         window.localStorage.removeItem("token")
@@ -53,7 +53,7 @@ const Dashboard = () => {
                     <div className="columns is-vcentered is-centered is-mobile">
                         <div className="column is-half">
                             <br /><br /><br /><br /><br /><br /><br />
-                        <progress class="progress is-small is-primary" max="100">15%</progress>
+                        <progress className="progress is-small is-primary" max="100">15%</progress>
                         </div>
                     </div>
                 </div>
@@ -71,8 +71,8 @@ const Dashboard = () => {
 
                         <br />
                         <div className="buttons">
-                            <button class="button is-info is-light" onClick={handleDownloadExcelFile}>Export Excel</button>
-                            <button class="button is-warning is-light" onClick={handleLogOut}>Log Out</button>
+                            <button className="button is-info is-light" onClick={handleDownloadExcelFile}>Export Excel</button>
+                            <button className="button is-warning is-light" onClick={handleLogOut}>Log Out</button>
                         </div>
                         <table className="table">
                             <thead>
