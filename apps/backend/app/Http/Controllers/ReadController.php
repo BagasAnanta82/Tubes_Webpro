@@ -89,6 +89,10 @@ class ReadController extends Controller
                 $classroom_id = [$filter, "=", $filter];
             }
 
+            $date_at = \Carbon\Carbon::parse($req->date_at)->toDateTime() ?? \Carbon\Carbon::now()->toDateString();
+
+            // dd($date_at);
+
             $data = \App\Models\Attandence::select(
                 "attandences.is_late",
                 "s.name",
@@ -101,6 +105,7 @@ class ReadController extends Controller
              ->leftJoin("genders as g", "g.id", "=", "s.gender_id")
              ->where([$classroom_id])
              ->where("s.active_status", true)
+             ->whereDate("attandences.created_at", $date_at)
              ->get();
             
             return response()->json(
