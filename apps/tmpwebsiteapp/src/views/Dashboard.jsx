@@ -37,7 +37,7 @@ const Dashboard = () => {
         const getData = await fetch(`${url}attandence/records?date_at=` + date_at, {
             method: "GET",
             headers: {
-                "Authorization": auth.token
+                "Authorization": `Bearer ${auth.token}`
             }
         })
         const json = await getData.json()

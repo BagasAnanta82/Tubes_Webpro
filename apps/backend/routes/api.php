@@ -35,6 +35,10 @@ Route::group([
         Route::post("auth", [App\Http\Controllers\ReadController::class, "authenticateUser"]);
         Route::post("create", [App\Http\Controllers\CreateController::class, "createUser"]);
     });
+
+    Route::prefix("excel")->group(function(){
+        Route::get("/attandence", [App\Http\Controllers\ReadController::class, "exportExcelStudentAttandence"]);
+    });
 });
 
 
@@ -51,10 +55,6 @@ Route::group([
 
         Route::prefix("attandence")->group(function(){
             Route::get("/records", [\App\Http\Controllers\ReadController::class, "getAllAttadenceRecords"]);
-        });
-
-        Route::prefix("excel")->group(function(){
-            Route::get("/attandence", [App\Http\Controllers\ReadController::class, "exportExcelStudentAttandence"]);
         });
 
         Route::prefix("students")->group(function(){
