@@ -14,6 +14,21 @@ const router = createRouter({
                     component: () => import('@/views/Dashboard.vue')
                 },
                 {
+                    path : "/home/datasiswa",
+                    name : "datasiswa",
+                    component : () => import("@/views/home/DataSiswa.vue")
+                },
+                {
+                    path : "/home/rekamabsen",
+                    name : "rekamabsen",
+                    component : () => import("@/views/home/RekamAbsen.vue")
+                },
+                {
+                    path : "/home/",
+                    name : "homepage",
+                    component : () => import("@/views/home/HomePage.vue")
+                },
+                {
                     path: '/uikit/formlayout',
                     name: 'formlayout',
                     component: () => import('@/views/uikit/FormLayout.vue')
@@ -140,7 +155,7 @@ const router = createRouter({
                     path: '/documentation',
                     name: 'documentation',
                     component: () => import('@/views/utilities/Documentation.vue')
-                }
+                },
             ]
         },
         {
@@ -168,7 +183,7 @@ const router = createRouter({
             path: '/auth/error',
             name: 'error',
             component: () => import('@/views/pages/auth/Error.vue')
-        }
+        },
     ]
 });
 

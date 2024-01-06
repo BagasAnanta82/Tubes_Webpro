@@ -91,8 +91,6 @@ class ReadController extends Controller
 
             $date_at = \Carbon\Carbon::parse($req->date_at)->toDateTime() ?? \Carbon\Carbon::now()->toDateString();
 
-            // dd($date_at);
-
             $data = \App\Models\Attandence::select(
                 "attandences.is_late",
                 "s.name",
@@ -128,6 +126,9 @@ class ReadController extends Controller
 
     public function exportExcelStudentAttandence(Request $req)
     {
-        return Excel::download(new \App\Exports\Excel\AttandenceExcel, hash("sha256", Carbon::now()->toString()) . ".xlsx");
+        $date_start = \Carbon\Carbon::parse($req->date_at)->toDateTime() ?? \Carbon\Carbon::now()->toDateTime();
+        $date_end = \Carbon\Carbon::parse($req->date_at)->toDateTime() ?? \Carbon\Carbon::now()->toDateTime();
+
+        return Excel::download(new \App\Exports\Excel\AttandenceExcel($date_start, $date_end), hash("sha256", Carbon::now()->toString()) . ".xlsx");
     }
 }

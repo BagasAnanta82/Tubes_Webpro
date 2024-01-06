@@ -1,9 +1,11 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import $ from 'jquery'
 import 'datatables.net'
+import '../assets/dashboard.css'
 
 const Dashboard = () => {
     const URL = import.meta.env.VITE_API_URL_V1
+    const DateAt = useRef()
     const [data, setData] = useState([])
     const [isLoading, setIsLoading] = useState(false)
 
@@ -12,10 +14,9 @@ const Dashboard = () => {
             window.location.href = "/login"
         }
 
+        window.document.title = "Presensi"
+
         getAllAttandenceRecordsData(URL)
-        if (isLoading) {
-            $("table").dataTable()
-        }
     }, [isLoading])
 
     const handleLogOut = async () => {
@@ -27,9 +28,13 @@ const Dashboard = () => {
         window.open(`${URL}excel/attandence`, "_blank")
     }
 
-    const getAllAttandenceRecordsData = async (url) => {
+    const handleChangeDate = async () => {
+        getAllAttandenceRecordsData(URL, DateAt.current.value)
+    }
+
+    const getAllAttandenceRecordsData = async (url, date_at = new Date().toISOString()) => {
         const auth = JSON.parse(window.localStorage.getItem("token"))
-        const getData = await fetch(`${url}attandence/records`, {
+        const getData = await fetch(`${url}attandence/records?date_at=` + date_at, {
             method: "GET",
             headers: {
                 "Authorization": auth.token
@@ -42,6 +47,7 @@ const Dashboard = () => {
         }
 
         setData(json.data)
+        $("table").dataTable()
         setIsLoading(true)
     }
 
@@ -74,6 +80,10 @@ const Dashboard = () => {
                             <button className="button is-info is-light" onClick={handleDownloadExcelFile}>Export Excel</button>
                             <button className="button is-warning is-light" onClick={handleLogOut}>Log Out</button>
                         </div>
+                        <div style={{marginBottom : "10px"}}>
+                            <label htmlFor="date_at">Silahkan Pilih Tanggal Presensi: </label>
+                            <input type="date" name="date_at" id="date_at" ref={DateAt} onChange={handleChangeDate}/>
+                        </div>
                         <table className="table">
                             <thead>
                                 <tr>
@@ -83,6 +93,7 @@ const Dashboard = () => {
                                     <th>Nama</th>
                                     <th>Kelamin</th>
                                     <th>Timestamp</th>
+                                    <th>Terlambat</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -96,6 +107,7 @@ const Dashboard = () => {
                                                 <td>{val.name}</td>
                                                 <td>{val.code}</td>
                                                 <td>{val.timestamp}</td>
+                                                <td>{val.is_late ? "Terlambat" : "Tepat Waktu"}</td>
                                             </tr>
                                         )
                                     })

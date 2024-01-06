@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "NODE_ENV=local vite",
     "build" : "npm run build:prod && npm run build:dev",
-    "build:prod": "vite build --mode production",
+    "build:prod": "vite build --mode production && cp .htaccess.example /dist/.htaccess",
     "build:dev" : "vite build --mode development",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
