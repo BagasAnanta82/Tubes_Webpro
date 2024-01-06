@@ -29,7 +29,7 @@ Route::get("/login", function(){
 
 Route::group([
     "prefix" => "v1",
-    "middleware" => ["cors"]
+    "middleware" => []
 ], function(){
     Route::prefix("user")->group(function(){
         Route::post("auth", [App\Http\Controllers\ReadController::class, "authenticateUser"]);
