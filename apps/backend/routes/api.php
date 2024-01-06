@@ -29,6 +29,17 @@ Route::get("/login", function(){
 
 Route::group([
     "prefix" => "v1",
+    "middleware" => ["cors"]
+], function(){
+    Route::prefix("user")->group(function(){
+        Route::post("auth", [App\Http\Controllers\ReadController::class, "authenticateUser"]);
+        Route::post("create", [App\Http\Controllers\CreateController::class, "createUser"]);
+    });
+});
+
+
+Route::group([
+    "prefix" => "v1",
     "middleware" => ["cors", 'auth:sanctum']
 ], function(){
     Route::group(
@@ -49,10 +60,5 @@ Route::group([
         Route::prefix("students")->group(function(){
             Route::get("/", [\App\Http\Controllers\ReadController::class, "getAllStudentData"]);
         });
-    });
-
-    Route::prefix("user")->group(function(){
-        Route::post("auth", [App\Http\Controllers\ReadController::class, "authenticateUser"]);
-        Route::post("create", [App\Http\Controllers\CreateController::class, "createUser"]);
     });
 });
