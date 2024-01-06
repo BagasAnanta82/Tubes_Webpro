@@ -35,7 +35,7 @@ class AttandenceExcel implements FromCollection, WithHeadings
          ->join("genders as g", "g.id", "=", "s.gender_id")
          ->join("classrooms as c", "c.id", "=", "s.classroom_id")
          ->where("s.active_status", true)
-         ->whereDate("attandences.created_at", $this->date_start)
+        //  ->whereDate("attandences.created_at", $this->date_start)
          ->get();
 
         return $data;
