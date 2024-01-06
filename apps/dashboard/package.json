@@ -1,6 +1,6 @@
 {
-    "name": "sakai-vue",
-    "version": "3.9.0",
+    "name": "highschoolproject",
+    "version": "0.4.2",
     "scripts": {
         "dev": "vite",
         "build": "vite build",

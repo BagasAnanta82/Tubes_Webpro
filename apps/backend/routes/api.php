@@ -29,7 +29,7 @@ Route::get("/login", function(){
 
 Route::group([
     "prefix" => "v1",
-    "middleware" => ["cors"]
+    "middleware" => ["cors", 'auth:sanctum']
 ], function(){
     Route::group(
         ["middleware" => []
@@ -44,6 +44,10 @@ Route::group([
 
         Route::prefix("excel")->group(function(){
             Route::get("/attandence", [App\Http\Controllers\ReadController::class, "exportExcelStudentAttandence"]);
+        });
+
+        Route::prefix("students")->group(function(){
+            Route::get("/", [\App\Http\Controllers\ReadController::class, "getAllStudentData"]);
         });
     });
 

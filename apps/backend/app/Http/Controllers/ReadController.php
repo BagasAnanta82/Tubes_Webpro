@@ -78,6 +78,41 @@ class ReadController extends Controller
         }
     }
 
+    function getAllStudentData(Request $req)
+    {
+        try {
+            $data = \App\Models\Student::select(
+                "students.id",
+                "students.name",
+                "students.NIS",
+                "students.NISN",
+                "g.code",
+                "c.id as classroom_id",
+                "c.name as classroom_name"
+            )
+             ->leftJoin("genders as g", "g.id", "=", "students.gender_id")
+             ->leftJoin("classrooms as c", "c.id", "=", "students.classroom_id")
+             ->where("students.active_status", true)
+             ->get();
+
+            return response()->json(
+                [
+                    "message" => "Success on get data",
+                    "status" => true,
+                    "data" => $data
+                ]
+            );
+        } catch (Exception $th) {
+            return response()->json(
+                [
+                    "message" => "Failed to get student data",
+                    "status" => false,
+                    "error" => $th->getMessage()
+                ]
+            );
+        }
+    }
+
     function getAllAttadenceRecords(Request $req)
     {
         try {
