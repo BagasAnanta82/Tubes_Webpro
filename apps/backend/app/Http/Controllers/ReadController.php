@@ -78,6 +78,94 @@ class ReadController extends Controller
         }
     }
 
+    public function getAllAchivementData(Request $req)
+    {
+        try {
+            $data = \App\Models\Achievements::select(
+                "name",
+                "description",
+                "achievement_code",
+                "score",
+                "active_status",
+            )
+             ->orederBy("created_at", "ASC")
+             ->get();
+
+            return response()->json(
+                [
+                    "message" => "Success on get achievement",
+                    "status" => true,
+                    "data" => $data
+                ]
+            );
+        } catch (Exception $th) {
+            return response()->json(
+                [
+                    "message" => "Failed to get Data",
+                    "status" => false,
+                    "error" => $th->getMessage()
+                ]
+            );
+        }
+    }
+
+    public function getAllViolationData(Request $req)
+    {
+        try {
+            $data = \App\Models\Violation::select(
+                "name",
+                "violation_code",
+                "score",
+                "active_status",
+            )
+             ->orederBy("created_at", "ASC")
+             ->get();
+
+            return response()->json(
+                [
+                    "message" => "Success on get violation",
+                    "status" => true,
+                    "data" => $data
+                ]
+            );
+        } catch (Exception $th) {
+            return response()->json(
+                [
+                    "message" => "Failed to get Data",
+                    "status" => false,
+                    "error" => $th->getMessage()
+                ]
+            );
+        }
+    }
+
+    public function getAllGender(Request $req)
+    {
+        try {
+            $data = \App\Models\Gender::select(
+                "id",
+                "gender",
+                "code"
+            )->get();
+
+            return response()->json(
+                [
+                    "message" => "Success on get Gender",
+                    "status" => true,
+                    "data" => $data
+                ]
+            );
+        } catch (Exception $th) {
+            return response()->json(
+                [
+                    "message" => "Failed to get gender",
+                    "status" => false,
+                    "error" => $th->getMessage()
+                ]
+            );
+        }
+    }
+
     function getAllStudentData(Request $req)
     {
         try {

@@ -39,6 +39,8 @@ Route::group([
     Route::prefix("excel")->group(function(){
         Route::get("/attandence", [App\Http\Controllers\ReadController::class, "exportExcelStudentAttandence"]);
     });
+
+    // Route::post("/test", [\App\Http\Controllers\CreateController::class, "test"]);
 });
 
 

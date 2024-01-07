@@ -8,4 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 class Achievements extends Model
 {
     use HasFactory;
+    protected $table = "achievements";
+    protected $fillable = [
+        "name",
+        "description",
+        "achievement_code",
+        "score",
+        "active_status",
+    ];
 }
