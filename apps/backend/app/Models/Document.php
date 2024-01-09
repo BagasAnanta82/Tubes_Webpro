@@ -6,12 +6,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Classroom extends Model
+class Document extends Model
 {
     use HasFactory, SoftDeletes;
-    protected $table = "classrooms";
+    protected $table = "documents";
     protected $fillable = [
         "name",
-        "active_status"
+        "document_type",
+        "url"
     ];
 }

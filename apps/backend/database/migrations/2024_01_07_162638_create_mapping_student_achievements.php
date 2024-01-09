@@ -17,7 +17,7 @@ class CreateMappingStudentAchievements extends Migration
             $table->id();
             $table->foreignId("achievement_id");
             $table->foreignId("student_id");
-            $table->string("description");
+            $table->string("description")->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

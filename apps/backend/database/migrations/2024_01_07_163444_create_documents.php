@@ -16,7 +16,7 @@ class CreateDocuments extends Migration
         Schema::create('documents', function (Blueprint $table) {
             $table->id();
             $table->string("name");
-            $table->string("file_type");
+            $table->string("document_type");
             $table->string("url");
             $table->timestamps();
             $table->softDeletes();

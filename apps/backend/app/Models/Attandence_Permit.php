@@ -6,12 +6,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Classroom extends Model
+class Attandence_Permit extends Model
 {
     use HasFactory, SoftDeletes;
-    protected $table = "classrooms";
+    protected $table = "attandence_Permits";
     protected $fillable = [
-        "name",
-        "active_status"
+        "student_id",
+        "attandence_permit_type_id",
+        "document_id",
     ];
 }

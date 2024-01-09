@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 class CreateUserRoles extends Migration
 {
@@ -19,6 +20,14 @@ class CreateUserRoles extends Migration
             $table->timestamps();
             $table->softDeletes();
         });
+
+        DB::table("user_roles")->insert(
+            [
+                "name" => "admin",
+                "created_at" => now(),
+                "updated_at" => now()
+            ]
+        );
     }
 
     /**

@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 class CreateAttandencePermitTypes extends Migration
@@ -20,6 +21,24 @@ class CreateAttandencePermitTypes extends Migration
             $table->timestamps();
             $table->softDeletes();
         });
+
+        DB::table("attandence_permit_types")->insert(
+            [
+                "name" => "Sakit",
+                "active_status" => true,
+                "created_at" => now(),
+                "updated_at" => now()
+            ]
+        );
+
+        DB::table("attandence_permit_types")->insert(
+            [
+                "name" => "Izin",
+                "active_status" => true,
+                "created_at" => now(),
+                "updated_at" => now()
+            ]
+        );
     }
 
     /**
