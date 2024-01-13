@@ -238,9 +238,9 @@ class CreateController extends Controller
         try {
             \App\Models\Mapping_Student_Achievement::create(
                 [
-                    "achievement_id",
-                    "student_id",
-                    "description"
+                    "achievement_id" => $req->achievement_id,
+                    "student_id" => $req->student_id,
+                    "description" => $req->description
                 ]
             );
 
@@ -266,9 +266,9 @@ class CreateController extends Controller
         try {
             \App\Models\Mapping_Student_Violation::create(
                 [
-                    "violation_id",
-                    "student_id",
-                    "description"
+                    "violation_id" => $req->violation_id,
+                    "student_id" => $req->student_id,
+                    "description" => $req->description
                 ]
             );
 
@@ -282,6 +282,44 @@ class CreateController extends Controller
             return response()->json(
                 [
                     "message" => "Failed on create student achievement",
+                    "status" => false,
+                    "error" => $th->getMessage()
+                ], 500
+            );
+        }
+    }
+
+    public function InsertIntoStudentAttandencePermit(Request $req)
+    {
+        try {
+            $file_path = Storage::url($req->file("file")->store("public/permit"));
+
+            $document = \App\Models\Document::create(
+                [
+                    "name" => $req->file("file")->getName(),
+                    "document_type" => $req->file("file")->getMimeType(),
+                    "url" => $file_path
+                ]
+            );
+
+            \App\Models\Attandence_Permit::create(
+                [
+                    "student_id" => $req->student_id,
+                    "attandence_permit_type_id" => $req->attandence_permit_type_id,
+                    "document_id" => $document->id
+                ]
+            );
+
+            return response()->json(
+                [
+                    "message" => "Success on create attandence permit",
+                    "status" => true
+                ]
+            );
+        } catch (Exception $th) {
+            return response()->json(
+                [
+                    "message" => "Failed on create student attandence permit",
                     "status" => false,
                     "error" => $th->getMessage()
                 ], 500

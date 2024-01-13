@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Attandence_Permit extends Model
 {
     use HasFactory, SoftDeletes;
-    protected $table = "attandence_Permits";
+    protected $table = "attandence_permits";
     protected $fillable = [
         "student_id",
         "attandence_permit_type_id",

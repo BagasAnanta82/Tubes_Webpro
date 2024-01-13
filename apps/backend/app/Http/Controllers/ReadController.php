@@ -170,10 +170,11 @@ class ReadController extends Controller
     {
         try {
             $data = \App\Models\Student::select(
-                "students.id",
+                "students.id as student_id",
                 "students.name",
                 "students.NIS",
                 "students.NISN",
+                "g.id as gender_id",
                 "g.code",
                 "c.id as classroom_id",
                 "c.name as classroom_name"
@@ -241,6 +242,148 @@ class ReadController extends Controller
             return response()->json(
                 [
                     "message" => "failed to get attadance data",
+                    "status" => false,
+                    "error" => $th->getMessage()
+                ]
+            );
+        }
+    }
+
+    public function GetStudentAttandencePermit(Request $req)
+    {
+        try {
+            $start_time = microtime(true);
+
+            if ($req->date_at) {
+                $date_at = \Carbon\Carbon::parse($req->date_at)->toDateTime();
+            }else{
+                $date_at = \Carbon\Carbon::now()->toDateTime();
+            }
+
+            $data = \App\Models\Attandence_Permit::select(
+                "s.id as student_id",
+                "s.name as student_name",
+                "s.NIS",
+                "s.NISN",
+                "g.id as gender_id",
+                "g.code",
+                "c.id as classroom_id",
+                "c.name as classroom_name",
+                "apt.name as permit_type_name",
+                "d.id as document_id",
+                "d.url as document_url"
+            )
+             ->leftJoin("students as s", "s.id", "=", "attandence_permits.student_id")
+             ->leftJoin("attandence_permit_types as apt", "apt.id", "=", "attandence_permits.attandence_permit_type_id")
+             ->leftJoin("documents as d", "d.id", "=", "attandence_permits.document_id")
+             ->leftJoin("classrooms as c", "c.id", "=", "s.classroom_id")
+             ->leftJoin("genders as g", "g.id", "=", "s.gender_id")
+             ->where("s.active_status", true)
+             ->where("apt.active_status", true)
+             ->whereDate("attandence_permits.created_at", $date_at)
+             ->get();
+
+            $end_time = microtime(true);
+            $time = \number_format(($end_time - $start_time), 2);
+
+            return response()->json(
+                [
+                    "message" => "success on get data",
+                    "status" => true,
+                    "response_time" => $time,
+                    "data" => $data
+                ]
+            );
+        } catch (Exception $th) {
+            return response()->json(
+                [
+                    "message" => "failed to get permit attadance data",
+                    "status" => false,
+                    "error" => $th->getMessage()
+                ]
+            );
+        }
+    }
+
+    public function GetAllStudentAchievementRecords(Request $req)
+    {
+        try {
+            $data = \App\Models\Mapping_Student_Achievement::select(
+                "ach.name as achievement_name",
+                "ach.achievement_code as achievement_code",
+                "ach.score as achievement_score",
+                "s.id as student_id",
+                "s.name as student_name",
+                "s.NIS",
+                "s.NISN",
+                "g.id as gender_id",
+                "g.code",
+                "c.id as classroom_id",
+                "c.name as classroom_name",
+                "mapping_student_achievements.description"
+            )
+             ->leftJoin("achievements as ach", "ach.id", "=", "mapping_student_achievements.achievement_id")
+             ->leftJoin("students as s", "s.id", "=", "mapping_student_achievements.student_id")
+             ->leftJoin("classrooms as c", "c.id", "=", "s.classroom_id")
+             ->leftJoin("genders as g", "g.id", "=", "s.gender_id")
+             ->where("s.active_status", true)
+             ->where("ach.active_status", true)
+             ->get();
+
+            return response()->json(
+                [
+                    "message" => "success on get data",
+                    "status" => true,
+                    "data" => $data
+                ]
+            );
+        } catch (Exception $th) {
+            return response()->json(
+                [
+                    "message" => "failed to get achievemnet records",
+                    "status" => false,
+                    "error" => $th->getMessage()
+                ]
+            );
+        }
+    }
+
+    public function GetAllStudentViolationRecords(Request $req)
+    {
+        try {
+            $data = \App\Models\Mapping_Student_Violation::select(
+                "vln.name as violation_name",
+                "vln.violation_code as violation_code",
+                "vln.score as violation_score",
+                "s.id as student_id",
+                "s.name as student_name",
+                "s.NIS",
+                "s.NISN",
+                "g.id as gender_id",
+                "g.code",
+                "c.id as classroom_id",
+                "c.name as classroom_name",
+                "mapping_student_violations.description"
+            )
+             ->leftJoin("violations as vln", "vln.id", "=", "mapping_student_violations.achievement_id")
+             ->leftJoin("students as s", "s.id", "=", "mapping_student_violations.student_id")
+             ->leftJoin("classrooms as c", "c.id", "=", "s.classroom_id")
+             ->leftJoin("genders as g", "g.id", "=", "s.gender_id")
+             ->where("s.active_status", true)
+             ->where("vln.active_status", true)
+             ->get();
+
+            return response()->json(
+                [
+                    "message" => "success on get data",
+                    "status" => true,
+                    "data" => $data
+                ]
+            );
+        } catch (Exception $th) {
+            return response()->json(
+                [
+                    "message" => "failed to get violation records",
                     "status" => false,
                     "error" => $th->getMessage()
                 ]

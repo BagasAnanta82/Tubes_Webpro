@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onBeforeMount, onMounted } from 'vue';
+import { ref, onBeforeMount, onMounted, watch } from 'vue';
 import { FilterMatchMode, FilterOperator } from 'primevue/api';
 import PresensiService from '@/service/PresensiService'
 
@@ -11,8 +11,10 @@ const dt = ref(null)
 
 const presensiService = new PresensiService()
 
-const handleChangeDate = () => {
-    presensiService.getStudentAttendences(new Date(date.value).toISOString()).then((val) => (siswa.value = val))
+const handleChangeDate = (e) => {
+    console.log(e.target.value);
+    const time = new Date(date.value).toISOString()
+    presensiService.getStudentAttendences().then((val) => (siswa.value = val))
     console.log(siswa.value);
 }
 
@@ -41,6 +43,12 @@ const clearFilter = () => {
 const exportCSV = () => {
     dt.value.exportCSV();
 };
+
+watch(date, async (newDate, oldDate) => {
+    const time = new Date(newDate)
+    time.setDate(time.getDate() + 1)
+    await presensiService.getStudentAttendences(time.toISOString()).then((val) => (siswa.value = val))
+})
 </script>
 
 <template>
@@ -48,7 +56,7 @@ const exportCSV = () => {
         <h1>Rekam Presensi SMAN24 Bandung</h1>
         <div class="flex flex-column justify-content-left gap-2">
             <label for="date">Silahkan Pilih Tanggal Presnesi</label>
-            <Calendar id="date" v-model="date" @click="handleChangeDate()" dateFormat="dd/mm/yy" />
+            <Calendar id="date" v-model="date" />
         </div>
     </div>
     <div className="card">
@@ -80,7 +88,7 @@ const exportCSV = () => {
                 </div>
             </template>
             <template #empty> Data Tidak Ditemukan. </template>
-            <template #loading> Memuat Data Siswa, Mohon Tunggu. </template>
+            <template #loading> Memuat Data Presensi, Mohon Tunggu. </template>
             <Column field="name" header="Name" style="min-width: 12rem">
                 <template #body="{ data }">
                     {{ data.name }}

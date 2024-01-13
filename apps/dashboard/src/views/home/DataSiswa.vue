@@ -1,7 +1,8 @@
-<script setup>
+<script setup lang="js">
 import { FilterMatchMode } from 'primevue/api';
 import { ref, onMounted, onBeforeMount } from 'vue';
 import ProductService from '@/service/ProductService';
+import SiswaService from '@/service/SiswaService';
 import { useToast } from 'primevue/usetoast';
 
 const toast = useToast();
@@ -22,6 +23,7 @@ const statuses = ref([
 ]);
 
 const productService = new ProductService();
+const siswaService = new SiswaService();
 
 onBeforeMount(() => {
     initFilters();
@@ -103,7 +105,8 @@ const confirmDeleteSelected = () => {
     deleteProductsDialog.value = true;
 };
 const deleteSelectedProducts = () => {
-    products.value = products.value.filter((val) => !selectedProducts.value.includes(val));
+    // products.value = products.value.filter((val) => !selectedProducts.value.includes(val));
+    console.log(selectedProducts.value);
     deleteProductsDialog.value = false;
     selectedProducts.value = null;
     toast.add({ severity: 'success', summary: 'Successful', detail: 'Products Deleted', life: 3000 });

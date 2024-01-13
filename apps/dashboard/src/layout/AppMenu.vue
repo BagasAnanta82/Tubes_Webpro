@@ -99,10 +99,10 @@ const model = ref([
     {
         label: 'SMAN 24',
         items: [
-            { label: 'Form Layout', icon: 'pi pi-fw pi-id-card', to: '/uikit/formlayout' },
+            { label: 'Home Page', icon: 'pi pi-file', to: '/home/' },
             { label: 'Data Siswa', icon: 'pi pi-book', to: '/home/datasiswa'},
             { label: 'Rekam Absen', icon: 'pi pi-file', to: '/home/rekamabsen'},
-            { label: 'Home Page', icon: 'pi pi-file', to: '/home/' }
+            { label: 'Form Layout', icon: 'pi pi-fw pi-id-card', to: '/uikit/formlayout' }
         ]
     },
 ]);
