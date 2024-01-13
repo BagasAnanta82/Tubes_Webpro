@@ -6,17 +6,17 @@
   "type": "module",
   "scripts": {
     "dev": "NODE_ENV=local vite",
-    "build" : "npm run build:prod && npm run build:dev",
+    "build": "npm run build:prod && npm run build:dev",
     "build:prod": "vite build --mode production && cp .htaccess.example /dist/.htaccess",
-    "build:dev" : "vite build --mode development",
+    "build:dev": "vite build --mode development",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },
   "dependencies": {
     "bulma": "^0.9.4",
-    "datatables.net": "^1.13.8",
     "jquery": "^3.7.1",
     "react": "^18.2.0",
+    "react-data-table-component": "^7.6.2",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.21.0",
     "sweetalert2": "^11.10.1",

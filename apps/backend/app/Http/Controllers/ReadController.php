@@ -209,7 +209,7 @@ class ReadController extends Controller
             if ($req->classroom_id) {
                 $classroom_id = ["s.classroom_id", "=", $req->classroom_id];
             }else{
-                $classroom_id = [$filter, "=", $filter];
+                $classroom_id = [$filter, "=", "1"];
             }
 
             $date_at = \Carbon\Carbon::parse($req->date_at)->toDateTime() ?? \Carbon\Carbon::now()->toDateString();
@@ -227,6 +227,7 @@ class ReadController extends Controller
              ->where([$classroom_id])
              ->where("s.active_status", true)
              ->whereDate("attandences.created_at", $date_at)
+             ->orderBy("attandences.created_at", "DESC")
              ->get();
             
             return response()->json(
