@@ -55,7 +55,7 @@ class ReadController extends Controller
         }
     }
 
-    function getAllClassroom(Request $req)
+    public function getAllClassroom(Request $req)
     {
         try {
             $data = \App\Models\Classroom::all();
@@ -166,7 +166,35 @@ class ReadController extends Controller
         }
     }
 
-    function getAllStudentData(Request $req)
+    public function getAllPermitType(Request $req)
+    {
+        try {
+            $data = \App\Models\Attandence_Permit_Type::select(
+                "id",
+                "name"
+            )
+             ->where("active_status", true)
+             ->get();
+
+            return response()->json(
+                [
+                    "message" => "Success on get Gender",
+                    "status" => true,
+                    "data" => $data
+                ]
+            );
+        } catch (Exception $th) {
+            return response()->json(
+                [
+                    "message" => "Failed to get gender",
+                    "status" => false,
+                    "error" => $th->getMessage()
+                ]
+            );
+        }
+    }
+
+    public function getAllStudentData(Request $req)
     {
         try {
             $data = \App\Models\Student::select(
@@ -202,7 +230,8 @@ class ReadController extends Controller
         }
     }
 
-    function getAllAttadenceRecords(Request $req)
+
+    public function getAllAttadenceRecords(Request $req)
     {
         try {
             $filter = DB::raw("1");

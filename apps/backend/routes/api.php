@@ -53,6 +53,9 @@ Route::group([
     ], function(){
         Route::prefix("classroom")->group(function(){
             Route::get("/", [\App\Http\Controllers\ReadController::class, "getAllClassroom"]);
+            Route::post("/", [\App\Http\Controllers\CreateController::class, "CreateClassroom"]);
+            Route::put("/", [\App\Http\Controllers\UpdateController::class, "UpdateClassroom"]);
+            Route::delete("/", [\App\Http\Controllers\DeleteController::class, "DeleteClassroom"]);
         });
 
         Route::prefix("attandence")->group(function(){
@@ -61,6 +64,50 @@ Route::group([
 
         Route::prefix("students")->group(function(){
             Route::get("/", [\App\Http\Controllers\ReadController::class, "getAllStudentData"]);
+            Route::post('/', [\App\Http\Controllers\CreateController::class, "CreateStudent"]);
+            Route::put("/", [\App\Http\Controllers\UpdateController::class, "UpdateStudent"]);
+            Route::delete('/', [\App\Http\Controllers\DeleteController::class, "DeleteStudent"]);
+        });
+
+        Route::prefix("violations")->group(function(){
+            Route::get("/", [\App\Http\Controllers\ReadController::class, "getAllViolationData"]);
+            Route::post("/", [\App\Http\Controllers\CreateController::class, "CreateViolation"]);
+            Route::put("/", [\App\Http\Controllers\UpdateController::class, "UpdateViolation"]);
+            Route::delete("/", [\App\Http\Controllers\DeleteController::class, "DeleteViolation"]);
+
+            Route::prefix("student")->group(function(){
+                Route::get("/", [\App\Http\Controllers\ReadController::class, "GetAllStudentViolationRecords"]);
+                Route::post("/", [\App\Http\Controllers\CreateController::class, "InsertIntoStudentViolationMapping"]);
+            });
+        });
+
+        Route::prefix("achievements")->group(function(){
+            Route::get("/", [\App\Http\Controllers\ReadController::class, "getAllAchievementData"]);
+            Route::post("/", [\App\Http\Controllers\CreateController::class, "CreateAchievement"]);
+            Route::put("/", [\App\Http\Controllers\UpdateController::class, "UpdateAchievement"]);
+            Route::delete("/", [\App\Http\Controllers\DeleteController::class, "DeleteAchievement"]);
+
+            Route::prefix("student")->group(function(){
+                Route::get("/", [\App\Http\Controllers\ReadController::class, "GetAllStudentAchievementRecords"]);
+                Route::post("/", [\App\Http\Controllers\CreateController::class, "InsertIntoStudentAchievementMapping"]);
+            });
+        });
+
+        Route::prefix("gender")->group(function(){
+            Route::get('/', [\App\Http\Controllers\ReadController::class, "getAllGender"]);
+        });
+
+        Route::prefix("attandencepermit")->group(function(){
+            Route::get("/", [\App\Http\Controllers\ReadController::class, "GetStudentAttandencePermit"]);
+            Route::post('/', [\App\Http\Controllers\CreateController::class, "CreateStudentAttandencePermit"]);
+            Route::put("/", [\App\Http\Controllers\UpdateController::class, "UpdateStudentAttandencePermit"]);
+            Route::delete("/", [\App\Http\Controllers\DeleteController::class, "DeleteStudentAttandencePermit"]);
+        });
+
+        Route::prefix("permittype")->group(function(){
+            Route::get('/', [\App\Http\Controllers\ReadController::class, "getAllPermitType"]);
+            Route::post("/", [\App\Http\Controllers\CreateController::class, "CreateAttandencePermitType"]);
+            Route::put("/", [\App\Http\Controllers\UpdateController::class, "UpdatePermitType"]);
         });
     });
 });
