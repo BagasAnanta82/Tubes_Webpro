@@ -33,12 +33,11 @@ const Dashboard = () => {
 
     const columns = useMemo(() => [
         { name: "NIS", selector: row => row.NIS },
-        { name: "NISN", selector: row => row.NISN },
         { name: "Name", selector: row => row.name },
         { name: "Gender", selector: row => row.code },
         { name: "Timestamp", selector: row => row.timestamp },
-        { name: "Terlambat", selector: row => row.is_late ? "Terlambat" : "Tepat Waktu" },
-    ])
+        { name: "Status", selector: row => row.is_late ? "Terlambat" : "Tepat Waktu" },
+    ], [])
 
     const getAllAttandenceRecordsData = async (url, date_at = new Date().toISOString()) => {
         const auth = JSON.parse(window.localStorage.getItem("token"))
@@ -70,7 +69,6 @@ const Dashboard = () => {
         let filterRes = dataFilter.filter((word) => {
             return String(word.NIS).includes(searchWord)
                 || String(word.name).toLowerCase().includes(String(searchWord).toLowerCase())
-                || String(word.NISN).includes(searchWord)
         })
 
         setDataFilter(filterRes)
@@ -115,7 +113,6 @@ const Dashboard = () => {
                         data={dataFilter}
                         columns={columns}
                         pagination={true}
-
                     />
                 </div>
             </div>
