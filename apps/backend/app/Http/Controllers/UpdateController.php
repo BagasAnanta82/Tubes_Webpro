@@ -10,29 +10,7 @@ class UpdateController extends Controller
 {
     public function UpdateClassroom(Request $req)
     {
-        try {
-            \App\Models\Classroom::where("id", $req->id)->update(
-                [
-                    "name" => $req->name,
-                    "active_status" => $req->active_Status
-                ]
-            );
-
-            return response()->json(
-                [
-                    "message" => "Success on update classroom",
-                    "status" => true
-                ]
-            );
-        } catch (Exception $th) {
-            return response()->json(
-                [
-                    "message" => "Failed to update classroom",
-                    "status" => false,
-                    "error" => $th->getMessage()
-                ]
-            );
-        }
+        return \App\Services\ClassroomServices::UpdateClassroom($req);
     }
 
     public function UpdatePermitType(Request $req)
@@ -123,31 +101,7 @@ class UpdateController extends Controller
 
     public function UpdateAchievement(Request $req)
     {
-        try {
-            \App\Models\Achievements::where("id", $req->achievement_id)->update(
-                [
-                    "name" => $req->name,
-                    "achievement_code" => $req->achievement_code,
-                    "score" => $req->score,
-                    "active_status" => $req->active_status,
-                ]
-            );
-
-            return response()->json(
-                [
-                    "message" => "Success on update achievement",
-                    "status" => true
-                ]
-            );
-        } catch (Exception $th) {
-            return response()->json(
-                [
-                    "message" => "Failed to update achievement",
-                    "status" => false,
-                    "error" => $th->getMessage()
-                ]
-            );
-        }
+        return \App\Services\AchievementServices::UpdateAchievement($req);
     }
 
     public function UpdateStudentAttandencePermit(Request $req)

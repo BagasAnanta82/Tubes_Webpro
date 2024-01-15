@@ -7,8 +7,8 @@ export default class PresensiService{
         // this.token = JSON.parse(window.localStorage.getItem("token")).token
     }
 
-    getStudentAttendences(date_at = new Date().toISOString()){
-        return fetch(`${this.url}attandence/records?date_at=` + date_at, {
+    getStudentAttendences(date_at = new Date().toISOString(), classroom_id = null){
+        return fetch(`${this.url}attandence/records?date_at=` + date_at + "&classroom_id=" + classroom_id{
             "method" : "GET",
             "headers" : {
                 // "Authorization" : `Bearer ${this.token}`

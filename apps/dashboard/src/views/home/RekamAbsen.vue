@@ -1,22 +1,19 @@
-<script setup>
+<script setup lang="ts">
 import { ref, onBeforeMount, onMounted, watch } from 'vue';
 import { FilterMatchMode, FilterOperator } from 'primevue/api';
 import PresensiService from '@/service/PresensiService'
+import ClassroomService from '@/service/ClassroomService'
 
 const siswa = ref(null)
+const classroomSelect = ref(null)
+const classroom = ref(null)
 const filters = ref(null)
 const loading = ref(true)
 const date = ref(null)
 const dt = ref(null)
 
 const presensiService = new PresensiService()
-
-const handleChangeDate = (e) => {
-    console.log(e.target.value);
-    const time = new Date(date.value).toISOString()
-    presensiService.getStudentAttendences().then((val) => (siswa.value = val))
-    console.log(siswa.value);
-}
+const classroomService = new ClassroomService()
 
 onBeforeMount(() => {
     loading.value = false
@@ -25,6 +22,7 @@ onBeforeMount(() => {
 
 onMounted(() => {
     presensiService.getStudentAttendences().then((data) => (siswa.value = data))
+    classroomService.getAllClassroom().then((data) => (classroom.value = data))
 })
 
 const initFilter = () => {
@@ -49,14 +47,24 @@ watch(date, async (newDate, oldDate) => {
     time.setDate(time.getDate() + 1)
     await presensiService.getStudentAttendences(time.toISOString()).then((val) => (siswa.value = val))
 })
+
+watch(classroomSelect, async (newClass, oldClass) => {
+    console.log(newClass.id);
+})
 </script>
 
 <template>
     <div class="card">
         <h1>Rekam Presensi SMAN24 Bandung</h1>
-        <div class="flex flex-column justify-content-left gap-2">
-            <label for="date">Silahkan Pilih Tanggal Presnesi</label>
-            <Calendar id="date" v-model="date" />
+        <div class="grid mt-4">
+            <div class="col-12 lg:col-6">
+                <h5>Silahkan Pilih Tanggal Presnesi</h5>
+                <Calendar id="date" v-model="date" style="width:70%;" />
+            </div>
+            <div class="col-12 lg:col-6">
+                <h5>Dropdown</h5>
+                <Dropdown v-model="classroomSelect" :options="classroom" optionLabel="name" placeholder="Silah Pilih Kelas" />
+            </div>
         </div>
     </div>
     <div className="card">
@@ -68,6 +76,7 @@ watch(date, async (newDate, oldDate) => {
             :rows="10"
             dataKey="id"
             :rowHover="true"
+            :rowsPerPageOptions="[15, 20, 50, 100]"
             v-model:filters="filters"
             filterDisplay="menu"
             :loading="loading"
