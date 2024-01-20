@@ -14,7 +14,7 @@ class AttandenceServices
         try {
             $filter = DB::raw("1");
 
-            if ($req->classroom_id) {
+            if (is_null($req->classroom_id)) {
                 $classroom_id = ["s.classroom_id", "=", $req->classroom_id];
             }else{
                 $classroom_id = [$filter, "=", "1"];

@@ -4,14 +4,14 @@ namespace App\Services;
 
 use Illuminate\Http\Request;
 use Exception;
-use DB;
+use Illuminate\Support\Facades\DB;
 
 class ClassroomServices
 {
     public static function GetAllClassroomData(Request $req)
     {
         try {
-            $data = \App\Models\Classroom::all();
+            $data = \App\Models\Classroom::select("id", "name", "active_status")->orderBy("id", "DESC")->get();
 
             return response()->json(
                 [
@@ -31,6 +31,57 @@ class ClassroomServices
         }
     }
 
+    public static function DeleteClassroom(Request $req)
+    {
+        try {
+            \App\Models\Classroom::where("id", $req->id)->delete();
+
+            return response()->json(
+                [
+                    "message" => "Success on delete classroom",
+                    "status" => true
+                ]
+            );
+        } catch (Exception $th) {
+            return response()->json(
+                [
+                    "message" => "Failed to delete classroom",
+                    "status" => false,
+                    "error" => $th->getMessage()
+                ]
+            );
+        }
+    }
+
+    public static function DeleteMultipleClassroom(Request $req)
+    {
+        try {
+            DB::beginTransaction();
+
+            foreach ($req->json as $key => $value) 
+            {
+                \App\Models\Classroom::where("id", $value['id'])->delete();
+            }
+
+            DB::commit();
+            return response()->json(
+                [
+                    "message" => "Success on delete classroom",
+                    "status" => true
+                ]
+            );
+        } catch (Exception $th) {
+            DB::rollBack();
+            return response()->json(
+                [
+                    "message" => "Failed to delete classroom",
+                    "status" => false,
+                    "error" => $th->getMessage()
+                ]
+            );
+        }
+    }
+
     public static function CreateClassroom(Request $req)
     {
         try {
@@ -38,6 +89,12 @@ class ClassroomServices
                 [
                     "name" => $req->name,
                     "active_status" => $req->active_status
+                ]
+            );
+            return response()->json(
+                [
+                    "message" => "Success on create classroom",
+                    "status" => true
                 ]
             );
         } catch (Exception $th) {
@@ -57,7 +114,7 @@ class ClassroomServices
             \App\Models\Classroom::where("id", $req->id)->update(
                 [
                     "name" => $req->name,
-                    "active_status" => $req->active_Status
+                    "active_status" => $req->active_status
                 ]
             );
 

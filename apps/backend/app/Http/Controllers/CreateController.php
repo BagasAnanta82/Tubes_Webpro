@@ -4,9 +4,7 @@ namespace App\Http\Controllers;
 
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Validator;
 
 
 class CreateController extends Controller
@@ -18,32 +16,7 @@ class CreateController extends Controller
 
     public function CreateStudent(Request $req)
     {
-        try {
-            \App\Models\Student::create(
-                [
-                    "NIS" => $req->NIS,
-                    "NISN" => $req->NISN,
-                    "Name" => $req->Name,
-                    "gender_id" => $req->gender_id,
-                    "classromm_id" => $req->classroom_id
-                ]
-            );
-
-            return response()->json(
-                [
-                    "message" => "Success on created student",
-                    "status" => true
-                ]
-            );
-        } catch (Exception $th) {
-            return response()->json(
-                [
-                    "message" => "Failed to create student",
-                    "status" => false,
-                    "error" => $th->getMessage()
-                ], 500
-            );
-        }
+        return \App\Services\StudentServices::createStudent($req);
     }
 
     public function CreateClassroom(Request $req)

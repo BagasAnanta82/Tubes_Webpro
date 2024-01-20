@@ -46,7 +46,7 @@ Route::group([
 
 Route::group([
     "prefix" => "v1",
-    "middleware" => ["cors", 'auth:sanctum']
+    "middleware" => ["cors"]
 ], function(){
     Route::group(
         ["middleware" => []
@@ -56,6 +56,7 @@ Route::group([
             Route::post("/", [\App\Http\Controllers\CreateController::class, "CreateClassroom"]);
             Route::put("/", [\App\Http\Controllers\UpdateController::class, "UpdateClassroom"]);
             Route::delete("/", [\App\Http\Controllers\DeleteController::class, "DeleteClassroom"]);
+            Route::delete("/multiple", [\App\Http\Controllers\DeleteController::class, "DeleteMultipleClassroom"]);
         });
 
         Route::prefix("attandence")->group(function(){
@@ -67,6 +68,7 @@ Route::group([
             Route::post('/', [\App\Http\Controllers\CreateController::class, "CreateStudent"]);
             Route::put("/", [\App\Http\Controllers\UpdateController::class, "UpdateStudent"]);
             Route::delete('/', [\App\Http\Controllers\DeleteController::class, "DeleteStudent"]);
+            Route::delete('/multiple', [\App\Http\Controllers\DeleteController::class, "DeleteMultipleStudent"]);
         });
 
         Route::prefix("violations")->group(function(){
@@ -82,10 +84,11 @@ Route::group([
         });
 
         Route::prefix("achievements")->group(function(){
-            Route::get("/", [\App\Http\Controllers\ReadController::class, "getAllAchievementData"]);
+            Route::get("/", [\App\Http\Controllers\ReadController::class, "getAllAchivementData"]);
             Route::post("/", [\App\Http\Controllers\CreateController::class, "CreateAchievement"]);
             Route::put("/", [\App\Http\Controllers\UpdateController::class, "UpdateAchievement"]);
             Route::delete("/", [\App\Http\Controllers\DeleteController::class, "DeleteAchievement"]);
+            Route::delete("/multiple", [\App\Http\Controllers\DeleteController::class, "DeleteMultipleAchievement"]);
 
             Route::prefix("student")->group(function(){
                 Route::get("/", [\App\Http\Controllers\ReadController::class, "GetAllStudentAchievementRecords"]);

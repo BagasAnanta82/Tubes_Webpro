@@ -14,14 +14,24 @@ const router = createRouter({
                     component: () => import('@/views/Dashboard.vue')
                 },
                 {
-                    path : "/home/datasiswa",
+                    path : "/home/student",
                     name : "datasiswa",
-                    component : () => import("@/views/home/DataSiswa.vue")
+                    component : () => import("@/views/home/Student.vue")
                 },
                 {
-                    path : "/home/rekamabsen",
-                    name : "rekamabsen",
-                    component : () => import("@/views/home/RekamAbsen.vue")
+                    path : "/home/attendance",
+                    name : "attendance",
+                    component : () => import("@/views/home/Attendance.vue")
+                },
+                {
+                    path : "/home/classroom",
+                    name : "classroom",
+                    component : () => import("@/views/home/Classroom.vue")
+                },
+                {
+                    path : "/home/achievement",
+                    name : "classroom",
+                    component : () => import("@/views/home/Achievement.vue")
                 },
                 {
                     path : "/home/",

@@ -49,7 +49,9 @@ watch(date, async (newDate, oldDate) => {
 })
 
 watch(classroomSelect, async (newClass, oldClass) => {
-    console.log(newClass.id);
+    const time = new Date(date)
+    time.setDate(time.getDate() + 1)
+    await presensiService.getStudentAttendences(time.toISOString(), newClass.id).then((val) => (siswa.value = val))
 })
 </script>
 
@@ -62,7 +64,7 @@ watch(classroomSelect, async (newClass, oldClass) => {
                 <Calendar id="date" v-model="date" style="width:70%;" />
             </div>
             <div class="col-12 lg:col-6">
-                <h5>Dropdown</h5>
+                <h5>Kelas</h5>
                 <Dropdown v-model="classroomSelect" :options="classroom" optionLabel="name" placeholder="Silah Pilih Kelas" />
             </div>
         </div>
@@ -73,10 +75,10 @@ watch(classroomSelect, async (newClass, oldClass) => {
             :value="siswa"
             :paginator="true"
             class="p-datatable-gridlines"
-            :rows="10"
+            :rows="20"
             dataKey="id"
             :rowHover="true"
-            :rowsPerPageOptions="[15, 20, 50, 100]"
+            :rowsPerPageOptions="[20, 50, 75, 100]"
             v-model:filters="filters"
             filterDisplay="menu"
             :loading="loading"
@@ -114,14 +116,6 @@ watch(classroomSelect, async (newClass, oldClass) => {
                     <InputText type="text" v-model="filterModel.value" class="p-column-filter" placeholder="Search by NISN" />
                 </template>
             </Column>
-            <Column field="NIS" header="NIS" style="min-width: 12rem">
-                <template #body="{ data }">
-                    {{ data.NIS }}
-                </template>
-                <template #filter="{ filterModel }">
-                    <InputText type="text" v-model="filterModel.value" class="p-column-filter" placeholder="Search by NIS" />
-                </template>
-            </Column>
             <Column field="gender" header="Kelamin" style="min-width: 12rem">
                 <template #body="{ data }">
                     {{ data.code }}
@@ -138,7 +132,7 @@ watch(classroomSelect, async (newClass, oldClass) => {
                     <InputText type="text" v-model="filterModel.value" class="p-column-filter" placeholder="Search by NISN" />
                 </template>
             </Column>
-            <Column field="is_late" header="Status Keterlambatan" style="min-width: 12rem">
+            <Column field="is_late" header="Status" style="min-width: 12rem">
                 <template #body="{ data }">
                     <div v-if="data.is_late == true">
                         Terlambat

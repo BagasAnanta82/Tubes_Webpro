@@ -11,7 +11,7 @@ const logoUrl = computed(() => {
 
 <template>
     <div class="layout-footer">
-        <b class="">Created And Supported By CAATIS-RA And Telkom University</b>
+        <b class="">Created And Supported By <a href="https://caatis.matradipti.org/">CAATIS-RA</a> And <a href="https://telkomuniversity.ac.id/">Telkom University</a></b>
     </div>
 </template>
 <style lang="scss" scoped></style>

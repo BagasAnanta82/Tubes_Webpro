@@ -10,46 +10,27 @@ class DeleteController extends Controller
 {
     public function DeleteStudent(Request $req)
     {
-        try {
-            \App\Models\Student::where("id", $req->id)->delete();
+        return \App\Services\StudentServices::deleteStudent($req);
+    }
 
-            return response()->json(
-                [
-                    "message" => "success delete student",
-                    "status" => true
-                ]
-            );
-        } catch (Exception $th) {
-            return response()->json(
-                [
-                    "message" => "failed delete student",
-                    "status" => false,
-                    "error" => $th->getMessage()
-                ]
-            );
-        }
+    public function DeleteMultipleStudent(Request $req)
+    {
+        return \App\Services\StudentServices::deleteMultipleStudent($req);
+    }
+
+    public function DeleteMultipleClassroom(Request $req)
+    {
+        return \App\Services\ClassroomServices::DeleteMultipleClassroom($req);
     }
 
     public function DeleteAchievement(Request $req)
     {
-        try {
-            \App\Models\Achievements::where("id", $req->id)->delete();
+        return \App\Services\AchievementServices::DeleteAchievement($req);
+    }
 
-            return response()->json(
-                [
-                    "message" => "Success on delete achievement",
-                    "status" => true
-                ]
-            );
-        } catch (Exception $th) {
-            return response()->json(
-                [
-                    "message" => "Failed to delete achievement",
-                    "status" => false,
-                    "error" => $th->getMessage()
-                ]
-            );
-        }
+    public function DeleteMultipleAchievement(Request $req)
+    {
+        return \App\Services\AchievementServices::DeleteMultipleAchievement($req);
     }
 
     public function DeleteViolation(Request $req)
@@ -76,24 +57,7 @@ class DeleteController extends Controller
 
     public function DeleteClassroom(Request $req)
     {
-        try {
-            \App\Models\Classroom::where("id", $req->id)->delete();
-
-            return response()->json(
-                [
-                    "message" => "Success on delete classroom",
-                    "status" => true
-                ]
-            );
-        } catch (Exception $th) {
-            return response()->json(
-                [
-                    "message" => "Failed to delete classroom",
-                    "status" => false,
-                    "error" => $th->getMessage()
-                ]
-            );
-        }
+        return \App\Services\ClassroomServices::DeleteClassroom($req);
     }
 
     public function DeleteStudentAttandencePermit(Request $req)

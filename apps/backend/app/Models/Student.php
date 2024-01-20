@@ -11,11 +11,12 @@ class Student extends Model
 {
     use HasFactory, SoftDeletes;
     protected $table = "students";
+    protected $primaryKey = "id";
     protected $fillable = [
         "NIS",
         "NISN",
         "Name",
         "gender_id",
-        "classromm_id"
+        "classroom_id"
     ];
 }

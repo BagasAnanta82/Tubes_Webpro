@@ -4,7 +4,8 @@ namespace App\Services;
 
 use Illuminate\Http\Request;
 use Exception;
-use DB;
+use Illuminate\Support\Facades\DB;
+
 
 class AchievementServices
 {
@@ -12,13 +13,14 @@ class AchievementServices
     {
         try {
             $data = \App\Models\Achievements::select(
+                "id",
                 "name",
                 "description",
                 "achievement_code",
                 "score",
                 "active_status",
             )
-             ->orederBy("created_at", "ASC")
+             ->orderBy("created_at", "ASC")
              ->get();
 
             return response()->json(
@@ -72,9 +74,10 @@ class AchievementServices
     public static function UpdateAchievement(Request $req)
     {
         try {
-            \App\Models\Achievements::where("id", $req->achievement_id)->update(
+            \App\Models\Achievements::where("id", $req->id)->update(
                 [
                     "name" => $req->name,
+                    "description" => $req->description,
                     "achievement_code" => $req->achievement_code,
                     "score" => $req->score,
                     "active_status" => $req->active_status,
@@ -91,6 +94,56 @@ class AchievementServices
             return response()->json(
                 [
                     "message" => "Failed to update achievement",
+                    "status" => false,
+                    "error" => $th->getMessage()
+                ]
+            );
+        }
+    }
+
+    public static function DeleteAchievement(Request $req)
+    {
+        try {
+            \App\Models\Achievements::where("id", $req->id)->delete();
+
+            return response()->json(
+                [
+                    "message" => "Success on delete achievement",
+                    "status" => true
+                ]
+            );
+        } catch (Exception $th) {
+            return response()->json(
+                [
+                    "message" => "Failed to delete achievement",
+                    "status" => false,
+                    "error" => $th->getMessage()
+                ]
+            );
+        }
+    }
+
+    public static function DeleteMultipleAchievement(Request $req)
+    {
+        try {
+            DB::beginTransaction();
+
+            foreach ($req->json as $key => $value) {
+                \App\Models\Achievements::where("id", $value["id"])->delete();
+            }
+
+            DB::commit();
+            return response()->json(
+                [
+                    "message" => "Success on delete achievement",
+                    "status" => true
+                ]
+            );
+        } catch (Exception $th) {
+            DB::rollBack();
+            return response()->json(
+                [
+                    "message" => "Failed to delete achievement",
                     "status" => false,
                     "error" => $th->getMessage()
                 ]

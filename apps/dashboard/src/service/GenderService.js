@@ -1,4 +1,4 @@
-export default class PresensiService{
+export default class GenderServices{
     url
     token
 
@@ -7,14 +7,14 @@ export default class PresensiService{
         // this.token = JSON.parse(window.localStorage.getItem("token")).token
     }
 
-    getStudentAttendences(date_at = new Date().toISOString(), classroom_id = null){
-        return fetch(`${this.url}attandence/records?date_at=${date_at}&classroom_id=${classroom_id}`, {
+    getAllGender(){
+        return fetch(`${this.url}gender`, {
             "method" : "GET",
             "headers" : {
                 // "Authorization" : `Bearer ${this.token}`
             }
         })
          .then((res) => res.json())
-         .then((json) => json.data)
+         .then((data) => data.data)
     }
 }
