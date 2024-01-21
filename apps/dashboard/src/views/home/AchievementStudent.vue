@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import { FilterMatchMode } from 'primevue/api';
 import { ref, onMounted, onBeforeMount } from 'vue';
-import ViolationService from '@/service/ViolationService';
+import AchievementService from '@/service/AchievementService';
+import SiswaService from '@/service/SiswaService';
 import { useToast } from 'primevue/usetoast';
 
 const toast = useToast();
 
-const violation = ref(null);
+const achievement = ref(null);
+const student = ref(null);
 const productDialog = ref(false);
 const productDialogUpdate = ref(false);
 const deleteProductDialog = ref(false);
@@ -17,14 +19,16 @@ const dt = ref(null);
 const filters = ref({});
 const submitted = ref(false);
 
-const violationService = new ViolationService();
+const achievementService = new AchievementService();
+const siswaService = new SiswaService();
 
 onBeforeMount(() => {
     initFilters();
 });
 
 onMounted(() => {
-    violationService.getAllViolation().then((data) => (violation.value = data));
+    achievementService.getAllAchievement().then((data) => (achievement.value = data));
+    siswaService.getAllStudentData().then((data) => (student.value = data))
 });
 
 const openNew = () => {
@@ -41,11 +45,11 @@ const hideDialog = () => {
 
 const saveProduct = async () => {
     submitted.value = true;
-    await violationService.createViolation(product.value).then((res) => (
-        res.status ? toast.add({ severity: 'success', summary: 'Berhasil', detail: 'Berhasil Menambah Pelanggaran', life: 3000 })
-        : toast.add({ severity: 'error', summary: 'Gagal', detail: 'Gagal Menambah Pelanggaran', life: 3000 })
+    await achievementService.createAchievement(product.value).then((res) => (
+        res.status ? toast.add({ severity: 'success', summary: 'Berhasil', detail: 'Berhasil Menambah Pencapaian', life: 3000 })
+        : toast.add({ severity: 'error', summary: 'Gagal', detail: 'Gagal Menambah Kelas', life: 3000 })
     ))
-    await violationService.getAllViolation().then((data) => (violation.value = data));
+    await achievementService.getAllAchievement().then((data) => (achievement.value = data));
     productDialog.value = false;
     product.value = {};
 };
@@ -56,11 +60,11 @@ const editProductDialog = (editProduct) => {
 };
 
 const editProduct = async () => {
-    await violationService.updateViolation(product.value).then((res) => (
+    await achievementService.updateAchievement(product.value).then((res) => (
         res.status ? toast.add({ severity: 'success', summary: 'Berhasil', detail: 'Berhasil Memperbaharui Pencapaian', life: 3000 })
         : toast.add({ severity: 'error', summary: 'Gagal', detail: 'Gagal Memperbaharui Pencapaian', life: 3000 })
     ))
-    await violationService.getAllViolation().then((data) => (violation.value = data));
+    await achievementService.getAllAchievement().then((data) => (achievement.value = data));
     productDialogUpdate.value = false;
 }
 
@@ -70,11 +74,11 @@ const confirmDeleteProduct = (editProduct) => {
 };
 
 const deleteProduct = async () => {
-    await violationService.deleteViolation(product.value.id).then((res) => (
+    await achievementService.deleteAchievement(product.value.id).then((res) => (
         res.status ? toast.add({ severity: 'success', summary: 'Berhasil', detail: 'Pencapaian Dihapus', life: 3000 })
          : toast.add({ severity: 'error', summary: 'Gagal', detail: 'Gagal Menghapus Pencapaian', life: 3000 })
     ));
-    await violationService.getAllViolation().then((data) => (violation.value = data));
+    await achievementService.getAllAchievement().then((data) => (achievement.value = data));
     deleteProductDialog.value = false;
     product.value = {};
 };
@@ -88,11 +92,11 @@ const confirmDeleteSelected = () => {
     deleteProductsDialog.value = true;
 };
 const deleteSelectedProducts = async () => {
-    await violationService.deleteMultipleViolation(selectedProducts.value).then((res) => (
-        res.status ? toast.add({ severity: 'success', summary: 'Berhasil', detail: 'Pelanggaran Terhapus', life: 3000 })
-        : toast.add({ severity: 'error', summary: 'Gagal', detail: 'Pelanggaran Gagal Terhapus', life: 3000 })
+    await achievementService.deleteMultipleAchievement(selectedProducts.value).then((res) => (
+        res.status ? toast.add({ severity: 'success', summary: 'Berhasil', detail: 'Kelas Terhapus', life: 3000 })
+        : toast.add({ severity: 'error', summary: 'Gagal', detail: 'Kelas Gagal Terhapus', life: 3000 })
     ))
-    await violationService.getAllViolation().then((data) => (violation.value = data));
+    await achievementService.getAllAchievement().then((data) => (achievement.value = data));
     deleteProductsDialog.value = false;
     selectedProducts.value = null;
 };
@@ -124,7 +128,7 @@ const initFilters = () => {
 
                 <DataTable
                     ref="dt"
-                    :value="violation"
+                    :value="achievement"
                     v-model:selection="selectedProducts"
                     dataKey="id"
                     :paginator="true"
@@ -137,7 +141,7 @@ const initFilters = () => {
                 >
                     <template #header>
                         <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
-                            <h5 class="m-0">Pelanggaran SMAN 24</h5>
+                            <h5 class="m-0">Pencapaian SMAN 24</h5>
                             <span class="block mt-2 md:mt-0 p-input-icon-left">
                                 <i class="pi pi-search" />
                                 <InputText v-model="filters['global'].value" placeholder="Search..." />
@@ -152,10 +156,16 @@ const initFilters = () => {
                             {{ slotProps.data.name }}
                         </template>
                     </Column>
+                    <Column field="description" header="Dekripsi" :sortable="true" headerStyle="width:14%; min-width:10rem;">
+                        <template #body="slotProps">
+                            <span class="p-column-title">description</span>
+                            {{ slotProps.data.description }}
+                        </template>
+                    </Column>
                     <Column field="achievement_code" header="Kode Pencapaian" :sortable="true" headerStyle="width:14%; min-width:10rem;">
                         <template #body="slotProps">
                             <span class="p-column-title">Code</span>
-                            {{ slotProps.data.violation_code }}
+                            {{ slotProps.data.achievement_code }}
                         </template>
                     </Column>
                     <Column field="score" header="Nilai" :sortable="true" headerStyle="width:14%; min-width:10rem;">
@@ -182,25 +192,30 @@ const initFilters = () => {
 
                 <Dialog v-model:visible="productDialog" :style="{ width: '450px' }" header="Product Details" :modal="true" class="p-fluid">
                     <div class="field">
-                        <label for="name">Nama Pelanggaran</label>
+                        <label for="name">Nama Pencapaian</label>
                         <InputText id="name" v-model.trim="product.name" required="true" autofocus :class="{ 'p-invalid': submitted && !product.name }" />
                         <small class="p-invalid" v-if="submitted && !product.name">Name is required.</small>
                     </div>
 
                     <div class="field">
-                        <label for="name">kode  Pelanggaran</label>
-                        <InputText id="name" v-model.trim="product.violation_code" required="true" autofocus :class="{ 'p-invalid': submitted && !product.violation_code }" />
-                        <small class="p-invalid" v-if="submitted && !product.violation_code">Kode Pencapaian is required.</small>
+                        <label for="">Deskripsi</label>
+                        <Textarea id="name" v-model.trim="product.description" :required="true" autofocus />
                     </div>
 
                     <div class="field">
-                        <label for="name">Nilai Pelanggaran</label>
+                        <label for="name">kode  Pencapaian</label>
+                        <InputText id="name" v-model.trim="product.achievement_code" required="true" autofocus :class="{ 'p-invalid': submitted && !product.achievement_code }" />
+                        <small class="p-invalid" v-if="submitted && !product.achievement_code">Kode Pencapaian is required.</small>
+                    </div>
+
+                    <div class="field">
+                        <label for="name">Nilai Pencapaian</label>
                         <InputText type="number" id="name" v-model.trim="product.score" required="true" autofocus :class="{ 'p-invalid': submitted && !product.score }" />
                         <small class="p-invalid" v-if="submitted && !product.score">Nilai Pencapaian is required.</small>
                     </div>
 
                     <div class="field">
-                        <label class="mb-3">Status Pelanggaran</label>
+                        <label class="mb-3">Status Pencapaian</label>
                         <div class="formgrid grid">
                             <div class="field-radiobutton col-6">
                                 <RadioButton id="category1" name="true" :value="true" v-model="product.active_status" />
@@ -212,7 +227,6 @@ const initFilters = () => {
                             </div>
                         </div>
                     </div>
-
                     <template #footer>
                         <Button label="Cancel" icon="pi pi-times" class="p-button-text" @click="hideDialog" />
                         <Button label="Save" icon="pi pi-check" class="p-button-text" @click="saveProduct" />
@@ -221,25 +235,30 @@ const initFilters = () => {
 
                 <Dialog v-model:visible="productDialogUpdate" :style="{ width: '450px' }" header="Product Details" :modal="true" class="p-fluid">
                     <div class="field">
-                        <label for="name">Nama Pelanggaran</label>
+                        <label for="name">Nama Pencapaian</label>
                         <InputText id="name" v-model.trim="product.name" required="true" autofocus :class="{ 'p-invalid': submitted && !product.name }" />
                         <small class="p-invalid" v-if="submitted && !product.name">Name is required.</small>
                     </div>
 
                     <div class="field">
-                        <label for="name">kode  Pelanggaran</label>
-                        <InputText id="name" v-model.trim="product.violation_code" required="true" autofocus :class="{ 'p-invalid': submitted && !product.violation_code }" />
-                        <small class="p-invalid" v-if="submitted && !product.violation_code">Kode Pencapaian is required.</small>
+                        <label for="">Deskripsi</label>
+                        <Textarea id="name" v-model.trim="product.description" :required="true" autofocus />
                     </div>
 
                     <div class="field">
-                        <label for="name">Nilai Pelanggaran</label>
+                        <label for="name">kode  Pencapaian</label>
+                        <InputText id="name" v-model.trim="product.achievement_code" required="true" autofocus :class="{ 'p-invalid': submitted && !product.achievement_code }" />
+                        <small class="p-invalid" v-if="submitted && !product.achievement_code">Kode Pencapaian is required.</small>
+                    </div>
+
+                    <div class="field">
+                        <label for="name">Nilai Pencapaian</label>
                         <InputText type="number" id="name" v-model.trim="product.score" required="true" autofocus :class="{ 'p-invalid': submitted && !product.score }" />
                         <small class="p-invalid" v-if="submitted && !product.score">Nilai Pencapaian is required.</small>
                     </div>
 
                     <div class="field">
-                        <label class="mb-3">Status Pelanggaran</label>
+                        <label class="mb-3">Status Pencapaian</label>
                         <div class="formgrid grid">
                             <div class="field-radiobutton col-6">
                                 <RadioButton id="category1" name="true" :value="true" v-model="product.active_status" />

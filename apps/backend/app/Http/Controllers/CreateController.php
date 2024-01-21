@@ -31,31 +31,7 @@ class CreateController extends Controller
 
     public function CreateViolation(Request $req)
     {
-        try {
-            \App\Models\Violation::create(
-                [
-                    "name" => $req->name,
-                    "violation_code" => $req->violation_code,
-                    "score" => $req->score,
-                    "active_status" => $req->active_status,
-                ]
-            );
-
-            return response()->json(
-                [
-                    "message" => "success on create violation",
-                    "status" => true
-                ]
-            );
-        } catch (Exception $th) {
-            return response()->json(
-                [
-                    "message" => "Failed to create violation",
-                    "status" => false,
-                    "error" => $th->getMessage()
-                ], 500
-            );
-        }
+        return \App\Services\ViolationServices::createViolation($req);
     }
 
     public function CreateStudentAttandencePermit(Request $req)
@@ -129,30 +105,7 @@ class CreateController extends Controller
 
     public function InsertIntoStudentAchievementMapping(Request $req)
     {
-        try {
-            \App\Models\Mapping_Student_Achievement::create(
-                [
-                    "achievement_id" => $req->achievement_id,
-                    "student_id" => $req->student_id,
-                    "description" => $req->description
-                ]
-            );
-
-            return response()->json(
-                [
-                    "message" => "Success on create attandence permit type",
-                    "status" => true
-                ]
-            );
-        } catch (Exception $th) {
-            return response()->json(
-                [
-                    "message" => "Failed on create student achievement",
-                    "status" => false,
-                    "error" => $th->getMessage()
-                ], 500
-            );
-        }
+        return \App\Services\StudentAchievementServices::createMappingStudentAchievement($req);
     }
 
     public function InsertIntoStudentViolationMapping(Request $req)

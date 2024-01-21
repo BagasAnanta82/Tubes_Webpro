@@ -76,6 +76,7 @@ Route::group([
             Route::post("/", [\App\Http\Controllers\CreateController::class, "CreateViolation"]);
             Route::put("/", [\App\Http\Controllers\UpdateController::class, "UpdateViolation"]);
             Route::delete("/", [\App\Http\Controllers\DeleteController::class, "DeleteViolation"]);
+            Route::delete("/multiple", [\App\Http\Controllers\DeleteController::class, "DeleteMultipleViolation"]);
 
             Route::prefix("student")->group(function(){
                 Route::get("/", [\App\Http\Controllers\ReadController::class, "GetAllStudentViolationRecords"]);
@@ -93,6 +94,9 @@ Route::group([
             Route::prefix("student")->group(function(){
                 Route::get("/", [\App\Http\Controllers\ReadController::class, "GetAllStudentAchievementRecords"]);
                 Route::post("/", [\App\Http\Controllers\CreateController::class, "InsertIntoStudentAchievementMapping"]);
+                Route::put("/", [\App\Http\Controllers\UpdateController::class, "UpdateMappingStudentAchievement"]);
+                Route::delete("/", [\App\Http\Controllers\DeleteController::class, "DeleteMappingStudentAchievement"]);
+                Route::delete("/multiple", [\App\Http\Controllers\DeleteController::class, "DeleteMultipleMappingStudentAchievement"]);
             });
         });
 

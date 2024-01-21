@@ -14,6 +14,11 @@ const router = createRouter({
                     component: () => import('@/views/Dashboard.vue')
                 },
                 {
+                    path : "/home/",
+                    name : "homepage",
+                    component : () => import("@/views/home/HomePage.vue")
+                },
+                {
                     path : "/home/student",
                     name : "datasiswa",
                     component : () => import("@/views/home/Student.vue")
@@ -30,13 +35,18 @@ const router = createRouter({
                 },
                 {
                     path : "/home/achievement",
-                    name : "classroom",
+                    name : "achievement",
                     component : () => import("@/views/home/Achievement.vue")
                 },
                 {
-                    path : "/home/",
-                    name : "homepage",
-                    component : () => import("@/views/home/HomePage.vue")
+                    path : "/home/achievement/student",
+                    name : "achievementstudent",
+                    component : () => import("@/views/home/AchievementStudent.vue")
+                },
+                {
+                    path : "/home/violation",
+                    name : "violation",
+                    component : () => import("@/views/home/Violation.vue")
                 },
                 {
                     path: '/uikit/formlayout',

@@ -26,59 +26,12 @@ class ReadController extends Controller
 
     public function getAllViolationData(Request $req)
     {
-        try {
-            $data = \App\Models\Violation::select(
-                "name",
-                "violation_code",
-                "score",
-                "active_status",
-            )
-             ->orederBy("created_at", "ASC")
-             ->get();
-
-            return response()->json(
-                [
-                    "message" => "Success on get violation",
-                    "status" => true,
-                    "data" => $data
-                ]
-            );
-        } catch (Exception $th) {
-            return response()->json(
-                [
-                    "message" => "Failed to get Data",
-                    "status" => false,
-                    "error" => $th->getMessage()
-                ]
-            );
-        }
+        return \App\Services\ViolationServices::getAllViolation($req);
     }
 
     public function getAllGender(Request $req)
     {
-        try {
-            $data = \App\Models\Gender::select(
-                "id",
-                "gender",
-                "code"
-            )->get();
-
-            return response()->json(
-                [
-                    "message" => "Success on get Gender",
-                    "status" => true,
-                    "data" => $data
-                ]
-            );
-        } catch (Exception $th) {
-            return response()->json(
-                [
-                    "message" => "Failed to get gender",
-                    "status" => false,
-                    "error" => $th->getMessage()
-                ]
-            );
-        }
+        return \App\Services\GenderServices::getAllGender($req);
     }
 
     public function getAllPermitType(Request $req)
@@ -86,7 +39,8 @@ class ReadController extends Controller
         try {
             $data = \App\Models\Attandence_Permit_Type::select(
                 "id",
-                "name"
+                "name",
+                "active_status",
             )
              ->where("active_status", true)
              ->get();
@@ -127,45 +81,7 @@ class ReadController extends Controller
 
     public function GetAllStudentAchievementRecords(Request $req)
     {
-        try {
-            $data = \App\Models\Mapping_Student_Achievement::select(
-                "ach.name as achievement_name",
-                "ach.achievement_code as achievement_code",
-                "ach.score as achievement_score",
-                "s.id as student_id",
-                "s.name as student_name",
-                "s.NIS",
-                "s.NISN",
-                "g.id as gender_id",
-                "g.code",
-                "c.id as classroom_id",
-                "c.name as classroom_name",
-                "mapping_student_achievements.description"
-            )
-             ->leftJoin("achievements as ach", "ach.id", "=", "mapping_student_achievements.achievement_id")
-             ->leftJoin("students as s", "s.id", "=", "mapping_student_achievements.student_id")
-             ->leftJoin("classrooms as c", "c.id", "=", "s.classroom_id")
-             ->leftJoin("genders as g", "g.id", "=", "s.gender_id")
-             ->where("s.active_status", true)
-             ->where("ach.active_status", true)
-             ->get();
-
-            return response()->json(
-                [
-                    "message" => "success on get data",
-                    "status" => true,
-                    "data" => $data
-                ]
-            );
-        } catch (Exception $th) {
-            return response()->json(
-                [
-                    "message" => "failed to get achievemnet records",
-                    "status" => false,
-                    "error" => $th->getMessage()
-                ]
-            );
-        }
+        return \App\Services\StudentAchievementServices::getAllStudentAchivementRecords($req);
     }
 
     public function GetAllStudentViolationRecords(Request $req)

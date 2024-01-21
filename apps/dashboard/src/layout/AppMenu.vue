@@ -102,9 +102,10 @@ const model = ref([
             { label: 'Home Page', icon: 'pi pi-file', to: '/home/' },
             { label: 'Data Siswa', icon: 'pi pi-book', to: '/home/student'},
             { label: 'Rekam Absen', icon: 'pi pi-file', to: '/home/attendance'},
-            { label: 'Ruang Kelas', icon: 'pi pi-file', to: '/home/classroom'},
+            { label: 'Ruang Kelas', icon: 'pi pi-book', to: '/home/classroom'},
             { label: 'Data Pencapaian', icon: 'pi pi-file', to: '/home/achievement'},
-            { label: 'Form Layout', icon: 'pi pi-fw pi-id-card', to: '/uikit/formlayout' }
+            { label: 'Data Pencapaian Siswa', icon: 'pi pi-file', to: '/home/achievement/student'},
+            { label: 'Data Pelanggaran', icon: 'pi pi-file', to: '/home/violation'},
         ]
     },
 ]);

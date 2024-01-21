@@ -35,29 +35,27 @@ class DeleteController extends Controller
 
     public function DeleteViolation(Request $req)
     {
-        try {
-            \App\Models\Violation::where("id", $req->id)->delete();
+        return \App\Services\ViolationServices::deleteViolation($req);
+    }
 
-            return response()->json(
-                [
-                    "message" => "Success on delete violation",
-                    "status" => true
-                ]
-            );
-        } catch (Exception $th) {
-            return response()->json(
-                [
-                    "message" => "Failed to delete violation",
-                    "status" => false,
-                    "error" => $th->getMessage()
-                ]
-            );
-        }
+    public function DeleteMultipleViolation(Request $req)
+    {
+        return \App\Services\ViolationServices::deleteMultipleViolation($req);
     }
 
     public function DeleteClassroom(Request $req)
     {
         return \App\Services\ClassroomServices::DeleteClassroom($req);
+    }
+
+    public function DeleteMappingStudentAchievement(Request $req)
+    {
+        return \App\Services\StudentAchievementServices::deleteMappingStudentAchievement($req);
+    }
+
+    public function DeleteMultipleMappingStudentAchievement(Request $req)
+    {
+        return \App\Services\StudentAchievementServices::deleteMutlipleMappingStudentAchievement($req);
     }
 
     public function DeleteStudentAttandencePermit(Request $req)
