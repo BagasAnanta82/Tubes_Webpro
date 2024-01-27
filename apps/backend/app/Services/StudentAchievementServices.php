@@ -55,16 +55,75 @@ class StudentAchievementServices{
         }
     }
 
+
+    public static function findAchievementByUserId(string $id)
+    {
+        try {
+            if (is_null($id)) {
+                throw new Exception("id is not define", 1);
+            }
+
+            $score = 0;
+    
+            $data = \App\Models\Mapping_Student_Achievement::select(
+                "ach.name as achievement_name",
+                "ach.achievement_code as achievement_code",
+                "ach.score as achievement_score",
+                "mapping_student_achievements.id",
+                "mapping_student_achievements.description",
+                "mapping_student_achievements.student_id",
+                "mapping_student_achievements.created_at as timestamp"
+            )
+             ->leftJoin("achievements as ach", "ach.id", "=", "mapping_student_achievements.achievement_id")
+             ->leftJoin("students as s", "s.id", "=", "mapping_student_achievements.student_id")
+             ->leftJoin("classrooms as c", "c.id", "=", "s.classroom_id")
+             ->leftJoin("genders as g", "g.id", "=", "s.gender_id")
+             ->where("mapping_student_achievements.student_id", $id)
+             ->where("s.active_status", true)
+             ->where("s.deleted_at", null)
+             ->where("ach.active_status", true)
+             ->where("ach.deleted_at", null)
+             ->groupBy(["mapping_student_achievements.id", "mapping_student_achievements.student_id", "ach.name", "ach.achievement_code", "ach.score", "mapping_student_achievements.description", "mapping_student_achievements.created_at"])
+             ->get()
+             ->toArray();
+            
+            foreach ($data as $key => $value) {
+                $score += $value["achievement_score"];
+            }
+            
+             return response()->json(
+                [
+                    "message" => "success on get data",
+                    "status" => true,
+                    "data" => [
+                        "student" => $data,
+                        "total_score" => $score
+                    ]
+                ]
+            );
+        } catch (Exception $th) {
+            return response()->json(
+                [
+                    "message" => "failed to get achievemnet records",
+                    "status" => false,
+                    "error" => $th->getMessage()
+                ]
+            );
+        }
+    }
+
     public static function createMappingStudentAchievement(Request $req)
     {
         try {
-            \App\Models\Mapping_Student_Achievement::create(
-                [
-                    "achievement_id" => $req->achievement_id,
-                    "student_id" => $req->student_id,
-                    "description" => $req->description
-                ]
-            );
+            foreach ($req->students as $key => $value) {
+                \App\Models\Mapping_Student_Achievement::create(
+                    [
+                        "achievement_id" => $req->achievement_id,
+                        "student_id" => $value["student_id"],
+                        "description" => $req->description
+                    ]
+                );
+            }
 
             return response()->json(
                 [

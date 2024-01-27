@@ -38,6 +38,11 @@ class DeleteController extends Controller
         return \App\Services\ViolationServices::deleteViolation($req);
     }
 
+    public function DeleteMappingStudentViolation(Request $req)
+    {
+        return \App\Services\StudentViolationServices::deleteStudentViolationRecords($req);
+    }
+
     public function DeleteMultipleViolation(Request $req)
     {
         return \App\Services\ViolationServices::deleteMultipleViolation($req);

@@ -1,4 +1,4 @@
-export default class StudentAchievementService{
+export default class StudentViolationService{
     url
     token
 
@@ -7,8 +7,8 @@ export default class StudentAchievementService{
         // this.token = JSON.parse(window.localStorage.getItem('token')).token
     }
 
-    getAllStudentAchievement(){
-        return fetch(`${this.url}achievements/student`, {
+    getStudentViolationById(id){
+        return fetch(`${this.url}violations/student/${id}`, {
             method : "GET",
             headers : {
                 // "Authorization" : `Bearer ${this.token}`
@@ -18,19 +18,8 @@ export default class StudentAchievementService{
          .then(d => d.data)
     }
 
-    getStudentAchievementById(id){
-        return fetch(`${this.url}achievements/student/${id}`, {
-            method : "GET",
-            headers : {
-                // "Authorization" : `Bearer ${this.token}`
-            }
-        })
-         .then(res => res.json())
-         .then(d => d.data)
-    }
-
-    createStudentAchievement(data){
-        return fetch(`${this.url}achievements/student`, {
+    createStudentViolation(data){
+        return fetch(`${this.url}violations/student`, {
             method : "POST",
             headers : {
                 "Content-Type" : "application/json",
@@ -38,7 +27,7 @@ export default class StudentAchievementService{
                 // "Authorization" : `Bearer ${this.token}`
             },
             body : JSON.stringify({
-                "achievement_id" : data.achievement.id,
+                "violation_id" : data.violation.id,
                 "description" : data.description,
                 "students" : data.students
             })
@@ -47,8 +36,8 @@ export default class StudentAchievementService{
         .then(d => d)
     }
 
-    deleteStudentAchievement(id){
-        return fetch(`${this.url}achievements/student`, {
+    deleteStudentViolation(id){
+        return fetch(`${this.url}violations/student`, {
             method : "DELETE",
             headers : {
                 "Content-Type" : "application/json",

@@ -62,7 +62,7 @@ const isOutsideClicked = (event) => {
 
 <template>
     <div class="layout-topbar">
-        <router-link to="/" class="layout-topbar-logo">
+        <router-link to="/home" class="layout-topbar-logo">
             <img :src="logoUrl" alt="logo" />
             <span>SMAN 24 Bandung</span>
         </router-link>

@@ -1,15 +1,19 @@
 <script setup lang="ts">
 import { FilterMatchMode } from 'primevue/api';
-import { ref, onMounted, onBeforeMount } from 'vue';
-import AchievementService from '@/service/AchievementService';
-import SiswaService from '@/service/SiswaService';
+import { ref, onMounted, onBeforeMount, watch } from 'vue';
 import { useToast } from 'primevue/usetoast';
+import SiswaService from '@/service/SiswaService';
+import AchievementService from '@/service/AchievementService';
+import StudentAchievementService from '@/service/StudentAchievementService';
+
 
 const toast = useToast();
 
-const achievement = ref(null);
-const student = ref(null);
+const students = ref(null);
+const achievement = ref({});
+const achievementDialog = ref({});
 const productDialog = ref(false);
+const studentDialog = ref(false);
 const productDialogUpdate = ref(false);
 const deleteProductDialog = ref(false);
 const deleteProductsDialog = ref(false);
@@ -17,18 +21,22 @@ const product = ref({});
 const selectedProducts = ref(null);
 const dt = ref(null);
 const filters = ref({});
+const filtersDialog = ref({});
 const submitted = ref(false);
+const loading = ref(true);
 
-const achievementService = new AchievementService();
 const siswaService = new SiswaService();
+const achievementService = new AchievementService();
+const studentAchievementService = new StudentAchievementService();
 
 onBeforeMount(() => {
     initFilters();
 });
 
 onMounted(() => {
+    siswaService.getAllStudentData().then((data) => (students.value = data));
     achievementService.getAllAchievement().then((data) => (achievement.value = data));
-    siswaService.getAllStudentData().then((data) => (student.value = data))
+    loading.value = false;
 });
 
 const openNew = () => {
@@ -39,34 +47,47 @@ const openNew = () => {
 
 const hideDialog = () => {
     productDialog.value = false;
+    studentDialog.value = false;
+    achievementDialog.value = {};
     submitted.value = false;
-    productDialogUpdate.value = false;
 };
 
 const saveProduct = async () => {
     submitted.value = true;
-    await achievementService.createAchievement(product.value).then((res) => (
-        res.status ? toast.add({ severity: 'success', summary: 'Berhasil', detail: 'Berhasil Menambah Pencapaian', life: 3000 })
-        : toast.add({ severity: 'error', summary: 'Gagal', detail: 'Gagal Menambah Kelas', life: 3000 })
-    ))
-    await achievementService.getAllAchievement().then((data) => (achievement.value = data));
+    await studentAchievementService.createStudentAchievement(product.value).then((res) => {
+        if (!res.status) {
+            toast.add({ severity: 'error', summary: 'Gagal', detail: 'Gagal Untuk Membuat Data Siswa', life: 3000 });
+        } else {
+            toast.add({ severity: 'success', summary: 'Berhasil', detail: 'Berhasil Tambah Siswa', life: 3000 });
+        }
+    })
     productDialog.value = false;
     product.value = {};
 };
 
+const showStudentData = async (editProduct) => {
+    await studentAchievementService.getStudentAchievementById(editProduct.student_id).then((data) => {
+        achievementDialog.value.student = data.student;
+        achievementDialog.value.score = data.total_score;
+    });
+    studentDialog.value = true;
+}
+
 const editProductDialog = (editProduct) => {
-    product.value = { ...editProduct };
-    productDialogUpdate.value = true;
-};
+    
+}
 
 const editProduct = async () => {
-    await achievementService.updateAchievement(product.value).then((res) => (
-        res.status ? toast.add({ severity: 'success', summary: 'Berhasil', detail: 'Berhasil Memperbaharui Pencapaian', life: 3000 })
-        : toast.add({ severity: 'error', summary: 'Gagal', detail: 'Gagal Memperbaharui Pencapaian', life: 3000 })
-    ))
-    await achievementService.getAllAchievement().then((data) => (achievement.value = data));
+    await siswaService.updateStudentData(product.value).then((res) => {
+        if (res) {
+            toast.add({ severity: 'success', summary: 'Berhasil', detail: 'Berhasil Untuk Delete Data Siswa', life: 3000 });
+        } else {
+            toast.add({ severity: 'error', summary: 'Gagal', detail: 'Gagal Untuk Delete Data Siswa', life: 3000 });
+        }
+    })
+    await siswaService.getAllStudentData().then((data) => (students.value = data));
     productDialogUpdate.value = false;
-}
+};
 
 const confirmDeleteProduct = (editProduct) => {
     product.value = editProduct;
@@ -74,15 +95,13 @@ const confirmDeleteProduct = (editProduct) => {
 };
 
 const deleteProduct = async () => {
-    await achievementService.deleteAchievement(product.value.id).then((res) => (
-        res.status ? toast.add({ severity: 'success', summary: 'Berhasil', detail: 'Pencapaian Dihapus', life: 3000 })
-         : toast.add({ severity: 'error', summary: 'Gagal', detail: 'Gagal Menghapus Pencapaian', life: 3000 })
-    ));
-    await achievementService.getAllAchievement().then((data) => (achievement.value = data));
     deleteProductDialog.value = false;
+    await studentAchievementService.deleteStudentAchievement(product.value.id).then((res) =>
+        res.status ? toast.add({ severity: 'success', summary: 'Successful', detail: 'berhasil menghapus data', life: 3000 })
+            : toast.add({ severity: 'error', summary: 'Gagal', detail: 'Gagal Menghapus data siswa', life: 3000 }))
+    await studentAchievementService.getStudentAchievementById(product.value.student_id).then((data) => (achievementDialog.value = data));
     product.value = {};
 };
-
 
 const exportCSV = () => {
     dt.value.exportCSV();
@@ -91,12 +110,13 @@ const exportCSV = () => {
 const confirmDeleteSelected = () => {
     deleteProductsDialog.value = true;
 };
+
 const deleteSelectedProducts = async () => {
-    await achievementService.deleteMultipleAchievement(selectedProducts.value).then((res) => (
-        res.status ? toast.add({ severity: 'success', summary: 'Berhasil', detail: 'Kelas Terhapus', life: 3000 })
-        : toast.add({ severity: 'error', summary: 'Gagal', detail: 'Kelas Gagal Terhapus', life: 3000 })
-    ))
-    await achievementService.getAllAchievement().then((data) => (achievement.value = data));
+    await studentAchievementService.deleteStudentAchievement(selectedProducts.value).then((res) => (
+        res.status ?
+            toast.add({ severity: 'success', summary: 'Berhasil', detail: 'Siswa Terhapus', life: 3000 })
+            : toast.add({ severity: 'error', summary: 'Gagal', detail: 'Siswa Gagal Terhapus', life: 3000 })))
+    await studentAchievementService.getStudentAchievementById().then((data) => (students.value = data));
     deleteProductsDialog.value = false;
     selectedProducts.value = null;
 };
@@ -105,7 +125,12 @@ const initFilters = () => {
     filters.value = {
         global: { value: null, matchMode: FilterMatchMode.CONTAINS }
     };
+
+    filtersDialog.value = {
+        global: { value: null, matchMode: FilterMatchMode.CONTAINS }
+    };
 };
+
 </script>
 
 <template>
@@ -117,7 +142,6 @@ const initFilters = () => {
                     <template v-slot:start>
                         <div class="my-2">
                             <Button label="New" icon="pi pi-plus" class="p-button-success mr-2" @click="openNew" />
-                            <Button label="Delete" icon="pi pi-trash" class="p-button-danger" @click="confirmDeleteSelected" :disabled="!selectedProducts || !selectedProducts.length" />
                         </div>
                     </template>
 
@@ -126,22 +150,21 @@ const initFilters = () => {
                     </template>
                 </Toolbar>
 
-                <DataTable
-                    ref="dt"
-                    :value="achievement"
-                    v-model:selection="selectedProducts"
-                    dataKey="id"
+                <DataTable 
+                    ref="dt" 
+                    :value="students" 
+                    dataKey="id" 
                     :paginator="true"
-                    :rows="5"
+                    :rows="20" 
                     :filters="filters"
                     paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-                    :rowsPerPageOptions="[5, 10, 25]"
-                    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products"
-                    responsiveLayout="scroll"
-                >
+                    :rowsPerPageOptions="[20, 50, 75, 100]" 
+                    :loading="loading"
+                    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} students"
+                    responsiveLayout="scroll">
                     <template #header>
                         <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
-                            <h5 class="m-0">Pencapaian SMAN 24</h5>
+                            <h5 class="m-0">Data Siswa SMAN 24 Bandung</h5>
                             <span class="block mt-2 md:mt-0 p-input-icon-left">
                                 <i class="pi pi-search" />
                                 <InputText v-model="filters['global'].value" placeholder="Search..." />
@@ -149,140 +172,171 @@ const initFilters = () => {
                         </div>
                     </template>
 
-                    <Column selectionMode="multiple" headerStyle="width: 3rem"></Column>
                     <Column field="name" header="Name" :sortable="true" headerStyle="width:14%; min-width:10rem;">
                         <template #body="slotProps">
                             <span class="p-column-title">Name</span>
                             {{ slotProps.data.name }}
                         </template>
                     </Column>
-                    <Column field="description" header="Dekripsi" :sortable="true" headerStyle="width:14%; min-width:10rem;">
+                    <Column field="NIS" header="NIS" :sortable="true" headerStyle="width:14%; min-width:8rem;">
                         <template #body="slotProps">
-                            <span class="p-column-title">description</span>
-                            {{ slotProps.data.description }}
+                            <span class="p-column-title">NIS</span>
+                            {{ slotProps.data.NIS }}
                         </template>
                     </Column>
-                    <Column field="achievement_code" header="Kode Pencapaian" :sortable="true" headerStyle="width:14%; min-width:10rem;">
+                    <Column field="NISN" header="NISN" :sortable="true" headerStyle="width:14%; min-width:10rem;">
                         <template #body="slotProps">
-                            <span class="p-column-title">Code</span>
-                            {{ slotProps.data.achievement_code }}
+                            <span class="p-column-title">NISN</span>
+                            {{ slotProps.data.NISN }}
                         </template>
                     </Column>
-                    <Column field="score" header="Nilai" :sortable="true" headerStyle="width:14%; min-width:10rem;">
+                    <Column field="code" header="Kelamin" :sortable="true" headerStyle="width:14%; min-width:10rem;">
                         <template #body="slotProps">
-                            <span class="p-column-title">Nilai</span>
-                            {{ slotProps.data.score }}
+                            <span class="p-column-title">kelamin</span>
+                            {{ slotProps.data.code }}
                         </template>
                     </Column>
-                    <Column field="status" header="Status Kelas" :sortable="true" headerStyle="width:20rem;">
+                    <Column field="classroom_name" header="Kelas" :sortable="true"
+                        headerStyle="width:14%; min-width:10rem;">
                         <template #body="slotProps">
-                            <span class="p-column-title">status</span>
-                            {{ slotProps.data.active_status ? "Aktif" : "Tidak Aktif" }}
+                            <span class="p-column-title">Kelas</span>
+                            {{ slotProps.data.classroom_name }}
                         </template>
                     </Column>
-                    <Column headerStyle="min-width:10rem;">
+                    <Column header="action" headerStyle="min-width:10rem;">
                         <template #body="slotProps">
-                            <Button icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2"
-                                @click="editProductDialog(slotProps.data)" />
-                            <Button icon="pi pi-trash" class="p-button-rounded p-button-warning mt-2"
-                                @click="confirmDeleteProduct(slotProps.data)" />
+                            <Button icon="pi pi-search" class="p-button-rounded p-button-primary mr-2"
+                                @click="showStudentData(slotProps.data)" />
                         </template>
                     </Column>
                 </DataTable>
 
-                <Dialog v-model:visible="productDialog" :style="{ width: '450px' }" header="Product Details" :modal="true" class="p-fluid">
+                <Dialog v-model:visible="productDialog" :style="{ width: '450px' }" header="Product Details" :modal="true"
+                    class="p-fluid">
                     <div class="field">
-                        <label for="name">Nama Pencapaian</label>
-                        <InputText id="name" v-model.trim="product.name" required="true" autofocus :class="{ 'p-invalid': submitted && !product.name }" />
-                        <small class="p-invalid" v-if="submitted && !product.name">Name is required.</small>
+                        <label for="inventoryStatus" class="mb-3">Pencapaian</label>
+                        <Dropdown id="inventoryStatus" v-model="product.achievement" :options="achievement" optionLabel="name" />
                     </div>
 
                     <div class="field">
-                        <label for="">Deskripsi</label>
-                        <Textarea id="name" v-model.trim="product.description" :required="true" autofocus />
+                        <label for="multipleStatus" class="mb-3">Pencapaian</label>
+                        <MultiSelect id="multipleStatus" v-model="product.students" :options="students" optionLabel="name" placeholder="Pilih Siswa" :filter="true">
+                            <template #value="slotProps">
+                                <div class="inline-flex align-items-center py-1 px-2 bg-primary text-primary border-round mr-2" v-for="option of slotProps.value" :key="option.id">
+                                    <!-- <span :class="'mr-2 flag flag-' + option.name.toLowerCase()" style="width: 18px; height: 12px" /> -->
+                                    <div>{{ option.name }}</div>
+                                </div>
+                                <template v-if="!slotProps.value || slotProps.value.length === 0">
+                                    <div class="p-1">Pilih Siswa</div>
+                                </template>
+                            </template>
+                            <template #option="slotProps">
+                                <div class="flex align-items-center">
+                                    <!-- <span :class="'mr-2 flag flag-' + slotProps.option.code.toLowerCase()" style="width: 18px; height: 12px" /> -->
+                                    <div>{{ slotProps.option.name }}</div>
+                                </div>
+                            </template>
+                        </MultiSelect>
                     </div>
 
                     <div class="field">
-                        <label for="name">kode  Pencapaian</label>
-                        <InputText id="name" v-model.trim="product.achievement_code" required="true" autofocus :class="{ 'p-invalid': submitted && !product.achievement_code }" />
-                        <small class="p-invalid" v-if="submitted && !product.achievement_code">Kode Pencapaian is required.</small>
+                        <label for="description">Deskripsi</label>
+                        <Textarea id="description" v-model.trim="product.description" :required="true" autofocus />
                     </div>
 
-                    <div class="field">
-                        <label for="name">Nilai Pencapaian</label>
-                        <InputText type="number" id="name" v-model.trim="product.score" required="true" autofocus :class="{ 'p-invalid': submitted && !product.score }" />
-                        <small class="p-invalid" v-if="submitted && !product.score">Nilai Pencapaian is required.</small>
-                    </div>
-
-                    <div class="field">
-                        <label class="mb-3">Status Pencapaian</label>
-                        <div class="formgrid grid">
-                            <div class="field-radiobutton col-6">
-                                <RadioButton id="category1" name="true" :value="true" v-model="product.active_status" />
-                                <label for="category1">Aktif</label>
-                            </div>
-                            <div class="field-radiobutton col-6">
-                                <RadioButton id="category2" name="false" :value="false" v-model="product.active_status" />
-                                <label for="category2">Tidak Aktif</label>
-                            </div>
-                        </div>
-                    </div>
                     <template #footer>
                         <Button label="Cancel" icon="pi pi-times" class="p-button-text" @click="hideDialog" />
                         <Button label="Save" icon="pi pi-check" class="p-button-text" @click="saveProduct" />
                     </template>
                 </Dialog>
 
-                <Dialog v-model:visible="productDialogUpdate" :style="{ width: '450px' }" header="Product Details" :modal="true" class="p-fluid">
-                    <div class="field">
-                        <label for="name">Nama Pencapaian</label>
-                        <InputText id="name" v-model.trim="product.name" required="true" autofocus :class="{ 'p-invalid': submitted && !product.name }" />
-                        <small class="p-invalid" v-if="submitted && !product.name">Name is required.</small>
-                    </div>
-
-                    <div class="field">
-                        <label for="">Deskripsi</label>
-                        <Textarea id="name" v-model.trim="product.description" :required="true" autofocus />
-                    </div>
-
-                    <div class="field">
-                        <label for="name">kode  Pencapaian</label>
-                        <InputText id="name" v-model.trim="product.achievement_code" required="true" autofocus :class="{ 'p-invalid': submitted && !product.achievement_code }" />
-                        <small class="p-invalid" v-if="submitted && !product.achievement_code">Kode Pencapaian is required.</small>
-                    </div>
-
-                    <div class="field">
-                        <label for="name">Nilai Pencapaian</label>
-                        <InputText type="number" id="name" v-model.trim="product.score" required="true" autofocus :class="{ 'p-invalid': submitted && !product.score }" />
-                        <small class="p-invalid" v-if="submitted && !product.score">Nilai Pencapaian is required.</small>
-                    </div>
-
-                    <div class="field">
-                        <label class="mb-3">Status Pencapaian</label>
-                        <div class="formgrid grid">
-                            <div class="field-radiobutton col-6">
-                                <RadioButton id="category1" name="true" :value="true" v-model="product.active_status" />
-                                <label for="category1">Aktif</label>
-                            </div>
-                            <div class="field-radiobutton col-6">
-                                <RadioButton id="category2" name="false" :value="false" v-model="product.active_status" />
-                                <label for="category2">Tidak Aktif</label>
-                            </div>
-                        </div>
+                <Dialog v-model:visible="deleteProductDialog" :style="{ width: '450px' }" header="Confirm" :modal="true">
+                    <div class="flex align-items-center justify-content-center">
+                        <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem" />
+                        <span v-if="product">Apakah Anda Yakin Untuk Menghapus Siswa <b>{{ product.name }}</b>?</span>
                     </div>
                     <template #footer>
-                        <Button label="Cancel" icon="pi pi-times" class="p-button-text" @click="hideDialog" />
-                        <Button label="Save" icon="pi pi-check" class="p-button-text" @click="editProduct" />
+                        <Button label="No" icon="pi pi-times" class="p-button-text" @click="deleteProductDialog = false" />
+                        <Button label="Yes" icon="pi pi-check" class="p-button-text" @click="deleteProduct" />
+                    </template>
+                </Dialog>
+
+                <Dialog v-model:visible="studentDialog" :style="{ width: '950px' }" header="Data Pencapaian" :modal="true"
+                    class="p-fluid">
+
+                    <DataTable 
+                        ref="dt" 
+                        :value="achievementDialog.student" 
+                        v-model:selection="selectedProducts" 
+                        dataKey="id"
+                        :paginator="true" :rows="5" 
+                        :filters="filtersDialog"
+                        paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+                        :rowsPerPageOptions="[5, 10, 15]" 
+                        :loading="loading"
+                        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} students"
+                        responsiveLayout="scroll">
+                        <template #header>
+                            <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
+                                <h5 class="m-0">Data Pencapaian SMAN 24</h5>
+                                <span class="block mt-2 md:mt-0 p-input-icon-left">
+                                    <i class="pi pi-search" />
+                                    <InputText v-model="filtersDialog['global'].value" placeholder="Search..." />
+                                </span>
+                            </div>
+                        </template>
+
+                        <!-- <Column selectionMode="multiple" headerStyle="width: 3rem"></Column> -->
+                        <Column field="achievement_name" header="Name" :sortable="true" headerStyle="width:14%; min-width:10rem;">
+                            <template #body="slotProps">
+                                <span class="p-column-title">Name</span>
+                                {{ slotProps.data.achievement_name }}
+                            </template>
+                        </Column>
+                        <Column field="achievement_code" header="Kode Pencapaian" :sortable="true" headerStyle="width:14%; min-width:10rem;">
+                            <template #body="slotProps">
+                                <span class="p-column-title">Code</span>
+                                {{ slotProps.data.achievement_code }}
+                            </template>
+                        </Column>
+                        <Column field="achievement_code" header="Deskripsi" :sortable="true" headerStyle="width:14%; min-width:10rem;">
+                            <template #body="slotProps">
+                                <span class="p-column-title">Deskripsi</span>
+                                {{ slotProps.data.description }}
+                            </template>
+                        </Column>
+                        <Column field="achievement_score" header="Nilai" :sortable="true" headerStyle="width:14%; min-width:10rem;">
+                            <template #body="slotProps">
+                                <span class="p-column-title">Nilai</span>
+                                {{ slotProps.data.achievement_score }}
+                            </template>
+                        </Column>
+                        <Column field="timestamp" header="Timestamp" :sortable="true" headerStyle="width:14%; min-width:10rem;">
+                            <template #body="slotProps">
+                                <span class="p-column-title">Nilai</span>
+                                {{ slotProps.data.timestamp }}
+                            </template>
+                        </Column>
+                        <Column header="action" headerStyle="min-width:10rem;">
+                            <template #body="slotProps">
+                                <!-- <Button icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2"
+                                @click="editProductDialog(slotProps.data)" /> -->
+                            <Button icon="pi pi-trash" class="p-button-rounded p-button-warning mt-2"
+                                @click="confirmDeleteProduct(slotProps.data)" />
+                            </template>
+                        </Column>
+                        <template #footer #body="slotProps">Total Score {{ achievementDialog.score }}</template>
+                    </DataTable>
+
+                    <template #footer>
+                        <Button label="Close" icon="pi pi-times" class="p-button-text" @click="hideDialog" />
                     </template>
                 </Dialog>
 
                 <Dialog v-model:visible="deleteProductDialog" :style="{ width: '450px' }" header="Confirm" :modal="true">
                     <div class="flex align-items-center justify-content-center">
                         <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem" />
-                        <span v-if="product"
-                            >Apakah Anda Yakin Untuk Menghapus <b>{{ product.name }}</b
-                            >?</span
-                        >
+                        <span v-if="product">Apakah Anda Yakin Untuk Menghapus Siswa <b>{{ product.name }}</b>?</span>
                     </div>
                     <template #footer>
                         <Button label="No" icon="pi pi-times" class="p-button-text" @click="deleteProductDialog = false" />
@@ -293,7 +347,7 @@ const initFilters = () => {
                 <Dialog v-model:visible="deleteProductsDialog" :style="{ width: '450px' }" header="Confirm" :modal="true">
                     <div class="flex align-items-center justify-content-center">
                         <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem" />
-                        <span v-if="product">Apakah Anda Yakin Untuk Menghapus Kelas Yang Dipilih?</span>
+                        <span v-if="product">Apakah Anda Yakin Untuk Menghapus Data-Data Siswa?</span>
                     </div>
                     <template #footer>
                         <Button label="No" icon="pi pi-times" class="p-button-text" @click="deleteProductsDialog = false" />

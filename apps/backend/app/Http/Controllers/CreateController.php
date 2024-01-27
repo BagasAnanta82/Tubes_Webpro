@@ -110,30 +110,7 @@ class CreateController extends Controller
 
     public function InsertIntoStudentViolationMapping(Request $req)
     {
-        try {
-            \App\Models\Mapping_Student_Violation::create(
-                [
-                    "violation_id" => $req->violation_id,
-                    "student_id" => $req->student_id,
-                    "description" => $req->description
-                ]
-            );
-
-            return response()->json(
-                [
-                    "message" => "Success on create attandence permit type",
-                    "status" => true
-                ]
-            );
-        } catch (Exception $th) {
-            return response()->json(
-                [
-                    "message" => "Failed on create student achievement",
-                    "status" => false,
-                    "error" => $th->getMessage()
-                ], 500
-            );
-        }
+        return \App\Services\StudentViolationServices::createStudentViolationRecords($req);
     }
 
     public function InsertIntoStudentAttandencePermit(Request $req)

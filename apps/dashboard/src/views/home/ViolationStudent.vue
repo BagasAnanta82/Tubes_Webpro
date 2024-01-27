@@ -1,17 +1,19 @@
 <script setup lang="ts">
 import { FilterMatchMode } from 'primevue/api';
 import { ref, onMounted, onBeforeMount, watch } from 'vue';
-import SiswaService from '@/service/SiswaService';
 import { useToast } from 'primevue/usetoast';
-import ClassroomService from '@/service/ClassroomService'
-import GenderService from '@/service/GenderService'
+import SiswaService from '@/service/SiswaService';
+import ViolationService from '@/service/ViolationService';
+import StudentViolationService from '@/service/StudentViolationService';
+
 
 const toast = useToast();
 
-const students = ref(null)
-const classroom = ref(null)
-const gender = ref(null)
+const students = ref(null);
+const violation = ref({});
+const violationDialog = ref({});
 const productDialog = ref(false);
+const studentDialog = ref(false);
 const productDialogUpdate = ref(false);
 const deleteProductDialog = ref(false);
 const deleteProductsDialog = ref(false);
@@ -19,12 +21,13 @@ const product = ref({});
 const selectedProducts = ref(null);
 const dt = ref(null);
 const filters = ref({});
+const filtersDialog = ref({});
 const submitted = ref(false);
 const loading = ref(true);
 
 const siswaService = new SiswaService();
-const classroomService = new ClassroomService()
-const genderService = new GenderService()
+const violationService = new ViolationService();
+const studentViolationService = new StudentViolationService();
 
 onBeforeMount(() => {
     initFilters();
@@ -32,8 +35,7 @@ onBeforeMount(() => {
 
 onMounted(() => {
     siswaService.getAllStudentData().then((data) => (students.value = data));
-    classroomService.getAllClassroom().then((data) => (classroom.value = data));
-    genderService.getAllGender().then((data) => (gender.value = data))
+    violationService.getAllViolation().then((data) => (violation.value = data));
     loading.value = false;
 });
 
@@ -45,35 +47,42 @@ const openNew = () => {
 
 const hideDialog = () => {
     productDialog.value = false;
-    productDialogUpdate.value = false;
+    studentDialog.value = false;
+    violationDialog.value = {};
     submitted.value = false;
 };
 
 const saveProduct = async () => {
     submitted.value = true;
-    await siswaService.createStudentData(product.value).then((res) => {
+    await studentViolationService.createStudentViolation(product.value).then((res) => {
         if (!res.status) {
             toast.add({ severity: 'error', summary: 'Gagal', detail: 'Gagal Untuk Membuat Data Siswa', life: 3000 });
-        }else{
+        } else {
             toast.add({ severity: 'success', summary: 'Berhasil', detail: 'Berhasil Tambah Siswa', life: 3000 });
         }
     })
-    await siswaService.getAllStudentData().then((data) => (students.value = data));
     productDialog.value = false;
     product.value = {};
 };
 
-const showEditDialog = (editProduct) => {
-    product.value = { ...editProduct };
-    productDialogUpdate.value = true;
+const showStudentData = async (editProduct) => {
+    await studentViolationService.getStudentViolationById(editProduct.student_id).then((data) => {
+        violationDialog.value.student = data.student;
+        violationDialog.value.score = data.total_score;
+    });
+    studentDialog.value = true;
+}
+
+const editProductDialog = (editProduct) => {
+
 }
 
 const editProduct = async () => {
     await siswaService.updateStudentData(product.value).then((res) => {
         if (res) {
-            toast.add({ severity: 'success', summary: 'Berhasil', detail: 'Berhasil Untuk Pemperbaharui Data Siswa', life: 3000 });
-        }else{
-            toast.add({ severity: 'error', summary: 'Gagal', detail: 'Gagal Untuk Memperbaharui Data Siswa', life: 3000 });
+            toast.add({ severity: 'success', summary: 'Berhasil', detail: 'Berhasil Untuk Delete Data Siswa', life: 3000 });
+        } else {
+            toast.add({ severity: 'error', summary: 'Gagal', detail: 'Gagal Untuk Delete Data Siswa', life: 3000 });
         }
     })
     await siswaService.getAllStudentData().then((data) => (students.value = data));
@@ -87,10 +96,13 @@ const confirmDeleteProduct = (editProduct) => {
 
 const deleteProduct = async () => {
     deleteProductDialog.value = false;
-    await siswaService.deleteStudent(product.value.student_id).then((res) => 
-    res ? toast.add({ severity: 'success', summary: 'Successful', detail: 'berhasil menghapus data', life: 3000 })
-    : toast.add({ severity: 'error', summary: 'Gagal', detail: 'Gagal Menghapus data siswa', life: 3000 }))
-    await siswaService.getAllStudentData().then((data) => (students.value = data));
+    await studentViolationService.deleteStudentViolation(product.value.id).then((res) =>
+        res.status ? toast.add({ severity: 'success', summary: 'Successful', detail: 'berhasil menghapus data', life: 3000 })
+            : toast.add({ severity: 'error', summary: 'Gagal', detail: 'Gagal Menghapus data siswa', life: 3000 }))
+    await studentViolationService.getStudentViolationById(product.value.student_id).then((data) => {
+        violationDialog.value.student = data.student;
+        violationDialog.value.score = data.total_score;
+    });
     product.value = {};
 };
 
@@ -101,12 +113,13 @@ const exportCSV = () => {
 const confirmDeleteSelected = () => {
     deleteProductsDialog.value = true;
 };
+
 const deleteSelectedProducts = async () => {
-    await siswaService.deleteMultipleStudent(selectedProducts.value).then((res) => (
+    await studentViolationService.deleteStudentAchievement(selectedProducts.value).then((res) => (
         res.status ?
             toast.add({ severity: 'success', summary: 'Berhasil', detail: 'Siswa Terhapus', life: 3000 })
             : toast.add({ severity: 'error', summary: 'Gagal', detail: 'Siswa Gagal Terhapus', life: 3000 })))
-    await siswaService.getAllStudentData().then((data) => (students.value = data));
+    await studentViolationService.getStudentAchievementById().then((data) => (students.value = data));
     deleteProductsDialog.value = false;
     selectedProducts.value = null;
 };
@@ -115,11 +128,11 @@ const initFilters = () => {
     filters.value = {
         global: { value: null, matchMode: FilterMatchMode.CONTAINS }
     };
+
+    filtersDialog.value = {
+        global: { value: null, matchMode: FilterMatchMode.CONTAINS }
+    };
 };
-
-watch(product, (newval, old) => {
-
-})
 
 </script>
 
@@ -132,8 +145,6 @@ watch(product, (newval, old) => {
                     <template v-slot:start>
                         <div class="my-2">
                             <Button label="New" icon="pi pi-plus" class="p-button-success mr-2" @click="openNew" />
-                            <Button label="Delete" icon="pi pi-trash" class="p-button-danger" @click="confirmDeleteSelected"
-                                :disabled="!selectedProducts || !selectedProducts.length" />
                         </div>
                     </template>
 
@@ -142,10 +153,15 @@ watch(product, (newval, old) => {
                     </template>
                 </Toolbar>
 
-                <DataTable ref="dt" :value="students" v-model:selection="selectedProducts" dataKey="student_id"
-                    :paginator="true" :rows="20" :filters="filters"
+                <DataTable 
+                    ref="dt" 
+                    :value="students" 
+                    dataKey="id" 
+                    :paginator="true" 
+                    :rows="20" 
+                    :filters="filters"
                     paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-                    :rowsPerPageOptions="[20, 50, 75, 100]"
+                    :rowsPerPageOptions="[20, 50, 75, 100]" 
                     :loading="loading"
                     currentPageReportTemplate="Showing {first} to {last} of {totalRecords} students"
                     responsiveLayout="scroll">
@@ -159,7 +175,6 @@ watch(product, (newval, old) => {
                         </div>
                     </template>
 
-                    <Column selectionMode="multiple" headerStyle="width: 3rem"></Column>
                     <Column field="name" header="Name" :sortable="true" headerStyle="width:14%; min-width:10rem;">
                         <template #body="slotProps">
                             <span class="p-column-title">Name</span>
@@ -191,12 +206,10 @@ watch(product, (newval, old) => {
                             {{ slotProps.data.classroom_name }}
                         </template>
                     </Column>
-                    <Column headerStyle="min-width:10rem;">
+                    <Column header="action" headerStyle="min-width:10rem;">
                         <template #body="slotProps">
-                            <Button icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2"
-                                @click="showEditDialog(slotProps.data)" />
-                            <Button icon="pi pi-trash" class="p-button-rounded p-button-warning mt-2"
-                                @click="confirmDeleteProduct(slotProps.data)" />
+                            <Button icon="pi pi-search" class="p-button-rounded p-button-primary mr-2"
+                                @click="showStudentData(slotProps.data)" />
                         </template>
                     </Column>
                 </DataTable>
@@ -204,38 +217,37 @@ watch(product, (newval, old) => {
                 <Dialog v-model:visible="productDialog" :style="{ width: '450px' }" header="Product Details" :modal="true"
                     class="p-fluid">
                     <div class="field">
-                        <label for="name">Name</label>
-                        <InputText id="name" v-model.trim="product.name" required="true" autofocus
-                            :class="{ 'p-invalid': submitted && !product.name }" />
-                        <small class="p-invalid" v-if="submitted && !product.name">Name is required.</small>
-                    </div>
-                    <div class="field">
-                        <label for="name">NIS</label>
-                        <InputText id="name" type="number" v-model.trim="product.NIS" :required="true"
-                            :class="{ 'p-invalid': submitted && !product.name }" />
-                        <small class="p-invalid" v-if="submitted && !product.NIS">NIS is required.</small>
-                    </div>
-                    <div class="field">
-                        <label for="name">NISN</label>
-                        <InputText id="name" type="number" v-model.trim="product.NISN" :required="true"
-                            :class="{ 'p-invalid': submitted && !product.name }" />
-                        <small class="p-invalid" v-if="submitted && !product.NISN">NIS is required.</small>
+                        <label for="inventoryStatus" class="mb-3">Pelanggaran</label>
+                        <Dropdown id="inventoryStatus" v-model="product.violation" :options="violation"
+                            optionLabel="name" />
                     </div>
 
                     <div class="field">
-                        <label for="inventoryStatus" class="mb-3">Kelas</label>
-                        <Dropdown id="inventoryStatus" v-model="product.classroom_id" :options="classroom" optionLabel="name" />
+                        <label for="multipleStatus" class="mb-3">Siswa</label>
+                        <MultiSelect id="multipleStatus" v-model="product.students" :options="students" optionLabel="name"
+                            placeholder="Pilih Siswa" :filter="true">
+                            <template #value="slotProps">
+                                <div class="inline-flex align-items-center py-1 px-2 bg-primary text-primary border-round mr-2"
+                                    v-for="option of slotProps.value" :key="option.id">
+                                    <!-- <span :class="'mr-2 flag flag-' + option.name.toLowerCase()" style="width: 18px; height: 12px" /> -->
+                                    <div>{{ option.name }}</div>
+                                </div>
+                                <template v-if="!slotProps.value || slotProps.value.length === 0">
+                                    <div class="p-1">Pilih Siswa</div>
+                                </template>
+                            </template>
+                            <template #option="slotProps">
+                                <div class="flex align-items-center">
+                                    <!-- <span :class="'mr-2 flag flag-' + slotProps.option.code.toLowerCase()" style="width: 18px; height: 12px" /> -->
+                                    <div>{{ slotProps.option.name }}</div>
+                                </div>
+                            </template>
+                        </MultiSelect>
                     </div>
 
                     <div class="field">
-                        <label class="mb-3">Kelamin</label>
-                        <div class="formgrid grid">
-                            <div class="field-radiobutton col-6" v-for="genderData in gender">
-                                <RadioButton id="category2" :name="genderData.code" :value="genderData.id"
-                                    v-model="product.gender_id" />
-                                <label for="category2">{{ genderData.gender }}</label>
-                            </div>
-                        </div>
+                        <label for="description">Deskripsi</label>
+                        <Textarea id="description" v-model.trim="product.description" :required="true" />
                     </div>
 
                     <template #footer>
@@ -255,46 +267,74 @@ watch(product, (newval, old) => {
                     </template>
                 </Dialog>
 
-                <Dialog v-model:visible="productDialogUpdate" :style="{ width: '450px' }" header="Product Details" :modal="true"
+                <Dialog v-model:visible="studentDialog" :style="{ width: '950px' }" header="Data Pencapaian" :modal="true"
                     class="p-fluid">
-                    <div class="field">
-                        <label for="name">Name</label>
-                        <InputText id="name" v-model.trim="product.name" required="true" autofocus
-                            :class="{ 'p-invalid': submitted && !product.name }" />
-                        <small class="p-invalid" v-if="submitted && !product.name">Name is required.</small>
-                    </div>
-                    <div class="field">
-                        <label for="name">NIS</label>
-                        <InputText id="name" type="number" v-model.trim="product.NIS" :required="true"
-                            :class="{ 'p-invalid': submitted && !product.name }" />
-                        <small class="p-invalid" v-if="submitted && !product.NIS">NIS is required.</small>
-                    </div>
-                    <div class="field">
-                        <label for="name">NISN</label>
-                        <InputText id="name" type="number" v-model.trim="product.NISN" :required="true"
-                            :class="{ 'p-invalid': submitted && !product.name }" />
-                        <small class="p-invalid" v-if="submitted && !product.NISN">NIS is required.</small>
-                    </div>
 
-                    <div class="field">
-                        <label for="inventoryStatus" class="mb-3">Kelas</label>
-                        <Dropdown id="inventoryStatus" v-model="product.classroom_id" :options="classroom" optionLabel="name" />
-                    </div>
-
-                    <div class="field">
-                        <label class="mb-3">Kelamin</label>
-                        <div class="formgrid grid">
-                            <div class="field-radiobutton col-6" v-for="genderData in gender">
-                                <RadioButton id="category2" :name="genderData.code" :value="genderData.id"
-                                    v-model="product.gender_id" />
-                                <label for="category2">{{ genderData.gender }}</label>
+                    <DataTable ref="dt" :value="violationDialog.student" v-model:selection="selectedProducts" dataKey="id"
+                        :paginator="true" :rows="5" :filters="filtersDialog"
+                        paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+                        :rowsPerPageOptions="[5, 10, 15]" :loading="loading"
+                        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} students"
+                        responsiveLayout="scroll">
+                        <template #header>
+                            <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
+                                <h5 class="m-0">Data Pencapaian SMAN 24</h5>
+                                <span class="block mt-2 md:mt-0 p-input-icon-left">
+                                    <i class="pi pi-search" />
+                                    <InputText v-model="filtersDialog['global'].value" placeholder="Search..." />
+                                </span>
                             </div>
-                        </div>
-                    </div>
+                        </template>
+
+                        <!-- <Column selectionMode="multiple" headerStyle="width: 3rem"></Column> -->
+                        <Column field="achievement_name" header="Name" :sortable="true"
+                            headerStyle="width:14%; min-width:10rem;">
+                            <template #body="slotProps">
+                                <span class="p-column-title">Name</span>
+                                {{ slotProps.data.violation_name }}
+                            </template>
+                        </Column>
+                        <Column field="achievement_code" header="Kode Pencapaian" :sortable="true"
+                            headerStyle="width:14%; min-width:10rem;">
+                            <template #body="slotProps">
+                                <span class="p-column-title">Code</span>
+                                {{ slotProps.data.violation_code }}
+                            </template>
+                        </Column>
+                        <Column field="achievement_code" header="Deskripsi" :sortable="true"
+                            headerStyle="width:14%; min-width:10rem;">
+                            <template #body="slotProps">
+                                <span class="p-column-title">Deskripsi</span>
+                                {{ slotProps.data.description }}
+                            </template>
+                        </Column>
+                        <Column field="achievement_score" header="Nilai" :sortable="true"
+                            headerStyle="width:14%; min-width:10rem;">
+                            <template #body="slotProps">
+                                <span class="p-column-title">Nilai</span>
+                                {{ slotProps.data.violation_score }}
+                            </template>
+                        </Column>
+                        <Column field="timestamp" header="Timestamp" :sortable="true"
+                            headerStyle="width:14%; min-width:10rem;">
+                            <template #body="slotProps">
+                                <span class="p-column-title">Nilai</span>
+                                {{ slotProps.data.timestamp }}
+                            </template>
+                        </Column>
+                        <Column header="action" headerStyle="min-width:10rem;">
+                            <template #body="slotProps">
+                                <!-- <Button icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2"
+                                @click="editProductDialog(slotProps.data)" /> -->
+                                <Button icon="pi pi-trash" class="p-button-rounded p-button-warning mt-2"
+                                    @click="confirmDeleteProduct(slotProps.data)" />
+                            </template>
+                        </Column>
+                        <template #footer #body="slotProps">Total Score {{ violationDialog.score }}</template>
+                    </DataTable>
 
                     <template #footer>
-                        <Button label="Cancel" icon="pi pi-times" class="p-button-text" @click="hideDialog" />
-                        <Button label="Save" icon="pi pi-check" class="p-button-text" @click="editProduct" />
+                        <Button label="Close" icon="pi pi-times" class="p-button-text" @click="hideDialog" />
                     </template>
                 </Dialog>
 
