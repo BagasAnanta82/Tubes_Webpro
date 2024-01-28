@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Carbon\Carbon;
-use Exception;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -36,31 +35,7 @@ class ReadController extends Controller
 
     public function getAllPermitType(Request $req)
     {
-        try {
-            $data = \App\Models\Attandence_Permit_Type::select(
-                "id",
-                "name",
-                "active_status",
-            )
-             ->where("active_status", true)
-             ->get();
-
-            return response()->json(
-                [
-                    "message" => "Success on get Gender",
-                    "status" => true,
-                    "data" => $data
-                ]
-            );
-        } catch (Exception $th) {
-            return response()->json(
-                [
-                    "message" => "Failed to get gender",
-                    "status" => false,
-                    "error" => $th->getMessage()
-                ]
-            );
-        }
+        return \App\Services\PermitTypeServices::getAllPermitType($req);
     }
 
     public function getAllStudentData(Request $req)
@@ -97,6 +72,11 @@ class ReadController extends Controller
     public function GetStudentViolationRecordsById(string $id)
     {
         return \App\Services\StudentViolationServices::getStudentViolationRecordsById($id);
+    }
+
+    public function GetStaticDashboard(Request $req)
+    {
+        return \App\Services\StaticDataDashboardServices::getDataDashboardStatic($req);
     }
 
     public function exportExcelStudentAttandence(Request $req)

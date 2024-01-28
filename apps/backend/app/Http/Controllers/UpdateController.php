@@ -2,9 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
 class UpdateController extends Controller
 {
@@ -15,29 +13,7 @@ class UpdateController extends Controller
 
     public function UpdatePermitType(Request $req)
     {
-        try {
-            \App\Models\Attandence_Permit_Type::where("id", $req->attandence_permit_type_id)->update(
-                [
-                    "name" => $req->name,
-                    "active_status" => $req->active_status
-                ]
-            );
-
-            return response()->json(
-                [
-                    "message" => "Success on update student",
-                    "status" => true
-                ]
-            );
-        } catch (Exception $th) {
-            return response()->json(
-                [
-                    "message" => "Failed to update student",
-                    "status" => false,
-                    "error" => $th->getMessage()
-                ]
-            );
-        }
+        return \App\Services\PermitTypeServices::updatePermitType($req);
     }
 
     public function UpdateStudent(Request $req)

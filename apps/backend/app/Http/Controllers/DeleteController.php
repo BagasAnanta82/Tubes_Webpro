@@ -3,8 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Exception;
-use Illuminate\Support\Facades\Storage;
 
 class DeleteController extends Controller
 {
@@ -65,23 +63,6 @@ class DeleteController extends Controller
 
     public function DeleteStudentAttandencePermit(Request $req)
     {
-        try {
-            \App\Models\Attandence_Permit::where("id", $req->attandence_permit_id)->delete();
-
-            return response()->json(
-                [
-                    "message" => "Success on update student permit",
-                    "status" => true
-                ]
-            );
-        } catch (Exception $th) {
-            return response()->json(
-                [
-                    "message" => "Failed to update student permit",
-                    "status" => false,
-                    "error" => $th->getMessage()
-                ]
-            );
-        }
+        return \App\Services\PermitServices::deleteStudentAttandencePermit($req);
     }
 }

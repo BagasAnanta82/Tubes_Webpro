@@ -111,4 +111,68 @@ class PermitServices
             );
         }
     }
+
+    public static function createStudentAttandencePermit(Request $req)
+    {
+        try {
+            if (! $req->hasFile("document")) {
+                throw new Exception("No File Included", 1);
+            }
+
+            $document_url = Storage::url($req->file("document")->store("public/permits"));
+
+            $document = \App\Models\Document::create(
+                [
+                    "name" => $req->file("document")->getName(),
+                    "document_type" => $req->file("document")->getType(),
+                    "url" => $document_url
+                ]
+            );
+
+            \App\Models\Attandence_Permit::create(
+                [
+                    "student_id" => $req->student_id,
+                    "attandence_permit_type_id" => $req->attandence_permit_type_id,
+                    "document_id" => $document->id
+                ]
+            );
+
+            return response()->json(
+                [
+                    "message" => "Success on create studnet attandence permit",
+                    "status" => true
+                ]
+            );
+        } catch (Exception $th) {
+            return response()->json(
+                [
+                    "message" => "Failed on create studnet attandence permit",
+                    "status" => false,
+                    "error" => $th->getMessage()
+                ], 500
+            );
+        }
+    }
+
+    public static function deleteStudentAttandencePermit(Request $req)
+    {
+        try {
+            \App\Models\Attandence_Permit::where("id", $req->attandence_permit_id)->delete();
+
+            return response()->json(
+                [
+                    "message" => "Success on update student permit",
+                    "status" => true
+                ]
+            );
+        } catch (Exception $th) {
+            return response()->json(
+                [
+                    "message" => "Failed to update student permit",
+                    "status" => false,
+                    "error" => $th->getMessage()
+                ]
+            );
+        }
+    }
 }

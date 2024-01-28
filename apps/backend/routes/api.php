@@ -51,6 +51,10 @@ Route::group([
     Route::group(
         ["middleware" => []
     ], function(){
+        Route::prefix("static")->group(function(){
+            Route::get("/dashboard", [\App\Http\Controllers\ReadController::class, "GetStaticDashboard"]);
+        });
+
         Route::prefix("classroom")->group(function(){
             Route::get("/", [\App\Http\Controllers\ReadController::class, "getAllClassroom"]);
             Route::post("/", [\App\Http\Controllers\CreateController::class, "CreateClassroom"]);
