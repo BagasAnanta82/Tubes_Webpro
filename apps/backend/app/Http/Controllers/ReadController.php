@@ -13,6 +13,11 @@ class ReadController extends Controller
         return \App\Services\AuthenticationServices::AuthUser($req);
     }
 
+    public function checkUserTokenAvailability(Request $req)
+    {
+        return \App\Services\AuthenticationServices::checkTokenAvailability($req);
+    }
+
     public function getAllClassroom(Request $req)
     {
         return \App\Services\ClassroomServices::GetAllClassroomData($req);

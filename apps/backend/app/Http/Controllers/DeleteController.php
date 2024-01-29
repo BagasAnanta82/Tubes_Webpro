@@ -6,6 +6,11 @@ use Illuminate\Http\Request;
 
 class DeleteController extends Controller
 {
+    public function revokeUserCurrentToken(Request $req)
+    {
+        return \App\Services\AuthenticationServices::revokeCurrentToken($req);
+    }
+
     public function DeleteStudent(Request $req)
     {
         return \App\Services\StudentServices::deleteStudent($req);

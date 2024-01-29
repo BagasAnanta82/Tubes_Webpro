@@ -180,7 +180,7 @@ const initFilters = () => {
                     </Column>
                 </DataTable>
 
-                <Dialog v-model:visible="productDialog" :style="{ width: '450px' }" header="Product Details" :modal="true" class="p-fluid">
+                <Dialog v-model:visible="productDialog" :style="{ width: '450px' }" header="Penambahan Data Pelanggaran" :modal="true" class="p-fluid">
                     <div class="field">
                         <label for="name">Nama Pelanggaran</label>
                         <InputText id="name" v-model.trim="product.name" required="true" autofocus :class="{ 'p-invalid': submitted && !product.name }" />
@@ -219,7 +219,7 @@ const initFilters = () => {
                     </template>
                 </Dialog>
 
-                <Dialog v-model:visible="productDialogUpdate" :style="{ width: '450px' }" header="Product Details" :modal="true" class="p-fluid">
+                <Dialog v-model:visible="productDialogUpdate" :style="{ width: '450px' }" header="Edit Data Pelanggaran" :modal="true" class="p-fluid">
                     <div class="field">
                         <label for="name">Nama Pelanggaran</label>
                         <InputText id="name" v-model.trim="product.name" required="true" autofocus :class="{ 'p-invalid': submitted && !product.name }" />

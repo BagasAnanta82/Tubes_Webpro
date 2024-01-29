@@ -4,14 +4,14 @@ export default class ClassroomService{
 
     constructor(){
         this.url = import.meta.env.VITE_API_URL_V1
-        // this.token = JSON.parse(window.localStorage.getItem("token")).token
+        this.token = JSON.parse(window.localStorage.getItem("token")).token
     }
 
     getAllClassroom(){
         return fetch(`${this.url}classroom`, {
             method : "GET",
             headers : {
-            //   "Authorization" : `Bearer ${this.token}`
+              "Authorization" : `Bearer ${this.token}`
             }
         })
             .then(res => res.json())
@@ -24,7 +24,7 @@ export default class ClassroomService{
             "headers" : {
                 "Content-Type" : "application/json",
                 "Accept" : "application/json",
-                // "Authorization" : `Bearer ${this.token}`
+                "Authorization" : `Bearer ${this.token}`
             },
             body : JSON.stringify({
                 "id" : id
@@ -40,7 +40,7 @@ export default class ClassroomService{
             "headers" : {
                 "Content-Type" : "application/json",
                 "Accept" : "application/json",
-                // "Authorization" : `Bearer ${this.token}`
+                "Authorization" : `Bearer ${this.token}`
             },
             body : JSON.stringify({
                 "json" : data
@@ -56,7 +56,7 @@ export default class ClassroomService{
             "headers" : {
                 "Content-Type" : "application/json",
                 "Accept" : "application/json",
-                // "Authorization" : `Bearer ${this.token}`
+                "Authorization" : `Bearer ${this.token}`
             },
             body : JSON.stringify({
                 "name" : data.name,
@@ -73,7 +73,7 @@ export default class ClassroomService{
             "headers" : {
                 "Content-Type" : "application/json",
                 "Accept" : "application/json",
-                // "Authorization" : `Bearer ${this.token}`
+                "Authorization" : `Bearer ${this.token}`
             },
             body : JSON.stringify({
                 "id" : data.id,

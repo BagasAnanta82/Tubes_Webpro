@@ -4,14 +4,14 @@ export default class StudentViolationService{
 
     constructor (){
         this.url = import.meta.env.VITE_API_URL_V1
-        // this.token = JSON.parse(window.localStorage.getItem('token')).token
+        this.token = JSON.parse(window.localStorage.getItem('token')).token
     }
 
     getStudentViolationById(id){
         return fetch(`${this.url}violations/student/${id}`, {
             method : "GET",
             headers : {
-                // "Authorization" : `Bearer ${this.token}`
+                "Authorization" : `Bearer ${this.token}`
             }
         })
          .then(res => res.json())
@@ -24,7 +24,7 @@ export default class StudentViolationService{
             headers : {
                 "Content-Type" : "application/json",
                 "Accept" : "application/json",
-                // "Authorization" : `Bearer ${this.token}`
+                "Authorization" : `Bearer ${this.token}`
             },
             body : JSON.stringify({
                 "violation_id" : data.violation.id,
@@ -42,7 +42,7 @@ export default class StudentViolationService{
             headers : {
                 "Content-Type" : "application/json",
                 "Accept" : "application/json",
-                // "Authorization" : `Bearer ${this.token}`
+                "Authorization" : `Bearer ${this.token}`
             },
             body : JSON.stringify({
                 "id" : id

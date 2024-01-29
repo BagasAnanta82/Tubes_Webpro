@@ -214,7 +214,7 @@ const initFilters = () => {
                     </Column>
                 </DataTable>
 
-                <Dialog v-model:visible="productDialog" :style="{ width: '450px' }" header="Product Details" :modal="true"
+                <Dialog v-model:visible="productDialog" :style="{ width: '450px' }" header="Penambahan Data Pelanggaran Siswa" :modal="true"
                     class="p-fluid">
                     <div class="field">
                         <label for="inventoryStatus" class="mb-3">Pelanggaran</label>

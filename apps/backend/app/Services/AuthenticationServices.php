@@ -106,4 +106,55 @@ class AuthenticationServices
 
         return AuthenticationServices::InsertNewUser($req);
     }
+
+    public static function checkTokenAvailability(Request $req)
+    {
+        try {
+            if ($req->user() == null) {
+                return response()->json(
+                    [
+                        "message" => "please auth first...",
+                        "status" => false
+                    ]
+                );
+            }else{
+                return response()->json(
+                    [
+                        "message" => "Token is available",
+                        "status" => true
+                    ]
+                );
+            }
+        } catch (Exception $th) {
+            return response()->json(
+                [
+                    "message" => "Failed to auth token",
+                    "status" => false,
+                    "error" => $th->getMessage()
+                ]
+            );
+        }
+    }
+
+    public static function revokeCurrentToken(Request $req)
+    {
+        try {
+            $req->user()->currentAccessToken()->delete();
+            
+            return response()->json(
+                [
+                    "message" => "Token is revoke",
+                    "status" => true
+                ]
+            );
+        } catch (Exception $th) {
+            return response()->json(
+                [
+                    "message" => "Failed to revoke token",
+                    "status" => false,
+                    "error" => $th->getMessage()
+                ]
+            );
+        }
+    }
 }

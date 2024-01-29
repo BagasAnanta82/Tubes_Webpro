@@ -1,13 +1,16 @@
-<script setup>
+<script setup lang="ts">
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
 import { useLayout } from '@/layout/composables/layout';
 import { useRouter } from 'vue-router';
+import AuthenticationService from '@/service/AuthenticationService';
 
 const { layoutConfig, onMenuToggle } = useLayout();
 
 const outsideClickListener = ref(null);
 const topbarMenuActive = ref(false);
 const router = useRouter();
+
+const authenticationService = new AuthenticationService()
 
 onMounted(() => {
     bindOutsideClickListener();
@@ -21,9 +24,14 @@ const logoUrl = computed(() => {
     return `layout/images/${layoutConfig.darkTheme.value ? 'logo-white' : 'logo-dark'}.svg`;
 });
 
-const onTopBarMenuButton = () => {
+const handleLogout = async () => {
+    await authenticationService.userLogOut()
+}
+
+const onTopBarMenuButton = async () => {
     topbarMenuActive.value = !topbarMenuActive.value;
 };
+
 const onSettingsClick = () => {
     topbarMenuActive.value = false;
     router.push('/documentation');
@@ -62,7 +70,7 @@ const isOutsideClicked = (event) => {
 
 <template>
     <div class="layout-topbar">
-        <router-link to="/home" class="layout-topbar-logo">
+        <router-link to="/" class="layout-topbar-logo">
             <img :src="logoUrl" alt="logo" />
             <span>SMAN 24 Bandung</span>
         </router-link>
@@ -76,9 +84,9 @@ const isOutsideClicked = (event) => {
         </button>
 
         <div class="layout-topbar-menu" :class="topbarMenuClasses">
-            <button @click="onTopBarMenuButton()" class="p-link layout-topbar-button">
+            <button @click="handleLogout" class="p-link layout-topbar-button">
                 <i class="pi pi-sign-out"></i>
-                <span>Calendar</span>
+                <span>Log Out</span>
             </button>
         </div>
     </div>

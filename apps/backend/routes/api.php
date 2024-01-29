@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,9 +13,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
 
 Route::get("/login", function(){
     return response()->json(
@@ -34,19 +33,19 @@ Route::group([
     Route::prefix("user")->group(function(){
         Route::post("auth", [App\Http\Controllers\ReadController::class, "authenticateUser"]);
         Route::post("create", [App\Http\Controllers\CreateController::class, "createUser"]);
+        Route::post("revoke", [\App\Http\Controllers\DeleteController::class, "revokeUserCurrentToken"])->middleware("auth:sanctum");
+        Route::get("check", [\App\Http\Controllers\ReadController::class, "checkUserTokenAvailability"])->middleware("auth:sanctum");
     });
 
     Route::prefix("excel")->group(function(){
         Route::get("/attandence", [App\Http\Controllers\ReadController::class, "exportExcelStudentAttandence"]);
     });
-
-    // Route::post("/test", [\App\Http\Controllers\CreateController::class, "test"]);
 });
 
 
 Route::group([
     "prefix" => "v1",
-    "middleware" => ["cors"]
+    "middleware" => ["cors", "auth:sanctum"]
 ], function(){
     Route::group(
         ["middleware" => []

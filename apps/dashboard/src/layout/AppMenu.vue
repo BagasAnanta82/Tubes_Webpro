@@ -99,28 +99,28 @@ const model = ref([
     {
         label: 'Dashboard',
         items: [
-            { label: 'Halaman Utaman', icon: 'pi pi-fw pi-home', to: '/home/' }
+            { label: 'Halaman Utaman', icon: 'pi pi-fw pi-home', to: '/' }
         ]
     },
     {
         label: 'Siswa',
         items: [
-            { label: 'Data Siswa', icon: 'pi pi-users', to: '/home/student'},
-            { label: 'Rekam Absen Siswa', icon: 'pi pi-list', to: '/home/attendance'},
+            { label: 'Data Siswa', icon: 'pi pi-users', to: '/student'},
+            { label: 'Rekam Absen Siswa', icon: 'pi pi-list', to: '/attendance'},
         ]
     },
     {
         label: 'Pencapaian',
         items: [
-            { label: 'Data Pencapaian', icon: 'pi pi-book', to: '/home/achievement'},
-            { label: 'Data Pencapaian Siswa', icon: 'pi pi-book', to: '/home/achievement/student'}
+            { label: 'Data Pencapaian', icon: 'pi pi-book', to: '/achievement'},
+            { label: 'Data Pencapaian Siswa', icon: 'pi pi-book', to: '/achievement/student'}
         ]
     },
     {
         label: 'Pelanggaran',
         items: [
-            { label: 'Data Pelanggaran', icon: 'pi pi-book', to: '/home/violation'},
-            { label: 'Data Pelanggaran Siswa', icon: 'pi pi-book', to: '/home/violation/student'}
+            { label: 'Data Pelanggaran', icon: 'pi pi-book', to: '/violation'},
+            { label: 'Data Pelanggaran Siswa', icon: 'pi pi-book', to: '/violation/student'}
         ]
     },
 ]);

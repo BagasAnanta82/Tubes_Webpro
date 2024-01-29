@@ -4,14 +4,14 @@ export default class SiswaService{
 
     constructor (){
         this.url = import.meta.env.VITE_API_URL_V1
-        // this.token = JSON.parse(window.localStorage.getItem('token')).token
+        this.token = JSON.parse(window.localStorage.getItem('token')).token
     }
 
     getAllStudentData(){
         return fetch(`${this.url}students`, {
             "method" : "GET",
             "headers" : {
-                // "Authorization" : `Bearer ${this.token}`
+                "Authorization" : `Bearer ${this.token}`
             }
         })
           .then(res => res.json())
@@ -24,7 +24,7 @@ export default class SiswaService{
             "headers" : {
                 "Content-Type" : "application/json",
                 "Accept" : "application/json",
-                // "Authorization" : `Bearer ${this.token}`
+                "Authorization" : `Bearer ${this.token}`
             },
             body : JSON.stringify({
                 "Name" : studentsData.name,
@@ -45,7 +45,7 @@ export default class SiswaService{
             "headers" : {
                 "Content-Type" : "application/json",
                 "Accept" : "application/json",
-                // "Authorization" : `Bearer ${this.token}`
+                "Authorization" : `Bearer ${this.token}`
             },
             body : JSON.stringify({
                 "id" : studentsData.student_id,
@@ -66,7 +66,7 @@ export default class SiswaService{
             "headers" : {
                 "Content-Type" : "application/json",
                 "Accept" : "application/json",
-                // "Authorization" : `Bearer ${this.token}`
+                "Authorization" : `Bearer ${this.token}`
             },
             body : JSON.stringify({
                 "id" : id
@@ -82,7 +82,7 @@ export default class SiswaService{
             "headers" : {
                 "Content-Type" : "application/json",
                 "Accept" : "application/json",
-                // "Authorization" : `Bearer ${this.token}`
+                "Authorization" : `Bearer ${this.token}`
             },
             body : JSON.stringify({
                 "json" : data

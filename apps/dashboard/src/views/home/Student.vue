@@ -201,7 +201,7 @@ watch(product, (newval, old) => {
                     </Column>
                 </DataTable>
 
-                <Dialog v-model:visible="productDialog" :style="{ width: '450px' }" header="Product Details" :modal="true"
+                <Dialog v-model:visible="productDialog" :style="{ width: '450px' }" header="Penambahan Data Siswa" :modal="true"
                     class="p-fluid">
                     <div class="field">
                         <label for="name">Name</label>
@@ -255,7 +255,7 @@ watch(product, (newval, old) => {
                     </template>
                 </Dialog>
 
-                <Dialog v-model:visible="productDialogUpdate" :style="{ width: '450px' }" header="Product Details" :modal="true"
+                <Dialog v-model:visible="productDialogUpdate" :style="{ width: '450px' }" header="Edit Data Siswa" :modal="true"
                     class="p-fluid">
                     <div class="field">
                         <label for="name">Name</label>

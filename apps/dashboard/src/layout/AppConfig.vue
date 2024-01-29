@@ -19,9 +19,6 @@ onBeforeMount(() => {
         window.localStorage.setItem("darkmode", false)
     }
 
-    console.log(window.localStorage.getItem("darkmode") == "true");
-    
-
     if (window.localStorage.getItem("darkmode") == "true") {
         onChangeTheme('lara-dark-indigo', 'dark')
     }else{

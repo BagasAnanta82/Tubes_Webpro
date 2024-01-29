@@ -4,14 +4,14 @@ export default class StudentAchievementService{
 
     constructor (){
         this.url = import.meta.env.VITE_API_URL_V1
-        // this.token = JSON.parse(window.localStorage.getItem('token')).token
+        this.token = JSON.parse(window.localStorage.getItem('token')).token
     }
 
     getAllStudentAchievement(){
         return fetch(`${this.url}achievements/student`, {
             method : "GET",
             headers : {
-                // "Authorization" : `Bearer ${this.token}`
+                "Authorization" : `Bearer ${this.token}`
             }
         })
          .then(res => res.json())
@@ -22,7 +22,7 @@ export default class StudentAchievementService{
         return fetch(`${this.url}achievements/student/${id}`, {
             method : "GET",
             headers : {
-                // "Authorization" : `Bearer ${this.token}`
+                "Authorization" : `Bearer ${this.token}`
             }
         })
          .then(res => res.json())
@@ -35,7 +35,7 @@ export default class StudentAchievementService{
             headers : {
                 "Content-Type" : "application/json",
                 "Accept" : "application/json",
-                // "Authorization" : `Bearer ${this.token}`
+                "Authorization" : `Bearer ${this.token}`
             },
             body : JSON.stringify({
                 "achievement_id" : data.achievement.id,
@@ -53,7 +53,7 @@ export default class StudentAchievementService{
             headers : {
                 "Content-Type" : "application/json",
                 "Accept" : "application/json",
-                // "Authorization" : `Bearer ${this.token}`
+                "Authorization" : `Bearer ${this.token}`
             },
             body : JSON.stringify({
                 "id" : id
