@@ -4,7 +4,7 @@ import Button from 'primevue/button';
 import InputSwitch from 'primevue/inputswitch';
 import Sidebar from 'primevue/sidebar';
 
-import { ref, onMounted, onBeforeMount, watch } from 'vue';
+import { ref, onBeforeMount, watch } from 'vue';
 import { useLayout } from '@/layout/composables/layout';
 
 defineProps({
@@ -15,20 +15,41 @@ defineProps({
 });
 
 onBeforeMount(() => {
+    CheckFirstUser()
+    initConfigApp()
+})
+
+const CheckFirstUser = () => {
     if (window.localStorage.getItem("darkmode") == null) {
         window.localStorage.setItem("darkmode", false)
     }
+
+    if (window.localStorage.getItem("scale") == null) {
+        window.localStorage.setItem("scale", 14)
+    }
+
+    if (window.localStorage.getItem("menuMode") == null) {
+        window.localStorage.setItem("menuMode", "static")
+    }
+
+    if (window.localStorage.getItem("ripple") == null) {
+        window.localStorage.setItem("ripple", false)
+    }
+}
+
+const initConfigApp = () => {
+    layoutConfig.scale.value = Number(window.localStorage.getItem("scale"));
+    layoutConfig.menuMode.value = window.localStorage.getItem("menuMode");
+    layoutConfig.ripple.value = window.localStorage.getItem("ripple") == "true";
+
+    applyScale()
 
     if (window.localStorage.getItem("darkmode") == "true") {
         onChangeTheme('lara-dark-indigo', 'dark')
     }else{
         onChangeTheme('lara-light-indigo', 'light')
     }
-}),
-
-onMounted(() => { 
-    
-})
+}
 
 const scales = ref([12, 13, 14, 15, 16]);
 const visible = ref(false);
@@ -55,10 +76,12 @@ const onChangeTheme = (theme, mode) => {
 };
 const decrementScale = () => {
     setScale(layoutConfig.scale.value - 1);
+    window.localStorage.setItem("scale", layoutConfig.scale.value)
     applyScale();
 };
 const incrementScale = () => {
     setScale(layoutConfig.scale.value + 1);
+    window.localStorage.setItem("scale", layoutConfig.scale.value)
     applyScale();
 };
 const applyScale = () => {
@@ -72,6 +95,12 @@ watch(darkmode, async (newVal, oldVal) => {
     } else {
         onChangeTheme('lara-light-indigo', 'light')
     }
+})
+watch(layoutConfig.menuMode, (newVal, oldVal) => {
+    window.localStorage.setItem("menuMode", newVal)
+})
+watch(layoutConfig.ripple, (newVal, oldVal) => {
+    window.localStorage.setItem("ripple", newVal)
 })
 </script>
 
@@ -106,18 +135,6 @@ watch(darkmode, async (newVal, oldVal) => {
         </template>
 
         <template v-if="!simple">
-            <h5>Input Style</h5>
-            <div class="flex">
-                <div class="field-radiobutton flex-1">
-                    <RadioButton name="inputStyle" value="outlined" v-model="layoutConfig.inputStyle.value" inputId="outlined_input"></RadioButton>
-                    <label for="outlined_input">Outlined</label>
-                </div>
-                <div class="field-radiobutton flex-1">
-                    <RadioButton name="inputStyle" value="filled" v-model="layoutConfig.inputStyle.value" inputId="filled_input"></RadioButton>
-                    <label for="filled_input">Filled</label>
-                </div>
-            </div>
-
             <h5>Ripple Effect</h5>
             <InputSwitch v-model="layoutConfig.ripple.value"></InputSwitch>
 

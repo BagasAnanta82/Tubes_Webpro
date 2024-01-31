@@ -4,11 +4,13 @@ export default class AuthenticationService{
     url
     token
     route
+    toast
 
-    constructor(){
+    constructor(toast){
         this.url = import.meta.env.VITE_API_URL_V1
         this.route = useRouter()
         this.token = JSON.parse(window.localStorage.getItem('token')).token
+        this.toast = toast
     }
 
     async AuthUser(email, password){
@@ -28,6 +30,8 @@ export default class AuthenticationService{
         if (json.status) {
             window.localStorage.setItem("token", JSON.stringify(json.data));
             this.route.push("/");
+        }else{
+            this.toast.add({ severity: 'error', summary: 'Gagal', detail: 'Email Dan Username Tidak Ada', life: 3000 })
         }
     }
 
