@@ -17,6 +17,7 @@ class Student extends Model
         "NISN",
         "Name",
         "gender_id",
-        "classroom_id"
+        "classroom_id",
+        "active_status"
     ];
 }

@@ -16,6 +16,7 @@ class StudentServices{
                 "students.name",
                 "students.NIS",
                 "students.NISN",
+                "students.active_status",
                 "g.id as gender_id",
                 "g.code",
                 "c.id as classroom_id",
@@ -23,7 +24,6 @@ class StudentServices{
             )
              ->leftJoin("genders as g", "g.id", "=", "students.gender_id")
              ->leftJoin("classrooms as c", "c.id", "=", "students.classroom_id")
-             ->where("students.active_status", true)
              ->orderBy("students.updated_at", "DESC")
              ->get();
 
@@ -104,7 +104,8 @@ class StudentServices{
                     "NISN" => $req->NISN,
                     "Name" => $req->Name,
                     "gender_id" => $req->gender_id,
-                    "classroom_id" => $req->classroom_id
+                    "classroom_id" => $req->classroom_id,
+                    "active_status" => $req->active_status
                 ]
             );
 
@@ -134,7 +135,8 @@ class StudentServices{
                     "NISN" => $req->NISN,
                     "Name" => $req->Name,
                     "gender_id" => $req->gender_id,
-                    "classroom_id" => $req->classroom_id
+                    "classroom_id" => $req->classroom_id,
+                    "active_status" => $req->active_status
                 ]
             );
 

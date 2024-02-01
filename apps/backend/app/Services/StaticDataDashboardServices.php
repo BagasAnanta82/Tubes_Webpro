@@ -18,13 +18,13 @@ class StaticDataDashboardServices{
              ->count();
            
            $data = [
-               "student_active" => \App\Models\Student::count(),
+               "student_active" => \App\Models\Student::where("active_status", true)->count(),
                "student_gender_male" => \App\Models\Student::where("gender_id", 1)->count(),
                "student_gender_female" => \App\Models\Student::where("gender_id", 2)->count(),
                "student_nonactive" => \App\Models\Student::where("active_status", false)->count(),
                "attandence" => \App\Models\Attandence::whereDate("created_at", \Carbon\Carbon::now())->count(),
-               "attandence_islate" => \App\Models\Attandence::where("is_late", 1)->whereDate("created_at", \Carbon\Carbon::now())->count(),
-               "attandence_notlate" => \App\Models\Attandence::where("is_late", 0)->whereDate("created_at", \Carbon\Carbon::now())->count(),
+               "attandence_islate" => \App\Models\Attandence::where("is_late", true)->whereDate("created_at", \Carbon\Carbon::now())->count(),
+               "attandence_notlate" => \App\Models\Attandence::where("is_late", false)->whereDate("created_at", \Carbon\Carbon::now())->count(),
                "achievement" => \App\Models\Achievements::count(),
                "violation" => \App\Models\Violation::count(),
                "student_achievement" => $student_achivement,

@@ -29,6 +29,7 @@ onMounted(() => {
 
 const openNew = () => {
     product.value = {};
+    product.value.active_status = 1;
     submitted.value = false;
     productDialog.value = true;
 };
@@ -179,15 +180,16 @@ const initFilters = () => {
                         <label class="mb-3">Status Kelas</label>
                         <div class="formgrid grid">
                             <div class="field-radiobutton col-6">
-                                <RadioButton id="category1" :name="true" :value="true" v-model="product.active_status" />
+                                <RadioButton id="category1" :name="true" :value="1" v-model="product.active_status" />
                                 <label for="category1">Aktif</label>
                             </div>
                             <div class="field-radiobutton col-6">
-                                <RadioButton id="category2" :name="false" :value="false" v-model="product.active_status" />
+                                <RadioButton id="category2" :name="false" :value="0" v-model="product.active_status" />
                                 <label for="category2">Tidak Aktif</label>
                             </div>
                         </div>
                     </div>
+                    
                     <template #footer>
                         <Button label="Cancel" icon="pi pi-times" class="p-button-text" @click="hideDialog" />
                         <Button label="Save" icon="pi pi-check" class="p-button-text" @click="saveProduct" />
@@ -205,15 +207,16 @@ const initFilters = () => {
                         <label class="mb-3">Status Kelas</label>
                         <div class="formgrid grid">
                             <div class="field-radiobutton col-6">
-                                <RadioButton id="category1" :name="true" :value="true" v-model="product.active_status" />
+                                <RadioButton id="category1" :name="true" :value="1" v-model="product.active_status" />
                                 <label for="category1">Aktif</label>
                             </div>
                             <div class="field-radiobutton col-6">
-                                <RadioButton id="category2" :name="false" :value="false" v-model="product.active_status" />
+                                <RadioButton id="category2" :name="false" :value="0" v-model="product.active_status" />
                                 <label for="category2">Tidak Aktif</label>
                             </div>
                         </div>
                     </div>
+
                     <template #footer>
                         <Button label="Cancel" icon="pi pi-times" class="p-button-text" @click="hideDialog" />
                         <Button label="Save" icon="pi pi-check" class="p-button-text" @click="editProduct" />

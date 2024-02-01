@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 class CreateGenders extends Migration
@@ -20,6 +21,24 @@ class CreateGenders extends Migration
             $table->timestamps();
             $table->softDeletes();
         });
+
+        DB::table("genders")->insert(
+            [
+                "gender" => "Laki-Laki",
+                "code" => "L",
+                "created_at" => now(),
+                "updated_at" => now()
+            ]
+        );
+
+        DB::table("genders")->insert(
+            [
+                "gender" => "Perempuan",
+                "code" => "P",
+                "created_at" => now(),
+                "updated_at" => now()
+            ]
+        );
     }
 
     /**

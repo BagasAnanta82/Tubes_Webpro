@@ -84,7 +84,7 @@ const isOutsideClicked = (event) => {
         </button>
 
         <div class="layout-topbar-menu" :class="topbarMenuClasses">
-            <button @click="handleLogout" class="p-link layout-topbar-button">
+            <button v-tooltip.bottom="'Log Out'" @click="handleLogout" class="p-link layout-topbar-button">
                 <i class="pi pi-sign-out"></i>
                 <span>Log Out</span>
             </button>

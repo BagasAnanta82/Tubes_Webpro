@@ -31,7 +31,7 @@ export default class AchievementService{
                 "description" : data.description,
                 "achievement_code" : data.achievement_code,
                 "score" : data.score,
-                "active_status" : data.active_status,
+                "active_status" : Boolean(data.active_status),
             })
         })
         .then(res => res.json())
@@ -52,7 +52,7 @@ export default class AchievementService{
                 "description" : data.description,
                 "achievement_code" : data.achievement_code,
                 "score" : data.score,
-                "active_status" : data.active_status,
+                "active_status" : Boolean(data.active_status),
             })
         })
         .then(res => res.json())

@@ -2,9 +2,11 @@
 
 namespace App\Services;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Exception;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
+use Exception;
 
 
 class AttandenceServices
@@ -54,5 +56,13 @@ class AttandenceServices
                 ]
             );
         }
+    }
+
+    public static function exportStudentAttandence(Request $req)
+    {
+        $date_start = \Carbon\Carbon::parse($req->date_at)->toDateTime() ?? \Carbon\Carbon::now()->toDateTime();
+        $date_end = \Carbon\Carbon::parse($req->date_at)->toDateTime() ?? \Carbon\Carbon::now()->toDateTime();
+
+        return Excel::download(new \App\Exports\Excel\AttandenceExcel($date_start, $date_end), hash("sha256", Carbon::now()->toString()) . ".xlsx");
     }
 }

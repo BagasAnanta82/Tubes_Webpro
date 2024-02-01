@@ -30,7 +30,7 @@ export default class ViolationService{
                 "name" : data.name,
                 "violation_code" : data.violation_code,
                 "score" : data.score,
-                "active_status" : data.active_status,
+                "active_status" : Boolean(data.active_status),
             })
         })
          .then(res => res.json())
@@ -50,7 +50,7 @@ export default class ViolationService{
                 "name" : data.name,
                 "violation_code" : data.violation_code,
                 "score" : data.score,
-                "active_status" : data.active_status,
+                "active_status" : Boolean(data.active_status),
             })
         })
          .then(res => res.json())

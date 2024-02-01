@@ -60,7 +60,7 @@ export default class ClassroomService{
             },
             body : JSON.stringify({
                 "name" : data.name,
-                "active_status" : data.active_status
+                "active_status" : Boolean(data.active_status)
             })
         })
          .then((res) => res.json())
@@ -78,7 +78,7 @@ export default class ClassroomService{
             body : JSON.stringify({
                 "id" : data.id,
                 "name" : data.name,
-                "active_status" : data.active_status
+                "active_status" : Boolean(data.active_status)
             })
         })
         .then((res) => res.json())

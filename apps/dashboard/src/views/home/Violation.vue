@@ -203,11 +203,11 @@ const initFilters = () => {
                         <label class="mb-3">Status Pelanggaran</label>
                         <div class="formgrid grid">
                             <div class="field-radiobutton col-6">
-                                <RadioButton id="category1" name="true" :value="true" v-model="product.active_status" />
+                                <RadioButton id="category1" name="true" :value="1" v-model="product.active_status" />
                                 <label for="category1">Aktif</label>
                             </div>
                             <div class="field-radiobutton col-6">
-                                <RadioButton id="category2" name="false" :value="false" v-model="product.active_status" />
+                                <RadioButton id="category2" name="false" :value="0" v-model="product.active_status" />
                                 <label for="category2">Tidak Aktif</label>
                             </div>
                         </div>
@@ -242,11 +242,11 @@ const initFilters = () => {
                         <label class="mb-3">Status Pelanggaran</label>
                         <div class="formgrid grid">
                             <div class="field-radiobutton col-6">
-                                <RadioButton id="category1" name="true" :value="true" v-model="product.active_status" />
+                                <RadioButton id="category1" name="true" :value="1" v-model="product.active_status" />
                                 <label for="category1">Aktif</label>
                             </div>
                             <div class="field-radiobutton col-6">
-                                <RadioButton id="category2" name="false" :value="false" v-model="product.active_status" />
+                                <RadioButton id="category2" name="false" :value="0" v-model="product.active_status" />
                                 <label for="category2">Tidak Aktif</label>
                             </div>
                         </div>

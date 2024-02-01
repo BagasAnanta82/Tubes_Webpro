@@ -31,7 +31,8 @@ export default class SiswaService{
                 "NIS" : studentsData.NIS,
                 "NISN" : studentsData.NISN,
                 "gender_id" : studentsData.gender_id,
-                "classroom_id" : studentsData.classroom_id.id
+                "classroom_id" : studentsData.classroom_id.id,
+                "active_status" : Boolean(studentsData.active_status)
             })
         })
          .then((res) => res.json())
@@ -53,7 +54,8 @@ export default class SiswaService{
                 "NIS" : studentsData.NIS,
                 "NISN" : studentsData.NISN,
                 "gender_id" : studentsData.gender_id,
-                "classroom_id" : studentsData.classroom_id.id
+                "classroom_id" : studentsData.classroom_id.id,
+                "active_status" : Boolean(studentsData.active_status)
             })
         })
          .then((res) => res.json())

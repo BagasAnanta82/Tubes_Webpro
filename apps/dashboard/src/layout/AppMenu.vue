@@ -105,21 +105,27 @@ const model = ref([
     {
         label: 'Siswa',
         items: [
-            { label: 'Data Siswa', icon: 'pi pi-users', to: '/student'},
+            { label: 'Daftar Siswa', icon: 'pi pi-users', to: '/student'},
             { label: 'Rekam Absen Siswa', icon: 'pi pi-list', to: '/attendance'},
+        ]
+    },
+    {
+        label: 'Kelas',
+        items: [
+            { label: 'Daftar Kelas', icon: 'pi pi-book', to: '/classroom'},
         ]
     },
     {
         label: 'Pencapaian',
         items: [
-            { label: 'Data Pencapaian', icon: 'pi pi-book', to: '/achievement'},
+            { label: 'Daftar Pencapaian', icon: 'pi pi-book', to: '/achievement'},
             { label: 'Data Pencapaian Siswa', icon: 'pi pi-book', to: '/achievement/student'}
         ]
     },
     {
         label: 'Pelanggaran',
         items: [
-            { label: 'Data Pelanggaran', icon: 'pi pi-book', to: '/violation'},
+            { label: 'Daftar Pelanggaran', icon: 'pi pi-book', to: '/violation'},
             { label: 'Data Pelanggaran Siswa', icon: 'pi pi-book', to: '/violation/student'}
         ]
     },

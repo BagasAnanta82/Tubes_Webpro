@@ -39,6 +39,7 @@ onMounted(() => {
 
 const openNew = () => {
     product.value = {};
+    product.value.active_status = 1;
     submitted.value = false;
     productDialog.value = true;
 };
@@ -63,8 +64,20 @@ const saveProduct = async () => {
     product.value = {};
 };
 
-const showEditDialog = (editProduct) => {
+const showEditDialog = (editProduct) => {    
     product.value = { ...editProduct };
+
+    if (product.value.active_status) {
+        product.value.active_status = 1;
+    }else{
+        product.value.active_status = 0;
+    }
+
+    product.value.classroom_id = classroom.value.filter((data) => {
+        return data.id == product.value.classroom_id;
+    })[0]
+
+
     productDialogUpdate.value = true;
 }
 
@@ -82,6 +95,7 @@ const editProduct = async () => {
 
 const confirmDeleteProduct = (editProduct) => {
     product.value = editProduct;
+    product.value.
     deleteProductDialog.value = true;
 };
 
@@ -191,6 +205,18 @@ watch(product, (newval, old) => {
                             {{ slotProps.data.classroom_name }}
                         </template>
                     </Column>
+                    <Column field="active_status" header="Status" :sortable="true"
+                        headerStyle="width:14%; min-width:10rem;">
+                        <template #body="slotProps">
+                            <span class="p-column-title">Status</span>
+                            <template v-if="slotProps.data.active_status">
+                                Aktif
+                            </template>
+                            <template v-else>
+                                Tidak Aktif
+                            </template>
+                        </template>
+                    </Column>
                     <Column headerStyle="min-width:10rem;">
                         <template #body="slotProps">
                             <Button icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2"
@@ -234,6 +260,20 @@ watch(product, (newval, old) => {
                                 <RadioButton id="category2" :name="genderData.code" :value="genderData.id"
                                     v-model="product.gender_id" />
                                 <label for="category2">{{ genderData.gender }}</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label class="mb-3">Status Siswa</label>
+                        <div class="formgrid grid">
+                            <div class="field-radiobutton col-6">
+                                <RadioButton id="category1" :name="true" :value="1" v-model="product.active_status" />
+                                <label for="category1">Aktif</label>
+                            </div>
+                            <div class="field-radiobutton col-6">
+                                <RadioButton id="category2" :name="false" :value="0" v-model="product.active_status" />
+                                <label for="category2">Tidak Aktif</label>
                             </div>
                         </div>
                     </div>
@@ -288,6 +328,20 @@ watch(product, (newval, old) => {
                                 <RadioButton id="category2" :name="genderData.code" :value="genderData.id"
                                     v-model="product.gender_id" />
                                 <label for="category2">{{ genderData.gender }}</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label class="mb-3">Status Kelas</label>
+                        <div class="formgrid grid">
+                            <div class="field-radiobutton col-6">
+                                <RadioButton id="category1" :name="true" :value="1" v-model="product.active_status" />
+                                <label for="category1">Aktif</label>
+                            </div>
+                            <div class="field-radiobutton col-6">
+                                <RadioButton id="category2" :name="false" :value="0" v-model="product.active_status" />
+                                <label for="category2">Tidak Aktif</label>
                             </div>
                         </div>
                     </div>
