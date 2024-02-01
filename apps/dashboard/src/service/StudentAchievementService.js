@@ -62,4 +62,18 @@ export default class StudentAchievementService{
         .then(res => res.json())
         .then(d => d)
     }
+
+    async getStudentAchievementExcelExport(){
+        const res = await fetch(`${this.url}excel/achievement`, {
+            method : "GET",
+            "headers" : {
+                "Authorization" : `Bearer ${this.token}`
+            }
+        })
+         .then(res => res.arrayBuffer())
+         .then(d => d)
+        const blob = new File([res], "filename.excel", {type : "application/vnd.ms-excel"})
+        const urlBlob = URL.createObjectURL(blob)
+        window.open(urlBlob)
+    }
 }

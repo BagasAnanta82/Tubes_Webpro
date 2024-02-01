@@ -17,4 +17,18 @@ export default class PresensiService{
          .then((res) => res.json())
          .then((json) => json.data)
     }
+
+    async getStudentAttendencesExcelExport(){
+        const res = await fetch(`${this.url}excel/attandence`, {
+            method : "GET",
+            "headers" : {
+                "Authorization" : `Bearer ${this.token}`
+            }
+        })
+         .then(res => res.arrayBuffer())
+         .then(d => d)
+        const blob = new File([res], "filename.excel", {type : "application/vnd.ms-excel"})
+        const urlBlob = URL.createObjectURL(blob)
+        window.open(urlBlob)
+    }
 }

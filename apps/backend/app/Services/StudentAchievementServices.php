@@ -3,8 +3,9 @@
 namespace App\Services;
 
 use Illuminate\Http\Request;
-use Exception;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
+use Exception;
 
 class StudentAchievementServices{
     public static function getAllStudentAchivementRecords(Request $req)
@@ -219,5 +220,10 @@ class StudentAchievementServices{
                 ], 500
             );
         }
+    }
+
+    public static function exportStudentAchievementExcel(Request $req)
+    {
+        return Excel::download(new \App\Exports\StudentAchievementExcel, hash("sha256", \Carbon\Carbon::now()->toString()) . ".xlsx");   
     }
 }

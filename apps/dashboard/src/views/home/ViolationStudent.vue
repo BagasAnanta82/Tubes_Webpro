@@ -106,8 +106,8 @@ const deleteProduct = async () => {
     product.value = {};
 };
 
-const exportCSV = () => {
-    dt.value.exportCSV();
+const exportCSV = async () => {
+    await studentViolationService.getStudentViolationExcelExport();
 };
 
 const confirmDeleteSelected = () => {

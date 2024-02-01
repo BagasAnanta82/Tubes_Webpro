@@ -88,4 +88,14 @@ class ReadController extends Controller
     {
         return \App\Services\AttandenceServices::exportStudentAttandence($req);
     }
+
+    public function exportExcelStudentAchievement(Request $req)
+    {
+        return \App\Services\StudentAchievementServices::exportStudentAchievementExcel($req);
+    }
+
+    public function exportExcelStudentViolation(Request $req)
+    {
+        return \App\Services\StudentViolationServices::exportStudentViolationExcel($req);
+    }
 }

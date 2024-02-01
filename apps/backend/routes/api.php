@@ -36,10 +36,6 @@ Route::group([
         Route::post("revoke", [\App\Http\Controllers\DeleteController::class, "revokeUserCurrentToken"])->middleware("auth:sanctum");
         Route::get("check", [\App\Http\Controllers\ReadController::class, "checkUserTokenAvailability"])->middleware("auth:sanctum");
     });
-
-    Route::prefix("excel")->group(function(){
-        Route::get("/attandence", [App\Http\Controllers\ReadController::class, "exportExcelStudentAttandence"]);
-    });
 });
 
 
@@ -52,6 +48,12 @@ Route::group([
     ], function(){
         Route::prefix("static")->group(function(){
             Route::get("/dashboard", [\App\Http\Controllers\ReadController::class, "GetStaticDashboard"]);
+        });
+
+        Route::prefix("excel")->group(function(){
+            Route::get("/attandence", [App\Http\Controllers\ReadController::class, "exportExcelStudentAttandence"]);
+            Route::get("/achievement", [App\Http\Controllers\ReadController::class, "exportExcelStudentAchievement"]);
+            Route::get("/violation", [App\Http\Controllers\ReadController::class, "exportExcelStudentViolation"]);
         });
 
         Route::prefix("classroom")->group(function(){

@@ -51,4 +51,18 @@ export default class StudentViolationService{
         .then(res => res.json())
         .then(d => d)
     }
+
+    async getStudentViolationExcelExport(){
+        const res = await fetch(`${this.url}excel/violation`, {
+            method : "GET",
+            "headers" : {
+                "Authorization" : `Bearer ${this.token}`
+            }
+        })
+         .then(res => res.arrayBuffer())
+         .then(d => d)
+        const blob = new File([res], "filename.excel", {type : "application/vnd.ms-excel"})
+        const urlBlob = URL.createObjectURL(blob)
+        window.open(urlBlob)
+    }
 }

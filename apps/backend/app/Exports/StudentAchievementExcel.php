@@ -2,10 +2,11 @@
 
 namespace App\Exports;
 
+use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 
-class StudentAttandenceExcel implements FromCollection, WithHeadings
+class StudentAchievementExcel implements FromCollection, WithHeadings
 {
     /**
     * @return \Illuminate\Support\Collection
@@ -22,7 +23,7 @@ class StudentAttandenceExcel implements FromCollection, WithHeadings
             "g.code",
             "g.gender",
             "c.name as classroom_name",
-            "mapping_student_achievements.description",
+            DB::raw("CASE WHEN mapping_student_achievements.description is null THEN '' ELSE mapping_student_achievements.description END as description"),
             "mapping_student_achievements.created_at as timestamp"
         )
          ->leftJoin("achievements as ach", "ach.id", "=", "mapping_student_achievements.achievement_id")
@@ -34,7 +35,7 @@ class StudentAttandenceExcel implements FromCollection, WithHeadings
          ->where("ach.active_status", true)
          ->where("ach.deleted_at", null)
          ->get();
-        
+    
         return $data;
     }
 

@@ -38,8 +38,8 @@ const clearFilter = () => {
     initFilter()
 }
 
-const exportCSV = () => {
-    dt.value.exportCSV();
+const exportCSV = async () => {
+    await presensiService.getStudentAttendencesExcelExport();
 };
 
 watch(date, async (newDate, oldDate) => {

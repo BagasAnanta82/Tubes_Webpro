@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 use Exception;
 
 class StudentViolationServices
@@ -154,5 +155,10 @@ class StudentViolationServices
                 500
             );
         }
+    }
+
+    public static function exportStudentViolationExcel(Request $req)
+    {
+        return Excel::download(new \App\Exports\StudentViolationExcel, hash("sha256", \Carbon\Carbon::now()->toString()) . ".xlsx");   
     }
 }
