@@ -159,6 +159,6 @@ class StudentViolationServices
 
     public static function exportStudentViolationExcel(Request $req)
     {
-        return Excel::download(new \App\Exports\StudentViolationExcel, hash("sha256", \Carbon\Carbon::now()->toString()) . ".xlsx");   
+        return Excel::download(new \App\Exports\StudentViolationExcel, hash("sha256", \Carbon\Carbon::now()->toString() . "_violations") . ".xlsx");   
     }
 }

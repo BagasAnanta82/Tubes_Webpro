@@ -224,6 +224,6 @@ class StudentAchievementServices{
 
     public static function exportStudentAchievementExcel(Request $req)
     {
-        return Excel::download(new \App\Exports\StudentAchievementExcel, hash("sha256", \Carbon\Carbon::now()->toString()) . ".xlsx");   
+        return Excel::download(new \App\Exports\StudentAchievementExcel, hash("sha256", \Carbon\Carbon::now()->toString() . '_achievements') . ".xlsx");   
     }
 }

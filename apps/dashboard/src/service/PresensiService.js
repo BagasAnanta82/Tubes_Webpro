@@ -27,7 +27,7 @@ export default class PresensiService{
         })
          .then(res => res.arrayBuffer())
          .then(d => d)
-        const blob = new File([res], "filename.excel", {type : "application/vnd.ms-excel"})
+        const blob = new File([res], "filename.xlsx", {type : "application/vnd.ms-excel"})
         const urlBlob = URL.createObjectURL(blob)
         window.open(urlBlob)
     }
