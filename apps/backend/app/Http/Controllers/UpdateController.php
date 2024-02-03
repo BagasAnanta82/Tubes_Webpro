@@ -40,4 +40,9 @@ class UpdateController extends Controller
     {
         return \App\Services\PermitServices::updateStudentPermit($req);
     }
+
+    public function UpdateAttandenceTime(Request $req)
+    {
+        return \App\Services\AttandenceTimeServices::updateAttandenceTime($req);
+    }
 }

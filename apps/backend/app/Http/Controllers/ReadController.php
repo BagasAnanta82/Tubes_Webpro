@@ -98,4 +98,9 @@ class ReadController extends Controller
     {
         return \App\Services\StudentViolationServices::exportStudentViolationExcel($req);
     }
+
+    public function GetAttandenceTime(Request $req)
+    {
+        return \App\Services\AttandenceTimeServices::getAttandenceTime($req);
+    }
 }

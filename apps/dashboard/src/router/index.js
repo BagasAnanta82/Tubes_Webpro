@@ -21,9 +21,14 @@ const router = createRouter({
                     component : () => import("@/views/home/Student.vue")
                 },
                 {
-                    path : "/attendance",
+                    path : "/attendence",
                     name : "attendance",
                     component : () => import("@/views/home/Attendance.vue")
+                },
+                {
+                    path : "/attendence/time",
+                    name : "attendancetime",
+                    component : () => import("@/views/home/AttendenceTime.vue")
                 },
                 {
                     path : "/classroom",

@@ -66,6 +66,8 @@ Route::group([
 
         Route::prefix("attandence")->group(function(){
             Route::get("/records", [\App\Http\Controllers\ReadController::class, "getAllAttadenceRecords"]);
+            Route::get("/time", [\App\Http\Controllers\ReadController::class, "GetAttandenceTime"]);
+            Route::put("/time", [\App\Http\Controllers\UpdateController::class, "UpdateAttandenceTime"]);
         });
 
         Route::prefix("students")->group(function(){
