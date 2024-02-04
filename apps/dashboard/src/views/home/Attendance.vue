@@ -60,7 +60,7 @@ watch(classroomSelect, async (newClass, oldClass) => {
         <h1>Rekam Presensi SMAN24 Bandung</h1>
         <div class="grid mt-4">
             <div class="col-12 lg:col-6">
-                <h5>Silahkan Pilih Tanggal Presnesi</h5>
+                <h5>Silahkan Pilih Tanggal Presensi</h5>
                 <Calendar id="date" v-model="date" style="width:70%;" />
             </div>
             <div class="col-12 lg:col-6">
