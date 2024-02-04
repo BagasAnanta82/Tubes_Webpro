@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onBeforeMount, onMounted, watch } from 'vue';
+import { ref, onBeforeMount, onMounted, watch, callWithAsyncErrorHandling } from 'vue';
 import { FilterMatchMode, FilterOperator } from 'primevue/api';
 import PresensiService from '@/service/PresensiService'
 import ClassroomService from '@/service/ClassroomService'
@@ -9,7 +9,7 @@ const classroomSelect = ref(null)
 const classroom = ref(null)
 const filters = ref(null)
 const loading = ref(true)
-const date = ref(null)
+const date = ref(new Date())
 const dt = ref(null)
 
 const presensiService = new PresensiService()
@@ -44,12 +44,13 @@ const exportCSV = async () => {
 
 watch(date, async (newDate, oldDate) => {
     const time = new Date(newDate)
+    const clsRoom = (classroomSelect.value == null) ? null : classroomSelect.value.id
     time.setDate(time.getDate() + 1)
-    await presensiService.getStudentAttendences(time.toISOString()).then((val) => (siswa.value = val))
+    await presensiService.getStudentAttendences(time.toISOString(), clsRoom).then((val) => (siswa.value = val))
 })
 
 watch(classroomSelect, async (newClass, oldClass) => {
-    const time = new Date(date)
+    const time = new Date(date.value)
     time.setDate(time.getDate() + 1)
     await presensiService.getStudentAttendences(time.toISOString(), newClass.id).then((val) => (siswa.value = val))
 })

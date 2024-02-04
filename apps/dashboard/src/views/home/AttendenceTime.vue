@@ -13,9 +13,13 @@ onBeforeMount(() => {
 })
 
 const handleSaveTime = async () => {
-    await attendenceTimeService.updateAttandenceTime(timeData.value).then((res) => (res.status ? 
-    toast.add({severity : "success", summary: "Gagal", detail : "Berhasil Update Waktu Presensi", life : 3000}) : 
-    toast.add({severity : "error", summary : "Gagal", detail : "Gagal Untuk Update Waktu Presensi", life : 3000})))
+    await attendenceTimeService.updateAttandenceTime(timeData.value).then((res) => {
+        res.status ? toast.add({severity : "success", summary: "Gagal", detail : "Berhasil Update Waktu Presensi", life : 3000}) : toast.add({severity : "error", summary : "Gagal", detail : "Gagal Untuk Update Waktu Presensi", life : 3000})
+
+        if (res.status) {
+            timeData.value.updated_at = new Date().toISOString()
+        }
+    })
 }
 
 </script>
@@ -24,7 +28,7 @@ const handleSaveTime = async () => {
     <div class="card">
         <Toast />
         <h1 class="text-center">Konfigurasi Waktu Presensi</h1>
-        <Message>Penginputan jam merupakan nilai dengan 1 - 24. Dan menit dalam 1 - 60</Message>
+        <Message>Penginputan jam merupakan nilai dengan 1 - 24. Dan menit dalam 0 - 60</Message>
         <h3>Jam</h3>
         <InputNumber :min="1" :max="24" v-model="timeData.hours" />
         <h3>Menit</h3>
