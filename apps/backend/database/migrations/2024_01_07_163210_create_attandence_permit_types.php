@@ -39,6 +39,15 @@ class CreateAttandencePermitTypes extends Migration
                 "updated_at" => now()
             ]
         );
+
+        DB::table("attandence_permit_types")->insert(
+            [
+                "name" => "Tidak Hadir",
+                "active_status" => true,
+                "created_at" => now(),
+                "updated_at" => now()
+            ]
+        );
     }
 
     /**

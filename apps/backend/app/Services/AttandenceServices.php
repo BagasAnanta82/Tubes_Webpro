@@ -2,12 +2,15 @@
 
 namespace App\Services;
 
+use App\Models\Attandence;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 use Exception;
-
+use RecursiveArrayIterator;
+use RecursiveIteratorIterator;
+use RecursiveRegexIterator;
 
 class AttandenceServices
 {    
@@ -51,6 +54,71 @@ class AttandenceServices
             return response()->json(
                 [
                     "message" => "failed to get attadance data",
+                    "status" => false,
+                    "error" => $th->getMessage()
+                ]
+            );
+        }
+    }
+
+    private static function reduceMappingInArray(array $arr)
+    {
+        $res = array();
+
+        foreach($arr as $key => $value){
+            array_push($res, $value["student_id"]);
+        }
+
+        return $res;
+    }
+
+    public static function generateStudentAttandenceNotTapping(Request $req)
+    {
+        try {
+            $curr_permit = \App\Models\Attandence_Permit::select(
+                "student_id"
+            )
+             ->whereDate("created_at", \Carbon\Carbon::now()->toDateString())
+             ->get()
+             ->toArray();
+
+            if(count($curr_permit) != 0){
+                return response()->json(
+                    [
+                        "message" => "success student has been generate for today",
+                        "status" => true
+                    ]
+                );
+            }
+
+            $student = \App\Models\Student::select(
+                "id as student_id",
+            )
+             ->where("active_status", true)
+             ->get()
+             ->toArray();
+            
+            $current_att = \App\Models\Attandence::select(
+                "student_id"
+            )
+             ->whereDate("created_at", \Carbon\Carbon::now()->toDateString())
+             ->get()
+             ->toArray();
+            
+            $diff = array_diff(AttandenceServices::reduceMappingInArray($student), AttandenceServices::reduceMappingInArray($current_att));
+            
+            dispatch(new \App\Jobs\GenerateStudentPermitAttandence($diff));
+            
+            return response()->json(
+                [
+                    "message" => "success to generate student",
+                    "status" => true
+                ]
+            );
+        } catch (Exception $th) {
+            return response()->json(
+                [
+                    "message" => "Failed to genreate student not tapping",
                     "status" => false,
                     "error" => $th->getMessage()
                 ]

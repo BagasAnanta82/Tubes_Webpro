@@ -11,6 +11,7 @@ const filters = ref(null)
 const loading = ref(true)
 const date = ref(new Date())
 const dt = ref(null)
+const generateDialog = ref(false)
 
 const presensiService = new PresensiService()
 const classroomService = new ClassroomService()
@@ -32,6 +33,10 @@ const initFilter = () => {
         NIS: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
         NISN: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
     };
+}
+
+const confirmGenerateDialog = () => {
+    
 }
 
 const clearFilter = () => {
@@ -91,6 +96,7 @@ watch(classroomSelect, async (newClass, oldClass) => {
                 <div class="flex justify-content-between flex-column sm:flex-row">
                     <div class="text-align-left gap-2">
                         <Button type="button" icon="pi pi-filter-slash" label="Clear" class="p-button-outlined mb-2" @click="clearFilter()" />
+                        <Button type="button" icon="pi pi-upload" label="Export" class="p-button-outlined mb-2" @click="exportCSV()" />
                         <Button type="button" icon="pi pi-upload" label="Export" class="p-button-outlined mb-2" @click="exportCSV()" />
                     </div>
                     <span class="p-input-icon-left mb-2">
