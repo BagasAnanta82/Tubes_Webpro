@@ -31,4 +31,15 @@ export default class PresensiService{
         const urlBlob = URL.createObjectURL(blob)
         window.open(urlBlob)
     }
+
+    generateStudentDidNotTapping(){
+        return fetch(`${this.url}attandence/generate`, {
+            method : "POST",
+            headers : {
+                "Authorization" : `Bearer ${this.token}`
+            }
+        })
+        .then(res => res.json())
+        .then(d => d)
+    }
 }

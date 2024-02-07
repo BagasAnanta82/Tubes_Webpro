@@ -3,6 +3,9 @@ import { ref, onBeforeMount, onMounted, watch, callWithAsyncErrorHandling } from
 import { FilterMatchMode, FilterOperator } from 'primevue/api';
 import PresensiService from '@/service/PresensiService'
 import ClassroomService from '@/service/ClassroomService'
+import { useToast } from 'primevue/usetoast';
+
+const toast = useToast()
 
 const siswa = ref(null)
 const classroomSelect = ref(null)
@@ -12,6 +15,7 @@ const loading = ref(true)
 const date = ref(new Date())
 const dt = ref(null)
 const generateDialog = ref(false)
+const buttonDialogLoading = ref(false)
 
 const presensiService = new PresensiService()
 const classroomService = new ClassroomService()
@@ -35,8 +39,15 @@ const initFilter = () => {
     };
 }
 
-const confirmGenerateDialog = () => {
-    
+const generateStudentDidNotTapping = async () => {
+    buttonDialogLoading.value = true
+    toast.add({ severity: "info", summary: 'Sedang melakukan generasi data', detail: 'Harap Untuk Tidak Menutup Browser atau Tab pada proses sedang berlangsung', life: 5000 })
+    await presensiService.generateStudentDidNotTapping().then((res) => (res.status ? 
+        toast.add({ severity: "success", summary: 'Berhasil', detail: 'Data Berhasil Digenerate', life: 3000 }) : 
+        toast.add({ severity: "error", summary: 'Gagal', detail: 'Gagal Untuk Melakuakan Generasi data', life: 3000 })
+    ))
+    generateDialog.value = false;
+    buttonDialogLoading.value = false;
 }
 
 const clearFilter = () => {
@@ -62,6 +73,7 @@ watch(classroomSelect, async (newClass, oldClass) => {
 </script>
 
 <template>
+    <Toast />
     <div class="card">
         <h1>Rekam Presensi SMAN24 Bandung</h1>
         <div class="grid mt-4">
@@ -71,33 +83,25 @@ watch(classroomSelect, async (newClass, oldClass) => {
             </div>
             <div class="col-12 lg:col-6">
                 <h5>Kelas</h5>
-                <Dropdown v-model="classroomSelect" :options="classroom" optionLabel="name" placeholder="Silah Pilih Kelas" />
+                <Dropdown v-model="classroomSelect" :options="classroom" optionLabel="name"
+                    placeholder="Silah Pilih Kelas" />
             </div>
         </div>
+        <h3>Generasi Siswa Yang Tidak Absen</h3>
+        <Button type="button" icon="pi pi-upload" label="Generate" class="p-button-outlined mb-2"
+            @click="generateDialog = true" />
     </div>
     <div className="card">
-        <DataTable
-            ref="dt"
-            :value="siswa"
-            :paginator="true"
-            class="p-datatable-gridlines"
-            :rows="20"
-            dataKey="id"
-            :rowHover="true"
-            :rowsPerPageOptions="[20, 50, 75, 100]"
-            v-model:filters="filters"
-            filterDisplay="menu"
-            :loading="loading"
-            :filters="filters"
-            responsiveLayout="scroll"
-            :globalFilterFields="['name', 'NIS', 'NISN']"
-        >
+        <DataTable ref="dt" :value="siswa" :paginator="true" class="p-datatable-gridlines" :rows="20" dataKey="id"
+            :rowHover="true" :rowsPerPageOptions="[20, 50, 75, 100]" v-model:filters="filters" filterDisplay="menu"
+            :loading="loading" :filters="filters" responsiveLayout="scroll" :globalFilterFields="['name', 'NIS', 'NISN']">
             <template #header>
                 <div class="flex justify-content-between flex-column sm:flex-row">
                     <div class="text-align-left gap-2">
-                        <Button type="button" icon="pi pi-filter-slash" label="Clear" class="p-button-outlined mb-2" @click="clearFilter()" />
-                        <Button type="button" icon="pi pi-upload" label="Export" class="p-button-outlined mb-2" @click="exportCSV()" />
-                        <Button type="button" icon="pi pi-upload" label="Export" class="p-button-outlined mb-2" @click="exportCSV()" />
+                        <Button type="button" icon="pi pi-filter-slash" label="Clear" class="p-button-outlined mb-2"
+                            @click="clearFilter()" />
+                        <Button type="button" icon="pi pi-upload" label="Export" class="p-button-outlined mb-2"
+                            @click="exportCSV()" />
                     </div>
                     <span class="p-input-icon-left mb-2">
                         <i class="pi pi-search"></i>
@@ -112,7 +116,8 @@ watch(classroomSelect, async (newClass, oldClass) => {
                     {{ data.name }}
                 </template>
                 <template #filter="{ filterModel }">
-                    <InputText type="text" v-model="filterModel.value" class="p-column-filter" placeholder="Search by name" />
+                    <InputText type="text" v-model="filterModel.value" class="p-column-filter"
+                        placeholder="Search by name" />
                 </template>
             </Column>
             <Column field="NISN" header="NISN" style="min-width: 12rem">
@@ -120,7 +125,8 @@ watch(classroomSelect, async (newClass, oldClass) => {
                     {{ data.NISN }}
                 </template>
                 <template #filter="{ filterModel }">
-                    <InputText type="text" v-model="filterModel.value" class="p-column-filter" placeholder="Search by NISN" />
+                    <InputText type="text" v-model="filterModel.value" class="p-column-filter"
+                        placeholder="Search by NISN" />
                 </template>
             </Column>
             <Column field="gender" header="Kelamin" style="min-width: 12rem">
@@ -128,7 +134,8 @@ watch(classroomSelect, async (newClass, oldClass) => {
                     {{ data.code }}
                 </template>
                 <template #filter="{ filterModel }">
-                    <InputText type="text" v-model="filterModel.value" class="p-column-filter" placeholder="Search by NISN" />
+                    <InputText type="text" v-model="filterModel.value" class="p-column-filter"
+                        placeholder="Search by NISN" />
                 </template>
             </Column>
             <Column field="timestamp" header="timestamp" style="min-width: 12rem">
@@ -136,7 +143,8 @@ watch(classroomSelect, async (newClass, oldClass) => {
                     {{ data.timestamp }}
                 </template>
                 <template #filter="{ filterModel }">
-                    <InputText type="text" v-model="filterModel.value" class="p-column-filter" placeholder="Search by NISN" />
+                    <InputText type="text" v-model="filterModel.value" class="p-column-filter"
+                        placeholder="Search by NISN" />
                 </template>
             </Column>
             <Column field="is_late" header="Status" style="min-width: 12rem">
@@ -149,14 +157,25 @@ watch(classroomSelect, async (newClass, oldClass) => {
                     </div>
                 </template>
                 <template #filter="{ filterModel }">
-                    <InputText type="text" v-model="filterModel.value" class="p-column-filter" placeholder="Search by NISN" />
+                    <InputText type="text" v-model="filterModel.value" class="p-column-filter"
+                        placeholder="Search by NISN" />
                 </template>
             </Column>
         </DataTable>
     </div>
+    <Dialog v-model:visible="generateDialog" modal header="Generate" :style="{ width: '50rem' }">
+        <h3>Apakah Anda Yakin?</h3>
+        <p>Untuk melakukan peng-generate data akan membutuhkan waktu yang tidak sebentar (akan sangat bergantung terpada banyak data yang dibutuhakn).
+            Diharapkan untuk tidak menutup <b>Browser dan Tab pada Browser</b> Ketika Proses sedang berlangsung. Serta pastikan bahwa
+            <i>internet connection</i> anda pada keadaan yang stabil
+        </p>
+        
+        <div class="flex justify-content-end gap-2">
+            <Button type="button" label="Cancel" severity="secondary" @click="generateDialog = false"></Button>
+            <Button type="button" label="Generate" :loading="buttonDialogLoading" @click="generateStudentDidNotTapping"></Button>
+        </div>
+    </Dialog>
 </template>
 
 
-<style scoped>
-
-</style>
+<style scoped></style>

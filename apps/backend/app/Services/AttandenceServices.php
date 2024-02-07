@@ -107,7 +107,17 @@ class AttandenceServices
             
             $diff = array_diff(AttandenceServices::reduceMappingInArray($student), AttandenceServices::reduceMappingInArray($current_att));
             
-            dispatch(new \App\Jobs\GenerateStudentPermitAttandence($diff));
+            $insertData = [];
+            foreach ($diff as $key => $value) {
+                $insertData[] = [
+                    "student_id" => $value,
+                    "attandence_permit_type_id" => 3,
+                    "document_id" => null,
+                    "created_at" => now(),
+                    "updated_at" => now()
+                ];
+            }
+            \App\Models\Attandence_Permit::insert($insertData);
             
             return response()->json(
                 [

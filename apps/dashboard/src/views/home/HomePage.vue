@@ -95,7 +95,7 @@ onMounted(async () => {
         labels: ['Tepat Waktu', "Terlambat"],
         datasets: [
             {
-                data: [dataHome.value.student_notlate, dataHome.value.student_islate],
+                data: [dataHome.value.attandence_notlate, dataHome.value.attandence_islate],
                 backgroundColor: [documentStyle.getPropertyValue('--indigo-500'), documentStyle.getPropertyValue('--purple-500'), documentStyle.getPropertyValue('--teal-500')],
                 hoverBackgroundColor: [documentStyle.getPropertyValue('--indigo-400'), documentStyle.getPropertyValue('--purple-400'), documentStyle.getPropertyValue('--teal-400')]
             }
@@ -266,7 +266,7 @@ watch(
         <div class="col-12 xl:col-6">
             <div class="card flex flex-column align-items-center">
                 <h5 class="text-left w-full">Perbandingan Kehadiran</h5>
-                <template v-if="dataHome.student_notlate != 0">
+                <template v-if="dataHome.attandence_notlate != 0">
                     <h3>Tidak Ada Kehadiran Hari Ini</h3>
                 </template>
                 <template v-else>
