@@ -3,8 +3,8 @@
 namespace App\Services;
 
 use Illuminate\Http\Request;
-use DB;
 use Exception;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class PermitServices
@@ -21,6 +21,7 @@ class PermitServices
             }
 
             $data = \App\Models\Attandence_Permit::select(
+                "attandence_permits.id",
                 "s.id as student_id",
                 "s.name as student_name",
                 "s.NIS",
@@ -29,9 +30,12 @@ class PermitServices
                 "g.code",
                 "c.id as classroom_id",
                 "c.name as classroom_name",
+                "apt.id as permit_type_id",
                 "apt.name as permit_type_name",
                 "d.id as document_id",
-                "d.url as document_url"
+                "d.url as document_url",
+                "attandence_permits.created_at",
+                "attandence_permits.updated_at"
             )
              ->leftJoin("students as s", "s.id", "=", "attandence_permits.student_id")
              ->leftJoin("attandence_permit_types as apt", "apt.id", "=", "attandence_permits.attandence_permit_type_id")
@@ -68,30 +72,31 @@ class PermitServices
     public static function updateStudentPermit(Request $req)
     {
         try {
-            if (! $req->hasFile("document")) {
-                throw new Exception("No File Included", 1);
+            if ($req->hasFile("document")) {
+                // Delete Old Document
+                $data = \App\Models\Attandence_Permit::select("document_id")->where("id", $req->attandence_permit_id)->first();
+                \App\Models\Document::where("id", $data->document_id)->delete();
+    
+                // Create new document
+                $document_url = Storage::url($req->file("document")->store("public/permits"));
+                
+                $document = \App\Models\Document::create(
+                    [
+                        "name" => $req->file("document")->getName(),
+                        "document_type" => $req->file("document")->getType(),
+                        "url" => $document_url
+                    ]
+                );
+                $document_id = $document->id;
+            }else{
+                $document_id = null;
             }
 
-            // Delete Old Document
-            $data = \App\Models\Attandence_Permit::select("document_id")->where("id", $req->attandence_permit_id)->first();
-            \App\Models\Document::where("id", $data->document_id)->delete();
-
-            // Create new document
-            $document_url = Storage::url($req->file("document")->store("public/permits"));
-            
-            $document = \App\Models\Document::create(
-                [
-                    "name" => $req->file("document")->getName(),
-                    "document_type" => $req->file("document")->getType(),
-                    "url" => $document_url
-                ]
-            );
 
             \App\Models\Attandence_Permit::where("id", $req->attandence_permit_id)->update(
                 [
-                    "student_id" => $req->student_id,
                     "attandence_permit_type_id" => $req->attandence_permit_type_id,
-                    "document_id" => $document->id
+                    "document_id" => $document_id
                 ]
             );
 
@@ -161,14 +166,43 @@ class PermitServices
 
             return response()->json(
                 [
-                    "message" => "Success on update student permit",
+                    "message" => "Success on delete student permit",
                     "status" => true
                 ]
             );
         } catch (Exception $th) {
             return response()->json(
                 [
-                    "message" => "Failed to update student permit",
+                    "message" => "Failed to delete student permit",
+                    "status" => false,
+                    "error" => $th->getMessage()
+                ]
+            );
+        }
+    }
+
+    public static function deleteMultipleStudentAttandencePermit(Request $req)
+    {
+        try {
+            DB::beginTransaction();
+
+            foreach ($req->json as $key => $value) {
+                \App\Models\Attandence_Permit::where("id", $value["id"])->delete();
+            }
+
+            DB::commit();
+
+            return response()->json(
+                [
+                    "message" => "Success on delete student permit",
+                    "status" => true
+                ]
+            );
+        } catch (Exception $th) {
+            DB::rollBack();
+            return response()->json(
+                [
+                    "message" => "Failed to delete student permit",
                     "status" => false,
                     "error" => $th->getMessage()
                 ]

@@ -75,10 +75,12 @@ class AttandenceServices
     public static function generateStudentAttandenceNotTapping(Request $req)
     {
         try {
+            $date_at = \Carbon\Carbon::parse($req->date_at)->toDateTime() ?? \Carbon\Carbon::now()->toDateString();
+
             $curr_permit = \App\Models\Attandence_Permit::select(
                 "student_id"
             )
-             ->whereDate("created_at", \Carbon\Carbon::now()->toDateString())
+             ->whereDate("created_at", $date_at)
              ->get()
              ->toArray();
 
@@ -101,7 +103,7 @@ class AttandenceServices
             $current_att = \App\Models\Attandence::select(
                 "student_id"
             )
-             ->whereDate("created_at", \Carbon\Carbon::now()->toDateString())
+             ->whereDate("created_at", $date_at)
              ->get()
              ->toArray();
             

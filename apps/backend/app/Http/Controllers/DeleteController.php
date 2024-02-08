@@ -70,4 +70,19 @@ class DeleteController extends Controller
     {
         return \App\Services\PermitServices::deleteStudentAttandencePermit($req);
     }
+
+    public function DeleteMultipleAttandencePermit(Request $req)
+    {
+        return \App\Services\PermitServices::deleteMultipleStudentAttandencePermit($req);
+    }
+
+    public function DeleteAttandencePermitType(Request $req)
+    {
+        return \App\Services\PermitTypeServices::deleteAttandencePermitType($req);
+    }
+
+    public function DeleteMultipleAttandencePermitType(Request $req)
+    {
+        return \App\Services\PermitTypeServices::deleteMultipleAttandencePermitType($req);
+    }
 }

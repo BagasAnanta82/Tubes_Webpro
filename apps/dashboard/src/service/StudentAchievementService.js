@@ -72,7 +72,6 @@ export default class StudentAchievementService{
         })
          .then(res => res.arrayBuffer())
          .then(d => d)
-        console.log(res);
         const blob = new File([res], "filename.xlsx", {type : "application/vnd.ms-excel"})
         const urlBlob = URL.createObjectURL(blob)
         window.open(urlBlob)

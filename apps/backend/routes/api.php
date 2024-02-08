@@ -120,12 +120,16 @@ Route::group([
             Route::post('/', [\App\Http\Controllers\CreateController::class, "CreateStudentAttandencePermit"]);
             Route::put("/", [\App\Http\Controllers\UpdateController::class, "UpdateStudentAttandencePermit"]);
             Route::delete("/", [\App\Http\Controllers\DeleteController::class, "DeleteStudentAttandencePermit"]);
+            Route::delete("/multiple", [\App\Http\Controllers\DeleteController::class, "DeleteMultipleAttandencePermit"]);
         });
         
         Route::prefix("permittype")->group(function(){
             Route::get('/', [\App\Http\Controllers\ReadController::class, "getAllPermitType"]);
+            Route::get("/active", [\App\Http\Controllers\ReadController::class, "GetPermitTypeActive"]);
             Route::post("/", [\App\Http\Controllers\CreateController::class, "CreateAttandencePermitType"]);
             Route::put("/", [\App\Http\Controllers\UpdateController::class, "UpdatePermitType"]);
+            Route::delete("/", [\App\Http\Controllers\DeleteController::class, "DeleteAttandencePermitType"]);
+            Route::delete("/multiple", [\App\Http\Controllers\DeleteController::class, "DeleteMultipleAttandencePermitType"]);
         });
     });
 });

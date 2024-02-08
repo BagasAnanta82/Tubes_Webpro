@@ -266,7 +266,7 @@ watch(
         <div class="col-12 xl:col-6">
             <div class="card flex flex-column align-items-center">
                 <h5 class="text-left w-full">Perbandingan Kehadiran</h5>
-                <template v-if="dataHome.attandence_notlate != 0">
+                <template v-if="dataHome.attandence_notlate == 0">
                     <h3>Tidak Ada Kehadiran Hari Ini</h3>
                 </template>
                 <template v-else>

@@ -88,7 +88,7 @@ watch(classroomSelect, async (newClass, oldClass) => {
             </div>
         </div>
         <h3>Generasi Siswa Yang Tidak Absen</h3>
-        <Button type="button" icon="pi pi-upload" label="Generate" class="p-button-outlined mb-2"
+        <Button type="button" icon="pi pi-upload" label="Generate" class="p-button mb-2"
             @click="generateDialog = true" />
     </div>
     <div className="card">

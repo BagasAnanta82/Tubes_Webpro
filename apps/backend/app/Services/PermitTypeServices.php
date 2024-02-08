@@ -3,10 +3,39 @@
 namespace App\Services;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Exception;
 
 class PermitTypeServices{
     public static function getAllPermitType(Request $req)
+    {
+        try {
+            $data = \App\Models\Attandence_Permit_Type::select(
+                "id",
+                "name",
+                "active_status",
+            )
+             ->get();
+
+            return response()->json(
+                [
+                    "message" => "Success on get Gender",
+                    "status" => true,
+                    "data" => $data
+                ]
+            );
+        } catch (Exception $th) {
+            return response()->json(
+                [
+                    "message" => "Failed to get gender",
+                    "status" => false,
+                    "error" => $th->getMessage()
+                ]
+            );
+        }
+    }
+
+    public static function getActivePermitType(Request $req)
     {
         try {
             $data = \App\Models\Attandence_Permit_Type::select(
@@ -65,7 +94,7 @@ class PermitTypeServices{
     public static function updatePermitType(Request $req)
     {
         try {
-            \App\Models\Attandence_Permit_Type::where("id", $req->attandence_permit_type_id)->update(
+            \App\Models\Attandence_Permit_Type::where("id", $req->id)->update(
                 [
                     "name" => $req->name,
                     "active_status" => $req->active_status
@@ -86,6 +115,56 @@ class PermitTypeServices{
                     "error" => $th->getMessage()
                 ]
             );
+        }
+    }
+
+    public static function deleteAttandencePermitType(Request $req) {
+        try {
+            \App\Models\Attandence_Permit_Type::where("id", $req->id)->delete();
+
+            return response()->json(
+                [
+                    "message" => "Success on delete permit type",
+                    "status" => true
+                ]
+            );
+        } catch (Exception $th) {
+            return response()->json(
+                [
+                    "message" => "Failed on delete permit type",
+                    "status" => false,
+                    "error" => $th->getMessage()
+                ]
+            );            
+        }
+    }
+
+    public static function deleteMultipleAttandencePermitType(Request $req)
+    {
+        try {
+            DB::beginTransaction();
+
+            foreach ($req->json as $key => $value) {
+                \App\Models\Attandence_Permit_Type::where("id", $value["id"])->delete();
+            }
+
+            DB::commit();
+
+            return response()->json(
+                [
+                    "message" => "Success on delete permit type",
+                    "status" => true
+                ]
+            );
+        } catch (Exception $th) {
+            DB::rollBack();
+            return response()->json(
+                [
+                    "message" => "Failed on delete permit type",
+                    "status" => false,
+                    "error" => $th->getMessage()
+                ]
+            );            
         }
     }
 }

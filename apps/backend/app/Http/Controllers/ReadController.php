@@ -43,6 +43,11 @@ class ReadController extends Controller
         return \App\Services\PermitTypeServices::getAllPermitType($req);
     }
 
+    public function GetPermitTypeActive(Request $req)
+    {
+        return \App\Services\PermitTypeServices::getActivePermitType($req);
+    }
+
     public function getAllStudentData(Request $req)
     {
         return \App\Services\StudentServices::getAllStudentData($req);

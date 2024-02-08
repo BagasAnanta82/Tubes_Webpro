@@ -31,6 +31,16 @@ const router = createRouter({
                     component : () => import("@/views/home/AttendenceTime.vue")
                 },
                 {
+                    path : "/attendence/student",
+                    name : "attandencestudentpermit",
+                    component : () => import("@/views/home/AttendencePermit.vue")
+                },
+                {
+                    path : "/attendence/type",
+                    name : "attandencepermittype",
+                    component : () => import("@/views/home/AttendencePermitType.vue")
+                },
+                {
                     path : "/classroom",
                     name : "classroom",
                     component : () => import("@/views/home/Classroom.vue")
