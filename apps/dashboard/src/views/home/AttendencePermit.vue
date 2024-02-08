@@ -81,6 +81,7 @@ const deletePermit = async () => {
 
 const deleteSelectedPermit = async () => {
     const time = new Date(date.value)
+    time.setDate(time.getDate() + 1)
     await attandencePermitService.deleteMutltipleStudentAttandencePermitRecord(selectedPermits.value).then((res) => (
         res.status ?
             toast.add({ severity: 'success', summary: 'Berhasil', detail: 'Berhasil Menghapus Presensi Siswa', life: 3000 })
