@@ -32,12 +32,17 @@ export default class PresensiService{
         window.open(urlBlob)
     }
 
-    generateStudentDidNotTapping(){
+    generateStudentDidNotTapping(date_at = new Date().toISOString()){
         return fetch(`${this.url}attandence/generate`, {
             method : "POST",
             headers : {
+                "Content-Type" : "application/json",
+                "Accept" : "application/json",
                 "Authorization" : `Bearer ${this.token}`
-            }
+            },
+            body : JSON.stringify({
+                "date_at" : date_at
+            })
         })
         .then(res => res.json())
         .then(d => d)

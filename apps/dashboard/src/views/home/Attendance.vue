@@ -40,9 +40,11 @@ const initFilter = () => {
 }
 
 const generateStudentDidNotTapping = async () => {
+    const time = new Date(date.value)
+    time.setDate(time.getDate() + 1)
     buttonDialogLoading.value = true
     toast.add({ severity: "info", summary: 'Sedang melakukan generasi data', detail: 'Harap Untuk Tidak Menutup Browser atau Tab pada proses sedang berlangsung', life: 5000 })
-    await presensiService.generateStudentDidNotTapping().then((res) => (res.status ? 
+    await presensiService.generateStudentDidNotTapping(time.toISOString()).then((res) => (res.status ? 
         toast.add({ severity: "success", summary: 'Berhasil', detail: 'Data Berhasil Digenerate', life: 3000 }) : 
         toast.add({ severity: "error", summary: 'Gagal', detail: 'Gagal Untuk Melakuakan Generasi data', life: 3000 })
     ))
@@ -78,7 +80,7 @@ watch(classroomSelect, async (newClass, oldClass) => {
         <h1>Rekam Presensi SMAN24 Bandung</h1>
         <div class="grid mt-4">
             <div class="col-12 lg:col-6">
-                <h5>Silahkan Pilih Tanggal Presensi</h5>
+                <h5>Silahkan Pilih Tanggal Presensi Dan Generate</h5>
                 <Calendar id="date" v-model="date" style="width:70%;" />
             </div>
             <div class="col-12 lg:col-6">

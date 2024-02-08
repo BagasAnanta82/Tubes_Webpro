@@ -110,13 +110,14 @@ class AttandenceServices
             $diff = array_diff(AttandenceServices::reduceMappingInArray($student), AttandenceServices::reduceMappingInArray($current_att));
             
             $insertData = [];
+
             foreach ($diff as $key => $value) {
                 $insertData[] = [
                     "student_id" => $value,
                     "attandence_permit_type_id" => 3,
                     "document_id" => null,
-                    "created_at" => now(),
-                    "updated_at" => now()
+                    "created_at" => $date_at,
+                    "updated_at" => $date_at
                 ];
             }
             \App\Models\Attandence_Permit::insert($insertData);
