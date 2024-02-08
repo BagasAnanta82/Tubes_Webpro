@@ -48,6 +48,7 @@ const editPermitDialog = (data) => {
 
 const editPermit = async () => {
     const time = new Date(date.value)
+    time.setDate(time.getDate() + 1)
     await attandencePermitService.updateStudentAttandencePermitRecords(dialog.value).then((res) => (
         res.status ?
             toast.add({ severity: 'success', summary: 'Berhasil', detail: 'Berhasil Memperbaharui Presensi Siswa', life: 3000 })
@@ -66,6 +67,7 @@ const confirmDeletePermit = (data) => {
 
 const deletePermit = async () => {
     const time = new Date(date.value)
+    time.setDate(time.getDate() + 1)
     await attandencePermitService.deleteStudentAttandencePermitRecord(dialog.value).then((res) => (
         res.status ?
             toast.add({ severity: 'success', summary: 'Berhasil', detail: 'Berhasil Menghapus Presensi Siswa', life: 3000 })
