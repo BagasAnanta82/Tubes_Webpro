@@ -28,7 +28,7 @@ const handleSaveTime = async () => {
     <div class="card">
         <Toast />
         <h1 class="text-center">Konfigurasi Waktu Presensi</h1>
-        <Message>Penginputan jam merupakan nilai dengan 1 - 24. Dan menit dalam 0 - 60</Message>
+        <Message>Format atur waktu presensi untuk jam adalah 0-23 dan untuk menit 0-59</Message>
         <h3>Jam</h3>
         <InputNumber :min="1" :max="24" v-model="timeData.hours" />
         <h3>Menit</h3>

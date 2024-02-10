@@ -44,8 +44,8 @@ const generateStudentDidNotTapping = async () => {
     time.setDate(time.getDate() + 1)
     buttonDialogLoading.value = true
     toast.add({ severity: "info", summary: 'Sedang melakukan generasi data', detail: 'Harap Untuk Tidak Menutup Browser atau Tab pada proses sedang berlangsung', life: 5000 })
-    await presensiService.generateStudentDidNotTapping(time.toISOString()).then((res) => (res.status ? 
-        toast.add({ severity: "success", summary: 'Berhasil', detail: 'Data Berhasil Digenerate', life: 3000 }) : 
+    await presensiService.generateStudentDidNotTapping(time.toISOString()).then((res) => (res.status ?
+        toast.add({ severity: "success", summary: 'Berhasil', detail: 'Data Berhasil Digenerate', life: 3000 }) :
         toast.add({ severity: "error", summary: 'Gagal', detail: 'Gagal Untuk Melakuakan Generasi data', life: 3000 })
     ))
     generateDialog.value = false;
@@ -90,8 +90,7 @@ watch(classroomSelect, async (newClass, oldClass) => {
             </div>
         </div>
         <h3>Generasi Siswa Yang Tidak Absen</h3>
-        <Button type="button" icon="pi pi-upload" label="Generate" class="p-button mb-2"
-            @click="generateDialog = true" />
+        <Button type="button" icon="pi pi-upload" label="Generate" class="p-button mb-2" @click="generateDialog = true" />
     </div>
     <div className="card">
         <DataTable ref="dt" :value="siswa" :paginator="true" class="p-datatable-gridlines" :rows="20" dataKey="id"
@@ -167,14 +166,16 @@ watch(classroomSelect, async (newClass, oldClass) => {
     </div>
     <Dialog v-model:visible="generateDialog" modal header="Generate" :style="{ width: '50rem' }">
         <h3>Apakah Anda Yakin?</h3>
-        <p>Untuk melakukan peng-generate data akan membutuhkan waktu yang tidak sebentar (akan sangat bergantung terpada banyak data yang dibutuhakn).
-            Diharapkan untuk tidak menutup <b>Browser dan Tab pada Browser</b> Ketika Proses sedang berlangsung. Serta pastikan bahwa
-            <i>internet connection</i> anda pada keadaan yang stabil
+        <p>
+            Untuk melakukan penghasilan data, waktu yang dibutuhkan tidak sebentar (tergantung pada jumlah data yang
+            dibutuhkan). Mohon untuk <b>tidak menutup browser dan tab pada browser ketika proses berlangsung</b>. Pastikan pula
+            bahwa koneksi internet Anda stabil.
         </p>
-        
+
         <div class="flex justify-content-end gap-2">
             <Button type="button" label="Cancel" severity="secondary" @click="generateDialog = false"></Button>
-            <Button type="button" label="Generate" :loading="buttonDialogLoading" @click="generateStudentDidNotTapping"></Button>
+            <Button type="button" label="Generate" :loading="buttonDialogLoading"
+                @click="generateStudentDidNotTapping"></Button>
         </div>
     </Dialog>
 </template>
