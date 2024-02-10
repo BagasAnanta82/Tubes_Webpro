@@ -129,10 +129,10 @@ const initFilters = () => {
                     v-model:selection="selectedProducts"
                     dataKey="id"
                     :paginator="true"
-                    :rows="5"
+                    :rows="20"
                     :filters="filters"
                     paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-                    :rowsPerPageOptions="[5, 10, 25]"
+                    :rowsPerPageOptions="[20, 50, 100]"
                     currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products"
                     responsiveLayout="scroll"
                 >

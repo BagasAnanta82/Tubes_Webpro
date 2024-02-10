@@ -22,6 +22,7 @@ class PermitServices
 
             $data = \App\Models\Attandence_Permit::select(
                 "attandence_permits.id",
+                "attandence_permits.description",
                 "s.id as student_id",
                 "s.name as student_name",
                 "s.NIS",
@@ -96,7 +97,8 @@ class PermitServices
             \App\Models\Attandence_Permit::where("id", $req->attandence_permit_id)->update(
                 [
                     "attandence_permit_type_id" => $req->attandence_permit_type_id,
-                    "document_id" => $document_id
+                    "document_id" => $document_id,
+                    "description" => $req->description
                 ]
             );
 
@@ -120,25 +122,28 @@ class PermitServices
     public static function createStudentAttandencePermit(Request $req)
     {
         try {
-            if (! $req->hasFile("document")) {
-                throw new Exception("No File Included", 1);
+            if ($req->hasFile("document")) {
+                $document_url = Storage::url($req->file("document")->store("public/permits"));
+    
+                $document = \App\Models\Document::create(
+                    [
+                        "name" => $req->file("document")->getName(),
+                        "document_type" => $req->file("document")->getType(),
+                        "url" => $document_url
+                    ]
+                );
+
+                $document_id = $document->id;
+            }else{
+                $document_id = null;
             }
 
-            $document_url = Storage::url($req->file("document")->store("public/permits"));
-
-            $document = \App\Models\Document::create(
-                [
-                    "name" => $req->file("document")->getName(),
-                    "document_type" => $req->file("document")->getType(),
-                    "url" => $document_url
-                ]
-            );
 
             \App\Models\Attandence_Permit::create(
                 [
                     "student_id" => $req->student_id,
                     "attandence_permit_type_id" => $req->attandence_permit_type_id,
-                    "document_id" => $document->id
+                    "document_id" => $document_id
                 ]
             );
 

@@ -134,10 +134,10 @@ const initFilters = () => {
                     v-model:selection="selectedPermitType" 
                     dataKey="id"
                     :paginator="true" 
-                    :rows="5" 
+                    :rows="20" 
                     :filters="filters"
                     paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-                    :rowsPerPageOptions="[5, 10, 15, 20]"
+                    :rowsPerPageOptions="[20, 50, 100]"
                     currentPageReportTemplate="Showing {first} to {last} of {totalRecords} students"
                     responsiveLayout="scroll">
                     <template #header>

@@ -14,5 +14,6 @@ class Attandence_Permit extends Model
         "student_id",
         "attandence_permit_type_id",
         "document_id",
+        "description"
     ];
 }

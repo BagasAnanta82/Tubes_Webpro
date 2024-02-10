@@ -28,7 +28,8 @@ export default class AttendencePermitService{
             },
             body : JSON.stringify({
                 "attandence_permit_id" : data.id,
-                "attandence_permit_type_id" : data.permit_type_id.id
+                "attandence_permit_type_id" : data.permit_type_id.id,
+                "description" : data.description
             })
         })
          .then(res => res.json())

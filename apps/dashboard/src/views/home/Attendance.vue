@@ -93,7 +93,7 @@ watch(classroomSelect, async (newClass, oldClass) => {
     </div>
     <div className="card">
         <DataTable ref="dt" :value="siswa" :paginator="true" class="p-datatable-gridlines" :rows="20" dataKey="id"
-            :rowHover="true" :rowsPerPageOptions="[20, 50, 75, 100]" v-model:filters="filters" filterDisplay="menu"
+            :rowHover="true" :rowsPerPageOptions="[20, 50, 100]" v-model:filters="filters" filterDisplay="menu"
             :loading="loading" :filters="filters" responsiveLayout="scroll" :globalFilterFields="['name', 'NIS', 'NISN']">
             <template #header>
                 <div class="flex justify-content-between flex-column sm:flex-row">

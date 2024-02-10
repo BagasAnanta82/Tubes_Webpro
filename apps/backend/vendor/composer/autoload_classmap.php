@@ -26,6 +26,7 @@ return array(
     'App\\Http\\Middleware\\TrustHosts' => $baseDir . '/app/Http/Middleware/TrustHosts.php',
     'App\\Http\\Middleware\\TrustProxies' => $baseDir . '/app/Http/Middleware/TrustProxies.php',
     'App\\Http\\Middleware\\VerifyCsrfToken' => $baseDir . '/app/Http/Middleware/VerifyCsrfToken.php',
+    'App\\Jobs\\GenerateStudentPermitAttandence' => $baseDir . '/app/Jobs/GenerateStudentPermitAttandence.php',
     'App\\Models\\Achievements' => $baseDir . '/app/Models/Achievements.php',
     'App\\Models\\Attandence' => $baseDir . '/app/Models/Attandence.php',
     'App\\Models\\Attandence_Permit' => $baseDir . '/app/Models/Attandence_Permit.php',

@@ -158,7 +158,7 @@ const initFilters = () => {
                     :rows="20" 
                     :filters="filters"
                     paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-                    :rowsPerPageOptions="[20, 50, 75, 100]" 
+                    :rowsPerPageOptions="[20, 50, 100]" 
                     :loading="loading"
                     currentPageReportTemplate="Showing {first} to {last} of {totalRecords} students"
                     responsiveLayout="scroll">

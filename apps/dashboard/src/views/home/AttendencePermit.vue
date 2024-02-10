@@ -4,6 +4,7 @@ import { FilterMatchMode } from 'primevue/api';
 import { useToast } from 'primevue/usetoast';
 import AttendencePermitService from '@/service/AttendencePermitService';
 import AttendencePermitTypeService from '@/service/AttendencePermitTypeService';
+import UrlViewer from '../../components/UrlViewer.vue';
 
 const toast = useToast();
 
@@ -137,10 +138,10 @@ watch(date, async (newVal, oldVal) => {
                     v-model:selection="selectedPermits"
                     dataKey="id"
                     :paginator="true"
-                    :rows="10"
+                    :rows="20"
                     :filters="filters"
                     paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-                    :rowsPerPageOptions="[10, 20, 25]"
+                    :rowsPerPageOptions="[20, 50, 100]"
                     currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products"
                     responsiveLayout="scroll"
                 >
@@ -195,15 +196,21 @@ watch(date, async (newVal, oldVal) => {
                     </Column>
                 </DataTable>
 
-                <Dialog v-model:visible="updateDialog" :style="{ width: '450px' }" header="Edit Data Pencapaian" :modal="true" class="p-fluid">
+                <Dialog v-model:visible="updateDialog" maximizable :breakpoints="{ '1199px': '75vw', '575px': '90vw' }" :style="{ width: '650px' }" header="Edit Data Pencapaian" :modal="true" class="p-fluid">
+                    <!-- <UrlViewer :text="dialog.description" /> -->
                     <div class="field">
                         <label for="name">Nama Siswa</label>
-                        <InputText id="name" disabled v-model.trim="dialog.student_name" required="true" autofocus :class="{ 'p-invalid': submitted && !product.name }" />
+                        <InputText id="name" disabled v-model.trim="dialog.student_name" required="true" />
                     </div>
 
                     <div class="field">
                         <label for="inventoryStatus" class="mb-3">Status Presensi</label>
                         <Dropdown id="inventoryStatus" v-model="dialog.permit_type_id" :options="permitType" optionLabel="name" />
+                    </div>
+
+                    <div class="field">
+                        <label for="description">Keterangan</label>
+                        <Textarea id="description" placeholder="Dapat Berupa Keteranga Atau dengan link pendukung" v-model="dialog.description" rows="5" cols="30" /> 
                     </div>
 
                     <template #footer>

@@ -576,6 +576,7 @@ class ComposerStaticInitd90a65918d7e86cd08556c149796ba02
         'App\\Http\\Middleware\\TrustHosts' => __DIR__ . '/../..' . '/app/Http/Middleware/TrustHosts.php',
         'App\\Http\\Middleware\\TrustProxies' => __DIR__ . '/../..' . '/app/Http/Middleware/TrustProxies.php',
         'App\\Http\\Middleware\\VerifyCsrfToken' => __DIR__ . '/../..' . '/app/Http/Middleware/VerifyCsrfToken.php',
+        'App\\Jobs\\GenerateStudentPermitAttandence' => __DIR__ . '/../..' . '/app/Jobs/GenerateStudentPermitAttandence.php',
         'App\\Models\\Achievements' => __DIR__ . '/../..' . '/app/Models/Achievements.php',
         'App\\Models\\Attandence' => __DIR__ . '/../..' . '/app/Models/Attandence.php',
         'App\\Models\\Attandence_Permit' => __DIR__ . '/../..' . '/app/Models/Attandence_Permit.php',
