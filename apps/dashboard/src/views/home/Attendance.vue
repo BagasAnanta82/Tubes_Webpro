@@ -84,12 +84,12 @@ watch(classroomSelect, async (newClass, oldClass) => {
                 <Calendar id="date" v-model="date" style="width:70%;" />
             </div>
             <div class="col-12 lg:col-6">
-                <h5>Kelas</h5>
+                <h5>Silahkan Pilih Kelas</h5>
                 <Dropdown v-model="classroomSelect" :options="classroom" optionLabel="name"
                     placeholder="Silah Pilih Kelas" />
             </div>
         </div>
-        <h3>Generasi Siswa Yang Tidak Absen</h3>
+        <h3>Generate siswa yang tidak melakukan presensi</h3>
         <Button type="button" icon="pi pi-upload" label="Generate" class="p-button mb-2" @click="generateDialog = true" />
     </div>
     <div className="card">
