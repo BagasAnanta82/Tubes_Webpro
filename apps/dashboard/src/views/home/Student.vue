@@ -156,8 +156,12 @@ watch(product, (newval, old) => {
                     </template>
                 </Toolbar>
 
-                <DataTable ref="dt" :value="students" v-model:selection="selectedProducts" dataKey="student_id"
-                    :paginator="true" :rows="20" :filters="filters"
+                <DataTable ref="dt" 
+                    :value="students" 
+                    v-model:selection="selectedProducts" 
+                    dataKey="student_id"
+                    :paginator="true" :rows="20" 
+                    :filters="filters"
                     paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
                     :rowsPerPageOptions="[20, 50, 75, 100]"
                     :loading="loading"
