@@ -41,6 +41,7 @@ const initFilter = () => {
 
 const generateStudentDidNotTapping = async () => {
     const time = new Date(date.value)
+    time.setDate(time.getDate() + 1)
     buttonDialogLoading.value = true
     toast.add({ severity: "info", summary: 'Sedang melakukan generasi data', detail: 'Harap Untuk Tidak Menutup Browser atau Tab pada proses sedang berlangsung', life: 5000 })
     await presensiService.generateStudentDidNotTapping(time.toISOString()).then((res) => (res.status ?
