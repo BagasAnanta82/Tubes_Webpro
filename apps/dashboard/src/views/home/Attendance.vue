@@ -12,6 +12,7 @@ const classroomSelect = ref(null)
 const classroom = ref(null)
 const filters = ref(null)
 const loading = ref(true)
+const isDateChange = ref(false)
 const date = ref(new Date())
 const dt = ref(null)
 const generateDialog = ref(false)
@@ -41,6 +42,11 @@ const initFilter = () => {
 
 const generateStudentDidNotTapping = async () => {
     const time = new Date(date.value)
+    
+    if (isDateChange.value) {
+        time.setDate(time.getDate() + 1)
+    }
+
     buttonDialogLoading.value = true
     toast.add({ severity: "info", summary: 'Sedang melakukan generasi data', detail: 'Harap Untuk Tidak Menutup Browser atau Tab pada proses sedang berlangsung', life: 5000 })
     await presensiService.generateStudentDidNotTapping(time.toISOString()).then((res) => (res.status ?
@@ -63,6 +69,7 @@ watch(date, async (newDate, oldDate) => {
     const time = new Date(newDate)
     const clsRoom = (classroomSelect.value == null) ? null : classroomSelect.value.id
     time.setDate(time.getDate() + 1)
+    isDateChange.value = true
     await presensiService.getStudentAttendences(time.toISOString(), clsRoom).then((val) => (siswa.value = val))
 })
 
