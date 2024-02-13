@@ -20,7 +20,7 @@ const model = ref([
         label: 'Presensi',
         items: [
             { label: 'Rekam Presensi Siswa', icon: 'pi pi-book', to: '/attendence'},
-            { label: 'Rekam Tidak Presensi Siswa', icon: 'pi pi-book', to: '/attendence/student'},
+            { label: 'Rekam Absensi Siswa', icon: 'pi pi-book', to: '/attendence/student'},
             { label: 'Waktu Presensi Siswa', icon: 'pi pi-list', to: '/attendence/time'},
             { label: 'Daftar Status Presensi', icon: 'pi pi-list', to: '/attendence/type'},
         ]
