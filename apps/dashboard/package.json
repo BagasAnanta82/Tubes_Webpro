@@ -3,6 +3,8 @@
     "version": "0.4.2",
     "scripts": {
         "dev": "NODE_ENV=local vite",
+        "dev:dev" : "NODE_ENV=development vite",
+        "dev:prod" : "NODE_ENV=production vite",
         "build": "vite build",
         "build:dev" : "vite build --mode development",
         "build:prod" : "vite build --mode production",

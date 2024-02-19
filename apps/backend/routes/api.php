@@ -41,7 +41,7 @@ Route::group([
 
 Route::group([
     "prefix" => "v1",
-    "middleware" => ["cors"]
+    "middleware" => ["cors", "auth:sanctum"]
 ], function(){
     Route::group(
         ["middleware" => []
