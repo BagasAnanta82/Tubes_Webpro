@@ -75,7 +75,9 @@ watch(date, async (newDate, oldDate) => {
 
 watch(classroomSelect, async (newClass, oldClass) => {
     const time = new Date(date.value)
-    time.setDate(time.getDate() + 1)
+    if (isDateChange.value) {
+        time.setDate(time.getDate() + 1)
+    }
     await presensiService.getStudentAttendences(time.toISOString(), newClass.id).then((val) => (siswa.value = val))
 })
 </script>
