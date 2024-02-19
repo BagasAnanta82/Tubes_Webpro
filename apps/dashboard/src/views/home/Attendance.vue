@@ -136,6 +136,15 @@ watch(classroomSelect, async (newClass, oldClass) => {
                         placeholder="Search by NISN" />
                 </template>
             </Column>
+            <Column field="classroom_name" header="Kelas" style="min-width: 12rem">
+                <template #body="{ data }">
+                    {{ data.classroom_name }}
+                </template>
+                <template #filter="{ filterModel }">
+                    <InputText type="text" v-model="filterModel.value" class="p-column-filter"
+                        placeholder="Search by NISN" />
+                </template>
+            </Column>
             <Column field="gender" header="Kelamin" style="min-width: 12rem">
                 <template #body="{ data }">
                     {{ data.code }}
