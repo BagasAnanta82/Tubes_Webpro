@@ -42,7 +42,7 @@ const initFilter = () => {
 
 const generateStudentDidNotTapping = async () => {
     const time = new Date(date.value)
-    
+
     if (isDateChange.value) {
         time.setDate(time.getDate() + 1)
     }
@@ -107,7 +107,8 @@ watch(classroomSelect, async (newClass, oldClass) => {
     <div className="card">
         <DataTable ref="dt" :value="siswa" :paginator="true" class="p-datatable-gridlines" :rows="20" dataKey="id"
             :rowHover="true" :rowsPerPageOptions="[20, 50, 100]" v-model:filters="filters" filterDisplay="menu"
-            :loading="loading" :filters="filters" responsiveLayout="scroll" :globalFilterFields="['name', 'NIS', 'NISN']">
+            :loading="loading" :filters="filters" responsiveLayout="scroll" :globalFilterFields="['name', 'NIS', 'NISN']"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} students">
             <template #header>
                 <div class="flex justify-content-between flex-column sm:flex-row">
                     <div class="text-align-left gap-2">
@@ -189,7 +190,8 @@ watch(classroomSelect, async (newClass, oldClass) => {
         <h3>Apakah Anda Yakin?</h3>
         <p>
             Untuk melakukan penghasilan data, waktu yang dibutuhkan tidak sebentar (tergantung pada jumlah data yang
-            dibutuhkan). Mohon untuk <b>tidak menutup browser dan tab pada browser ketika proses berlangsung</b>. Pastikan pula
+            dibutuhkan). Mohon untuk <b>tidak menutup browser dan tab pada browser ketika proses berlangsung</b>. Pastikan
+            pula
             bahwa koneksi internet Anda stabil.
         </p>
 
