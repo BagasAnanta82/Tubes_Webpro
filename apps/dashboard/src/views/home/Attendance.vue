@@ -66,7 +66,7 @@ const exportCSV = async () => {
     if (isDateChange.value) {
         time.setDate(time.getDate() + 1)
     }
-    await presensiService.getStudentAttendencesExcelExport(time);
+    await presensiService.getStudentAttendencesExcelExport(time.toISOString());
 };
 
 watch(date, async (newDate, oldDate) => {
