@@ -62,7 +62,11 @@ const clearFilter = () => {
 }
 
 const exportCSV = async () => {
-    await presensiService.getStudentAttendencesExcelExport();
+    const time = new Date(date.value)
+    if (isDateChange.value) {
+        time.setDate(time.getDate() + 1)
+    }
+    await presensiService.getStudentAttendencesExcelExport(time);
 };
 
 watch(date, async (newDate, oldDate) => {

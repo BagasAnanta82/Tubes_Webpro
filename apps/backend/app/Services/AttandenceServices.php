@@ -218,11 +218,31 @@ class AttandenceServices
         }
     }
 
+    public static function deleteStudentAttandence(Request $req)
+    {
+        try {
+            \App\Models\Attandence::where("id", $req->id)->delete();
+
+            return response()->json(
+                [
+                    "message" => "Success to delete student attandence",
+                    "status" => true
+                ]
+            );
+        } catch (Exception $th) {
+            return response()->json(
+                [
+                    "message" => "Failed to delete student",
+                    "status" => false
+                ], 500
+            );
+        }
+    }
+
     public static function exportStudentAttandence(Request $req)
     {
-        $date_start = \Carbon\Carbon::parse($req->date_at)->toDateTime() ?? \Carbon\Carbon::now()->toDateTime();
-        $date_end = \Carbon\Carbon::parse($req->date_at)->toDateTime() ?? \Carbon\Carbon::now()->toDateTime();
+        $date_at = \Carbon\Carbon::parse($req->date_at)->toDateTime() ?? \Carbon\Carbon::now()->toDateTime();
 
-        return Excel::download(new \App\Exports\Excel\AttandenceExcel($date_start, $date_end), hash("sha256", Carbon::now()->toString()) . ".xlsx");
+        return Excel::download(new \App\Exports\Excel\AttandenceExcel($date_at), hash("sha256", Carbon::now()->toString()) . ".xlsx");
     }
 }

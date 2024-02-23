@@ -18,8 +18,8 @@ export default class PresensiService{
          .then((json) => json.data)
     }
 
-    async getStudentAttendencesExcelExport(){
-        const res = await fetch(`${this.url}excel/attandence`, {
+    async getStudentAttendencesExcelExport(date_at = new Date().toISOString()){
+        const res = await fetch(`${this.url}excel/attandence?date_at=${date_at}`, {
             method : "GET",
             "headers" : {
                 "Authorization" : `Bearer ${this.token}`

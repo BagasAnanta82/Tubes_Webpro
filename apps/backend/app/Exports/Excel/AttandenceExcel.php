@@ -9,12 +9,11 @@ use Maatwebsite\Excel\Concerns\WithHeadings;
 
 class AttandenceExcel implements FromCollection, WithHeadings
 {
-    protected \DateTime $date_start, $date_end;
+    protected \DateTime $date_at;
 
-    public function __construct(\DateTime $date_start, \DateTime $date_end)
+    public function __construct(\DateTime $date_at)
     {
-        $this->date_start = $date_start;
-        $this->date_end = $date_end;    
+        $this->date_at = $date_at;
     }
 
     /**
@@ -35,7 +34,7 @@ class AttandenceExcel implements FromCollection, WithHeadings
          ->join("genders as g", "g.id", "=", "s.gender_id")
          ->join("classrooms as c", "c.id", "=", "s.classroom_id")
          ->where("s.active_status", true)
-        //  ->whereDate("attandences.created_at", $this->date_start)
+         ->whereDate("attandences.created_at", $this->date_at)
          ->get();
 
         return $data;
