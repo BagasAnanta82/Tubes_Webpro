@@ -77,25 +77,35 @@ const router = createRouter({
             name: 'auth',
             component: () => import('@/views/auth/Login.vue')
         },
+        {
+            path : "/parent/",
+            name : "parent",
+            component : () => import("@/views/home/ParentStudentAttandence.vue")
+        }
     ]
 });
 
-router.beforeEach(async (to, from) => {
-    if (window.localStorage.getItem("token") == null) {
-        window.localStorage.setItem("token", JSON.stringify({token : "", email : ""}))
-        return {name : "auth"}
-    }
+// router.beforeEach(async (to, from) => {
+//     if (window.localStorage.getItem("token") == null) {
+//         window.localStorage.setItem("token", JSON.stringify({token : "", email : ""}))
+//         return {name : "auth"}
+//     }
+    
+//     if (to.name == "parent") {
+//         return {name : "parent"}
+//     }
 
-    await isUserAuth()
+//     await isUserAuth()
 
-    if (to.name == "auth" && isAuthenticate.value) {
-        return {name : "homepage"}
-    }
 
-    if (to.name !== "auth" && !isAuthenticate.value){
-        return {name : "auth"}
-    }
+//     if (to.name == "auth" && isAuthenticate.value) {
+//         return {name : "homepage"}
+//     }
 
-})
+//     if (to.name !== "auth" && !isAuthenticate.value){
+//         return {name : "auth"}
+//     }
+
+// })
 
 export default router;
