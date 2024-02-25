@@ -27,7 +27,7 @@ class AttandenceExcel implements FromCollection, WithHeadings
             "s.name as Name",
             "g.code as Gender",
             "c.name as kelas",
-            DB::raw("CASE WHEN attandences.is_late = 1 THEN 'Terlambat' ELSE 'Tepat' END as status"),
+            DB::raw("CASE WHEN attandences.is_late = 1 THEN 'Terlambat' ELSE 'Tepat Waktu' END as status"),
             "attandences.created_at as timestamp"
         )
          ->join("students as s", "s.id", "=", "attandences.student_id")
@@ -35,6 +35,17 @@ class AttandenceExcel implements FromCollection, WithHeadings
          ->join("classrooms as c", "c.id", "=", "s.classroom_id")
          ->where("s.active_status", true)
          ->whereDate("attandences.created_at", $this->date_at)
+         ->groupBy([
+            "s.NIS",
+            "s.NISN",
+            "s.name",
+            "g.code",
+            "c.name",
+            "status",
+            "attandences.created_at"
+         ])
+         ->distinct()
+         ->orderBy("attandences.created_at", "DESC")
          ->get();
 
         return $data;
