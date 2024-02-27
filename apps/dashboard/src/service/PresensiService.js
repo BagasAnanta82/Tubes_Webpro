@@ -18,6 +18,14 @@ export default class PresensiService{
          .then((json) => json.data)
     }
 
+    getStudentAttendencesByStudentId(student){
+        return fetch(`${this.url}public/attandence/students?id=${student.student_id}`, {
+            method : "GET"
+        })
+         .then(res => res.json())
+         .then(data => data.data)
+    }
+
     async getStudentAttendencesExcelExport(date_at = new Date().toISOString()){
         const res = await fetch(`${this.url}excel/attandence?date_at=${date_at}`, {
             method : "GET",

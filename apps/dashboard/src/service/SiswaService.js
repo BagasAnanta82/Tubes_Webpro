@@ -18,6 +18,14 @@ export default class SiswaService{
           .then(data => data.data)
     }
 
+    getAllStudentActiveData(){
+        return fetch(`${this.url}public/students/active`, {
+            method : "GET"
+        })
+         .then(res => res.json())
+         .then(data => data.data)
+    }
+
     createStudentData(studentsData){
         return fetch(`${this.url}students`, {
             "method" : "POST",

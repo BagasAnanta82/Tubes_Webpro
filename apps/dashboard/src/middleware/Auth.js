@@ -21,4 +21,23 @@ const isUserAuth = async () => {
     }
 }
 
-export {isAuthenticate, isUserAuth}
+const authTokenGuard = async (to, from) => {
+    if (window.localStorage.getItem("token") == null) {
+        window.localStorage.setItem("token", JSON.stringify({token : "", email : ""}))
+        return {name : "auth"}
+    }
+
+    await isUserAuth()
+
+
+    if (to.name == "auth" && isAuthenticate.value) {
+        return {name : "homepage"}
+    }
+
+    if (to.name !== "auth" && !isAuthenticate.value){
+        return {name : "auth"}
+    }
+
+}
+
+export { authTokenGuard }

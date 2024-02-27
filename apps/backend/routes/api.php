@@ -30,6 +30,11 @@ Route::group([
     "prefix" => "v1",
     "middleware" => []
 ], function(){
+    Route::prefix("public")->group(function(){
+        Route::get("students/active", [App\Http\Controllers\ReadController::class, "getAllStudentActivceData"]);
+        Route::get("attandence/students", [\App\Http\Controllers\ReadController::class, "getAttendenceRecordByStudentId"]);
+    });
+
     Route::prefix("user")->group(function(){
         Route::post("auth", [App\Http\Controllers\ReadController::class, "authenticateUser"]);
         Route::post("create", [App\Http\Controllers\CreateController::class, "createUser"]);

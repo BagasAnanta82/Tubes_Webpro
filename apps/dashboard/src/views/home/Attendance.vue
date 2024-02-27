@@ -28,7 +28,15 @@ onBeforeMount(() => {
 
 onMounted(() => {
     presensiService.getStudentAttendences().then((data) => (siswa.value = data))
-    classroomService.getAllClassroom().then((data) => (classroom.value = data))
+    classroomService.getAllClassroom().then((data) => {
+        data.unshift({
+            "active_status" : 1,
+            "id" : null,
+            "name" : "ALL"
+        })
+        classroom.value = data
+        
+    })
 })
 
 const initFilter = () => {

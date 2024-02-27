@@ -17,11 +17,11 @@ class AttandenceServices
                 "attandences.created_at",
                 "s.name"
             )
-             ->leftJoin("students as s", "s.id", "=", "attandences.student_id")
-             ->whereDate("created_at", \Carbon\Carbon::now())
-             ->where("s.NIS", $req->nis)
-             ->first();
-            
+                ->leftJoin("students as s", "s.id", "=", "attandences.student_id")
+                ->whereDate("created_at", \Carbon\Carbon::now())
+                ->where("s.NIS", $req->nis)
+                ->first();
+
             if (!is_null($att_std)) {
                 throw new Exception($att_std->name . ' Telah Melakukan Presensi Hari Ini Pada ' . $att_std->created_at);
             }
@@ -51,7 +51,7 @@ class AttandenceServices
                         "status" => true
                     ]
                 );
-            }else{
+            } else {
                 \App\Models\Attandence::create(
                     [
                         "student_id" => $student->id,
@@ -66,12 +66,79 @@ class AttandenceServices
                     ]
                 );
             }
-
         } catch (Exception $th) {
             return response()->json(
                 [
                     "message" => $req->getMessage(),
                     "status" => false
+                ]
+            );
+        }
+    }
+
+    public static function GetStudentAttandenceByStudentId(Request $req)
+    {
+        try {
+            $student = \App\Models\Student::select(
+                "id",
+                "name"
+            )
+                ->where("active_status", true)
+                ->where("id", $req->id)
+                ->first();
+            
+            if (is_null($student)) {
+                return response()->json(
+                    [
+                        "message" => "Student Data Did Not Exist",
+                        "status" => false,
+                        "error" => "data siswa tidak ditemukan"
+                    ]
+                );
+            }
+
+            $data = \App\Models\Attandence::select(
+                "attandences.is_late",
+                "attandences.created_at as timestamp"
+            )
+                ->leftJoin("students as s", "s.id", "=", "attandences.student_id")
+                ->leftJoin("genders as g", "g.id", "=", "s.gender_id")
+                ->leftJoin("classrooms as c", "c.id", "=", "s.classroom_id")
+                ->where("attandences.student_id", $student->id)
+                ->groupBy([
+                    "attandences.is_late",
+                    "attandences.created_at"
+                ])
+                ->distinct()
+                ->orderBy("attandences.created_at", "DESC")
+                ->get();
+
+            $permission = \App\Models\Attandence_Permit::select(
+                "apt.name",
+                "attandence_permits.description",
+                "attandence_permits.created_at as timestamp"
+            )
+                ->leftJoin("attandence_permit_types as apt", "apt.id", "=", "attandence_permits.attandence_permit_type_id")
+                ->where("apt.active_status", true)
+                ->where("attandence_permits.student_id", $student->id)
+                ->get();
+            
+            return response()->json(
+                [
+                    "message" => "success on get data",
+                    "status" => true,
+                    "data" => [
+                        "attandence" => $data,
+                        "permission" => $permission
+                    ]
+                ]
+            );
+        } catch (Exception $th) {
+            return response()->json(
+                [
+                    "message" => "failed to get attadance data",
+                    "status" => false,
+                    "error" => $th->getMessage()
                 ]
             );
         }
@@ -83,8 +150,8 @@ class AttandenceServices
             $filter = DB::raw("1");
 
             if ($req->classroom_id == "null" || is_null($req->classroom_id)) {
-                $classroom_id = [$filter , "=", "1"];
-            }else{
+                $classroom_id = [$filter, "=", "1"];
+            } else {
                 $classroom_id = ["s.classroom_id", "=", $req->classroom_id];
             }
 
@@ -100,26 +167,26 @@ class AttandenceServices
                 "c.name as classroom_name",
                 "attandences.created_at as timestamp"
             )
-             ->leftJoin("students as s", "s.id", "=", "attandences.student_id")
-             ->leftJoin("genders as g", "g.id", "=", "s.gender_id")
-             ->leftJoin("classrooms as c", "c.id", "=", "s.classroom_id")
-             ->where([$classroom_id])
-             ->where("s.active_status", true)
-             ->whereDate("attandences.created_at", $date_at)
-             ->groupBy([
-                "attandences.is_late",
-                "attandences.student_id",
-                "s.name",
-                "s.NIS",
-                "s.NISN",
-                "g.code",
-                "c.name",
-                "attandences.created_at"
-             ])
-             ->distinct()
-             ->orderBy("attandences.created_at", "DESC")
-             ->get();
-            
+                ->leftJoin("students as s", "s.id", "=", "attandences.student_id")
+                ->leftJoin("genders as g", "g.id", "=", "s.gender_id")
+                ->leftJoin("classrooms as c", "c.id", "=", "s.classroom_id")
+                ->where([$classroom_id])
+                ->where("s.active_status", true)
+                ->whereDate("attandences.created_at", $date_at)
+                ->groupBy([
+                    "attandences.is_late",
+                    "attandences.student_id",
+                    "s.name",
+                    "s.NIS",
+                    "s.NISN",
+                    "g.code",
+                    "c.name",
+                    "attandences.created_at"
+                ])
+                ->distinct()
+                ->orderBy("attandences.created_at", "DESC")
+                ->get();
+
             return response()->json(
                 [
                     "message" => "success on get data",
@@ -142,7 +209,7 @@ class AttandenceServices
     {
         $res = array();
 
-        foreach($arr as $key => $value){
+        foreach ($arr as $key => $value) {
             array_push($res, $value["student_id"]);
         }
 
@@ -157,11 +224,11 @@ class AttandenceServices
             $curr_permit = \App\Models\Attandence_Permit::select(
                 "student_id"
             )
-             ->whereDate("created_at", $date_at)
-             ->get()
-             ->toArray();
+                ->whereDate("created_at", $date_at)
+                ->get()
+                ->toArray();
 
-            if(count($curr_permit) != 0){
+            if (count($curr_permit) != 0) {
                 return response()->json(
                     [
                         "message" => "success student has been generate for today",
@@ -173,21 +240,21 @@ class AttandenceServices
             $student = \App\Models\Student::select(
                 "id as student_id",
             )
-             ->where("active_status", true)
-             ->get()
-             ->toArray();
-            
+                ->where("active_status", true)
+                ->get()
+                ->toArray();
+
             $current_att = \App\Models\Attandence::select(
                 "student_id"
             )
-             ->whereDate("created_at", $date_at)
-             ->groupBy("student_id")
-             ->distinct()
-             ->get()
-             ->toArray();
-            
+                ->whereDate("created_at", $date_at)
+                ->groupBy("student_id")
+                ->distinct()
+                ->get()
+                ->toArray();
+
             $diff = array_diff(AttandenceServices::reduceMappingInArray($student), AttandenceServices::reduceMappingInArray($current_att));
-            
+
             $insertData = [];
 
             foreach ($diff as $key => $value) {
@@ -200,7 +267,7 @@ class AttandenceServices
                 ];
             }
             \App\Models\Attandence_Permit::insert($insertData);
-            
+
             return response()->json(
                 [
                     "message" => "success to generate student",
@@ -234,7 +301,8 @@ class AttandenceServices
                 [
                     "message" => "Failed to delete student",
                     "status" => false
-                ], 500
+                ],
+                500
             );
         }
     }

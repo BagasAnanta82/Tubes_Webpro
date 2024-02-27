@@ -1,7 +1,6 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
 import AppLayout from '@/layout/AppLayout.vue';
-import {isAuthenticate, isUserAuth} from "@/middleware/Auth"
-
+import {authTokenGuard} from "@/middleware/Auth"
 
 const router = createRouter({
     history: createWebHashHistory(),
@@ -9,6 +8,7 @@ const router = createRouter({
         {
             path: '/',
             component: AppLayout,
+            beforeEnter : authTokenGuard,
             children: [
                 {
                     path : "/",
@@ -75,6 +75,7 @@ const router = createRouter({
         {
             path: '/auth/',
             name: 'auth',
+            beforeEnter : authTokenGuard,
             component: () => import('@/views/auth/Login.vue')
         },
         {
@@ -84,28 +85,5 @@ const router = createRouter({
         }
     ]
 });
-
-// router.beforeEach(async (to, from) => {
-//     if (window.localStorage.getItem("token") == null) {
-//         window.localStorage.setItem("token", JSON.stringify({token : "", email : ""}))
-//         return {name : "auth"}
-//     }
-    
-//     if (to.name == "parent") {
-//         return {name : "parent"}
-//     }
-
-//     await isUserAuth()
-
-
-//     if (to.name == "auth" && isAuthenticate.value) {
-//         return {name : "homepage"}
-//     }
-
-//     if (to.name !== "auth" && !isAuthenticate.value){
-//         return {name : "auth"}
-//     }
-
-// })
 
 export default router;

@@ -53,10 +53,19 @@ class ReadController extends Controller
         return \App\Services\StudentServices::getAllStudentData($req);
     }
 
+    public function getAllStudentActivceData(Request $req)
+    {
+        return \App\Services\StudentServices::getAllActiveStudent($req);
+    }
 
     public function getAllAttadenceRecords(Request $req)
     {
         return \App\Services\AttandenceServices::GetAllStudentAttandeces($req);
+    }
+
+    public function getAttendenceRecordByStudentId(Request $req)
+    {
+        return \App\Services\AttandenceServices::GetStudentAttandenceByStudentId($req);
     }
 
     public function GetStudentAttandencePermit(Request $req)

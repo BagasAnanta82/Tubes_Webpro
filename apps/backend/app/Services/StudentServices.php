@@ -45,6 +45,44 @@ class StudentServices{
         }
     }
 
+    public static function getAllActiveStudent(Request $req) 
+    {
+        try {
+            $data = \App\Models\Student::select(
+                "students.id as student_id",
+                "students.name",
+                "students.NIS",
+                "students.NISN",
+                "students.active_status",
+                "g.id as gender_id",
+                "g.code",
+                "c.id as classroom_id",
+                "c.name as classroom_name"
+            )
+             ->leftJoin("genders as g", "g.id", "=", "students.gender_id")
+             ->leftJoin("classrooms as c", "c.id", "=", "students.classroom_id")
+             ->orderBy("students.updated_at", "DESC")
+             ->where("students.active_status", true)
+             ->get();
+
+            return response()->json(
+                [
+                    "message" => "Success on get data",
+                    "status" => true,
+                    "data" => $data
+                ]
+            );
+        } catch (Exception $th) {
+            return response()->json(
+                [
+                    "message" => "Failed to get student data",
+                    "status" => false,
+                    "error" => $th->getMessage()
+                ]
+            );
+        }   
+    }
+
     public static function deleteStudent(Request $req)
     {
         try {
