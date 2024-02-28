@@ -58,7 +58,7 @@ const logoUrl = computed(() => {
 });
 
 watch(value, (val, oldVal) => {
-    if (val == ""){
+    if (val == "") {
         showTable.value = false
         attandenceData.value = {}
     }
@@ -67,7 +67,7 @@ watch(value, (val, oldVal) => {
 </script>
 
 <template>
-    <Toast/>
+    <Toast />
     <div class="layout-topbar">
         <BlockUI :blocked="isLoading" fullScreen />
         <router-link to="#" class="layout-topbar-logo">
@@ -77,8 +77,9 @@ watch(value, (val, oldVal) => {
         <span class="title-navbar">Presensi Siswa</span>
     </div>
     <div class="content card">
-        <AutoComplete v-model="value" :optionLabel="optionLabel" placeholder="Silakan Mencari Nama Siswa" inputStyle="width:100%;"
-            focus :suggestions="filterStudents" @complete="search" @keyup.enter="handleClick" forceSelection>
+        <AutoComplete v-model="value" :optionLabel="optionLabel" placeholder="Silakan Mencari Nama Siswa"
+            inputStyle="width:100%;" focus :suggestions="filterStudents" @complete="search" @keyup.enter="handleClick"
+            forceSelection>
             <template #option="slotProps">
                 <div class="flex align-option-center">
                     <div>
@@ -90,10 +91,68 @@ watch(value, (val, oldVal) => {
     </div>
     <template v-if="showTable">
         <div class="card content">
-            <h1>test</h1>
+            <DataTable :value="attandenceData.attandence" :paginator="true"
+                :rows="5"
+                paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+                :rowsPerPageOptions="[5, 10, 25]"
+                currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products" responsiveLayout="scroll">
+                <template #header>
+                    <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
+                        <h5 class="m-0">Presensi Siswa {{ value.name }}</h5>
+                    </div>
+                </template>
+
+                <Column field="name" header="Status Presensi" :sortable="true" headerStyle="width:30rem;">
+                    <template #body="slotProps">
+                        <span class="p-column-title">nama</span>
+                        <div v-if="slotProps.data.is_late == true">
+                            Terlambat
+                        </div>
+                        <div v-else>
+                            Tepat Waktu
+                        </div>
+                    </template>
+                </Column>
+                <Column field="status" header="Waktu Presensi" :sortable="true" headerStyle="width:20rem;">
+                    <template #body="slotProps">
+                        <span class="p-column-title">status</span>
+                        {{ slotProps.data.timestamp}}
+                    </template>
+                </Column>
+            </DataTable>
         </div>
         <div class="card content">
-            <h1>test</h1>
+            <DataTable :value="attandenceData.permission" :paginator="true" :rows="5" :filters="filters"
+                paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+                :rowsPerPageOptions="[5, 10, 25]"
+                currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products" responsiveLayout="scroll">
+                <template #header>
+                    <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
+                        <h5 class="m-0">Ketidak hadiran siswa {{ value.name }}</h5>
+                    </div>
+                </template>
+
+                <Column field="name" header="kehadiran" :sortable="true" headerStyle="width:30rem;">
+                    <template #body="slotProps">
+                        <span class="p-column-title">Kehadiran</span>
+                        {{ slotProps.data.name }}
+                    </template>
+                </Column>
+                <Column field="name" header="Deskripsi" :sortable="true" headerStyle="width:30rem;">
+                    <template #body="slotProps">
+                        <span class="p-column-title">Deskripsi</span>
+                        {{ slotProps.data.description }}
+                    </template>
+                </Column>
+                <Column field="status" header="Tanggal" :sortable="true" headerStyle="width:20rem;">
+                    <template #body="slotProps">
+                        <span class="p-column-title">Waktu</span>
+                        {{
+                            new Date(slotProps.data.timestamp).getUTCDate() + "-" + new Date(slotProps.data.timestamp).getUTCMonth() + "-" + new Date(slotProps.data.timestamp).getUTCFullYear() 
+                        }}
+                    </template>
+                </Column>
+            </DataTable>
         </div>
     </template>
 </template>

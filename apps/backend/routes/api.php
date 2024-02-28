@@ -30,7 +30,7 @@ Route::group([
     "prefix" => "v1",
     "middleware" => []
 ], function(){
-    Route::prefix("public")->group(function(){
+    Route::prefix("public")->middleware("public")->group(function(){
         Route::get("students/active", [App\Http\Controllers\ReadController::class, "getAllStudentActivceData"]);
         Route::get("attandence/students", [\App\Http\Controllers\ReadController::class, "getAttendenceRecordByStudentId"]);
     });

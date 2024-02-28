@@ -101,9 +101,6 @@ class AttandenceServices
                 "attandences.is_late",
                 "attandences.created_at as timestamp"
             )
-                ->leftJoin("students as s", "s.id", "=", "attandences.student_id")
-                ->leftJoin("genders as g", "g.id", "=", "s.gender_id")
-                ->leftJoin("classrooms as c", "c.id", "=", "s.classroom_id")
                 ->where("attandences.student_id", $student->id)
                 ->groupBy([
                     "attandences.is_late",
@@ -121,6 +118,7 @@ class AttandenceServices
                 ->leftJoin("attandence_permit_types as apt", "apt.id", "=", "attandence_permits.attandence_permit_type_id")
                 ->where("apt.active_status", true)
                 ->where("attandence_permits.student_id", $student->id)
+                ->orderBy("attandence_permits.created_at", "DESC")
                 ->get();
             
             return response()->json(

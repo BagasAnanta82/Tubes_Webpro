@@ -19,8 +19,8 @@ export default class PresensiService{
     }
 
     getStudentAttendencesByStudentId(student){
-        return fetch(`${this.url}public/attandence/students?id=${student.student_id}`, {
-            method : "GET"
+        return fetch(`${this.url}public/attandence/students?id=${student.student_id}&atk_id=5ea28465-8775-4154-ad32-35a16d74da1c`, {
+            method : "GET",
         })
          .then(res => res.json())
          .then(data => data.data)

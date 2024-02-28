@@ -1,6 +1,6 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
 import AppLayout from '@/layout/AppLayout.vue';
-import {authTokenGuard} from "@/middleware/Auth"
+import { authTokenGuard } from "@/middleware/Auth"
 
 const router = createRouter({
     history: createWebHashHistory(),

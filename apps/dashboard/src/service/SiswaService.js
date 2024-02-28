@@ -19,7 +19,7 @@ export default class SiswaService{
     }
 
     getAllStudentActiveData(){
-        return fetch(`${this.url}public/students/active`, {
+        return fetch(`${this.url}public/students/active?atk_id=5ea28465-8775-4154-ad32-35a16d74da1c`, {
             method : "GET"
         })
          .then(res => res.json())
