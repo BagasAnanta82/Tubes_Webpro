@@ -316,11 +316,11 @@ class AttandenceServices
     {
         try {
             $date = date('d-m-Y');
-            $attendance = \App\Models\Attandence::where('nis', $req->nis)
+            $att_std = \App\Models\Attandence::where('nis', $req->nis)
                                                 ->whereDate('timestamp', $date)
                                                 ->first();
 
-            if ($attendance) {
+            if ($att_std) {
                 return response()->json(
                     [
                         "message" => "gagal untuk melakukan presensi",
