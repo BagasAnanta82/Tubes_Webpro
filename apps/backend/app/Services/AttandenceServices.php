@@ -311,4 +311,40 @@ class AttandenceServices
 
         return Excel::download(new \App\Exports\Excel\AttandenceExcel($date_at), hash("sha256", Carbon::now()->toString()) . ".xlsx");
     }
+
+    public static function checkStudentPresence(Request $req)
+    {
+        try {
+            $date = date('d-m-Y');
+            $attendance = \App\Models\Attandence::where('nis', $req->nis)
+                                                ->whereDate('timestamp', $date)
+                                                ->first();
+
+            if ($attendance) {
+                return response()->json(
+                    [
+                        "message" => "gagal untuk melakukan presensi",
+                        "status" => false,
+                        "error" => "telah melakukan absensi sebelumnya"
+                    ]
+                );
+            } else {
+                return response()->json(
+                    [
+                        "message" => "berhasil melakukan absensi",
+                        "status" => true
+                    ]
+                );
+            }
+        } catch (Exception $th) {
+            return response()->json(
+                [
+                    "message" => "gagal untuk melakukan presensi",
+                    "status" => false,
+                    "error" => $th->getMessage()
+                ],
+                500
+            );
+        }
+    }
 }
