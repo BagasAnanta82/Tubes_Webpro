@@ -315,24 +315,67 @@ class AttandenceServices
     public static function checkStudentPresence(Request $req)
     {
         try {
-            $date = date('d-m-Y');
-            $att_std = \App\Models\Attandence::where('nis', $req->nis)
-                                                ->whereDate('timestamp', $date)
-                                                ->first();
+            $date = \Carbon\Carbon::now();
+            $std = \App\Models\Student::where("nis", $req->nis)->first();
+            
+            if ($std) {
+                $att_std = \App\Models\Attandence::where('student_id', $std->id)
+                    ->whereDate('created_at', $date)
+                    ->first();
 
-            if ($att_std) {
-                return response()->json(
-                    [
-                        "message" => "gagal untuk melakukan presensi",
-                        "status" => false,
-                        "error" => "telah melakukan absensi sebelumnya"
-                    ]
-                );
+                if ($att_std) {
+                    return response()->json(
+                        [
+                            "message" => "gagal untuk melakukan presensi",
+                            "status" => false,
+                            "error" => "telah melakukan absensi sebelumnya"
+                        ]
+                    );    
+                } else {
+                    $att_time_data = \App\Models\Attandence_Time::where("id", 1)->first();
+                    $att_time = \Carbon\Carbon::now();
+                    $att_time->hours($att_time_data->hours);
+                    $att_time->minutes($att_time_data->minutes);
+
+                    // waktu sekarang lebih besar dari wakti data maka nilai true dan siswa telat else siswa tidak telat
+                    if ($att_time > $att_time_data) {
+                        \App\Models\Attandence::create(
+                            [
+                                "student_id" => $std->id,
+                                "is_late" => true
+                            ]
+                        );
+                        // success tp terlambat
+                        return response()->json(
+                            [
+                                "message" => "Sukses melakukan absensi, terlambat",
+                                "status" => true
+                            ]
+                        ); 
+
+                    } else {
+                        \App\Models\Attandence::create(
+                            [
+                                "student_id" => $std->id,
+                                "is_late" => false
+                            ]
+                        );
+                        // success tidak terlambat
+                        return response()->json(
+                            [
+                                "message" => "Sukses melakukan absensi",
+                                "status" => true
+                            ]
+                        );
+                    }
+                    
+                }
+                
             } else {
                 return response()->json(
                     [
-                        "message" => "berhasil melakukan absensi",
-                        "status" => true
+                        "message" => "Siswa tidak ditemukan",
+                        "status" => false
                     ]
                 );
             }
