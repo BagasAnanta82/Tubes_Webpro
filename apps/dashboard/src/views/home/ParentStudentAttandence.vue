@@ -132,9 +132,9 @@ watch(value, (val, oldVal) => {
                     </div>
                 </template>
 
-                <Column field="name" header="kehadiran" :sortable="true" headerStyle="width:30rem;">
+                <Column field="name" header="Status ketidak kehadiran" :sortable="true" headerStyle="width:30rem;">
                     <template #body="slotProps">
-                        <span class="p-column-title">Kehadiran</span>
+                        <span class="p-column-title">Status Ketidak Kehadiran</span>
                         {{ slotProps.data.name }}
                     </template>
                 </Column>
@@ -144,7 +144,7 @@ watch(value, (val, oldVal) => {
                         {{ slotProps.data.description }}
                     </template>
                 </Column>
-                <Column field="status" header="Tanggal" :sortable="true" headerStyle="width:20rem;">
+                <Column field="status" header="Tanggal Ketidak hadiran" :sortable="true" headerStyle="width:20rem;">
                     <template #body="slotProps">
                         <span class="p-column-title">Waktu</span>
                         {{
