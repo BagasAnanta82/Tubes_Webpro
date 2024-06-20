@@ -22,8 +22,7 @@ const handleSubmit = async () => {
 
   const formData = new FormData();
   formData.append("nis", nis.value);
-
-  // post an api
+  
   const response = await fetch("url", {
     method: "POST",
     body: formData
@@ -55,7 +54,7 @@ const handleSubmit = async () => {
 
 <template>
   <div>
-    <img class='smanLogo' src=./assets/sman24Logo.png alt="SMAN BANDUNG 24 logo" />
+    <img class='smanLogo' src=../../../public/sman24Logo.png alt="SMAN BANDUNG 24 logo" />
   </div>
 
    <h1 class="size">PRESENSI SMA 24 BANDUNG</h1>
@@ -75,9 +74,9 @@ const handleSubmit = async () => {
 
   <p>Created And Supported By</p>
 
-  <img class='teluLogo' src=./assets/telkomuniversityLogo.png alt="Telkom University"/>
+  <img class='teluLogo' src=../../../public/telkomuniversityLogo.png alt="Telkom University"/>
 
-  <img class='caatisLogo'src=./assets/caatisLogo.png alt="CAATIS-RA"/>
+  <img class='caatisLogo'src=../../../public/caatisLogo.png alt="CAATIS-RA"/>
    
   <div id="overlay">
     <div class="spinner"></div>
@@ -86,6 +85,77 @@ const handleSubmit = async () => {
 </template>
 
 <style scoped>
+
+@keyframes rotation {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.smanLogo {
+  height: 15em;
+  padding: 1,5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+
+.smanLogo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+
+.smanLogo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+#nameInput {
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
+  border-color: #1E90FF;
+  border-radius: 12px;
+  height: 60px;
+  width: 500px;
+  font-size: large;
+  text-align: center;
+}
+
+.card {
+  padding: 2em;
+}
+
+#overlay {
+  position: fixed;
+  display: none;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 2;
+  cursor: pointer;
+}
+
+.spinner {
+  position: absolute;
+  top: 44%;
+  left: 47%;
+  height: 60px;
+  width: 60px;
+  margin: auto;
+  display: flex;
+  -webkit-animation: rotation .6s infinite linear;
+  -moz-animation: rotation .6s infinite linear;
+  -o-animation: rotation .6s infinite linear;
+  animation: rotation .6s infinite linear;
+  border-left: 6px solid rgba(0, 174, 239, .15);
+  border-right: 6px solid rgba(0, 174, 239, .15);
+  border-bottom: 6px solid rgba(0, 174, 239, .15);
+  border-top: 6px solid rgba(0, 174, 239, .8);
+  border-radius: 100%;
+}
 .smanLogo{
   height: "20%";
   width: "20%"; 
