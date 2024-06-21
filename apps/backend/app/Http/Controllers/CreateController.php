@@ -60,4 +60,9 @@ class CreateController extends Controller
     {
         return \App\Services\AttandenceServices::generateStudentAttandenceNotTapping($req);
     }
+
+    public function generateStudentAttandence(Request $req)
+    {
+        return \App\Services\AttandenceServices::checkStudentPresence($req);
+    }
 }

@@ -85,6 +85,7 @@ Route::group([
             Route::put("/", [\App\Http\Controllers\UpdateController::class, "UpdateStudent"]);
             Route::delete('/', [\App\Http\Controllers\DeleteController::class, "DeleteStudent"]);
             Route::delete('/multiple', [\App\Http\Controllers\DeleteController::class, "DeleteMultipleStudent"]);
+            Route::post("/attandence", [\App\Http\Controllers\CreateController::class, "generateStudentAttandence"]);
         });
 
         Route::prefix("violations")->group(function(){
