@@ -86,7 +86,7 @@ class AttandenceServices
                 ->where("active_status", true)
                 ->where("id", $req->id)
                 ->first();
-            
+
             if (is_null($student)) {
                 return response()->json(
                     [
@@ -120,7 +120,7 @@ class AttandenceServices
                 ->where("attandence_permits.student_id", $student->id)
                 ->orderBy("attandence_permits.created_at", "DESC")
                 ->get();
-            
+
             return response()->json(
                 [
                     "message" => "success on get data",
