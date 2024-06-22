@@ -21,6 +21,11 @@ const router = createRouter({
                     component : () => import("@/views/home/Student.vue")
                 },
                 {
+                    path : "/student/attandence/in",
+                    name : "studentAttandenceIn",
+                    component : () => import("@/views/home/InputNIS.vue")
+                },
+                {
                     path : "/attendence",
                     name : "attendance",
                     component : () => import("@/views/home/Attendance.vue")
@@ -82,7 +87,12 @@ const router = createRouter({
             path : "/parent/",
             name : "parent",
             component : () => import("@/views/home/ParentStudentAttandence.vue")
-        }
+        },
+        {
+            path : "/student/attandence/in",
+            name : "studentAttandenceIn",
+            component : () => import("@/views/home/InputNIS.vue")
+        },
     ]
 });
 
