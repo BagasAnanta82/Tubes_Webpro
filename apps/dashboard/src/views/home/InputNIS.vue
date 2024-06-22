@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, watch } from 'vue';
+import { ref, onMounted, watch, computed } from 'vue';
 import Swal from 'sweetalert2';
 
 const isDisabled = ref(true);
@@ -11,6 +11,14 @@ watch(isDisabled, (newVal) => {
     nisInput.value.focus();
   }
 });
+
+const TelkomLogo = computed(() => {
+  return '/telkomuniversityLogo.png'
+})
+
+const caatisLogo = computed(() => {
+  return '/caatisLogo.png'
+})
 
 onMounted(() => {
   document.title = "Absensi SMAN 24";
@@ -74,9 +82,9 @@ const handleSubmit = async () => {
 
   <p>Created And Supported By</p>
 
-  <img class='teluLogo' src=../../../public/telkomuniversityLogo.png alt="Telkom University"/>
+  <img class='teluLogo' :src="TelkomLogo" alt="Telkom University"/>
 
-  <img class='caatisLogo'src=../../../public/caatisLogo.png alt="CAATIS-RA"/>
+  <img class='caatisLogo' :src="caatisLogo" alt="CAATIS-RA"/>
    
   <div id="overlay">
     <div class="spinner"></div>
