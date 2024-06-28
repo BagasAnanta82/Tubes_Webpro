@@ -340,7 +340,7 @@ class AttandenceServices
                     $late_limit = $att_time_data->copy()->addMinutes(30);
 
                     if ($att_time > $late_limit) {
-                        \App\Models\Attandence::create( //add lagi
+                        \App\Models\Attandence::create( 
                             [
                                 "student_id" => $std->id,
                                 "check_in_time" => $att_time,
@@ -411,7 +411,7 @@ class AttandenceServices
         }
     }
 
-    public static function checkStudentPresenceOut(Request $req) //att_std udah ada jadi kondisi berubah paradoxxxxxxx
+    public static function checkStudentPresenceOut(Request $req) 
     {
         try {
             $date = \Carbon\Carbon::now(); 
@@ -493,14 +493,13 @@ class AttandenceServices
             $date_at = \Carbon\Carbon::parse($req->date_at)->toDateString() ?? \Carbon\Carbon::now()->toDateString();
 
             $data = \App\Models\Attandence::select(
-                //"attandences.is_late",
                 "attandences.student_id",
+                "attandences.check_in_time",
                 "s.name",
                 "s.NIS",
                 "s.NISN",
                 "g.code",
-                "c.name as classroom_name",
-                //"attandences.created_at as timestamp"
+                "c.name as classroom_name"
             )
                 ->leftJoin("students as s", "s.id", "=", "attandences.student_id")
                 ->leftJoin("genders as g", "g.id", "=", "s.gender_id")
@@ -509,17 +508,16 @@ class AttandenceServices
                 ->where("s.active_status", true)
                 ->whereDate("attandences.created_at", $date_at)
                 ->groupBy([
-                    "attandences.is_late",
                     "attandences.student_id",
+                    "attandences.check_in_time",
                     "s.name",
                     "s.NIS",
                     "s.NISN",
                     "g.code",
-                    "c.name",
-                    "attandences.created_at"
+                    "c.name"
                 ])
                 ->distinct()
-                ->orderBy("attandences.created_at", "DESC")
+                ->orderBy("attandences.check_in_time", "DESC")
                 ->take(5)
                 ->get();
 
