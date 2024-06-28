@@ -312,7 +312,7 @@ class AttandenceServices
         return Excel::download(new \App\Exports\Excel\AttandenceExcel($date_at), hash("sha256", Carbon::now()->toString()) . ".xlsx");
     }
 
-    public static function checkStudentPresence(Request $req)
+    public static function checkStudentPresenceIn(Request $req) 
     {
         try {
             $date = \Carbon\Carbon::now();
@@ -328,47 +328,67 @@ class AttandenceServices
                         [
                             "message" => "gagal untuk melakukan presensi",
                             "status" => false,
-                            "error" => "telah melakukan absensi sebelumnya"
+                            "error" => "telah melakukan presensi masuk sebelumnya"
                         ]
                     );    
                 } else {
                     $att_time_data = \App\Models\Attandence_Time::where("id", 1)->first();
                     $att_time = \Carbon\Carbon::now();
-                    $att_time->hours($att_time_data->hours);
-                    $att_time->minutes($att_time_data->minutes);
+                    $att_time->hours($att_time_data_in->hours);
+                    $att_time->minutes($att_time_data_in->minutes);
 
-                    // waktu sekarang lebih besar dari wakti data maka nilai true dan siswa telat else siswa tidak telat
-                    if ($att_time > $att_time_data) {
-                        \App\Models\Attandence::create(
+                    $late_limit = $att_time_data->copy()->addMinutes(30);
+
+                    if ($att_time > $late_limit) {
+                        \App\Models\Attandence::create( 
                             [
                                 "student_id" => $std->id,
-                                "is_late" => true
+                                "check_in_time" => $att_time,
+                                "attendence_late_type_id" => 3 // Sangat terlambat
                             ]
                         );
-                        // success tp terlambat
+                        $attendence_late_type = \App\Models\Attandence_Late_Type::find(3);
                         return response()->json(
                             [
-                                "message" => "Sukses melakukan absensi, terlambat",
-                                "status" => true
+                                "message" => "Sukses melakukan presensi masuk, sangat terlambat",
+                                "status" => true,
+                                "attendence_late_type" => $attendence_late_type
                             ]
                         ); 
 
+                    } elseif ($att_time > $att_time_data_in) {
+                        \App\Models\Attandence::create(
+                            [
+                                "student_id" => $std->id,
+                                "check_in_time" => $att_time,
+                                "attendence_late_type_id" => 2 // Terlambat
+                            ]
+                        );
+                        $attendence_late_type = \App\Models\Attandence_Late_Type::find(2);
+                        return response()->json(
+                            [
+                                "message" => "Sukses melakukan presensi masuk, Terlambat",
+                                "status" => true,
+                                "attendence_late_type" => $attendence_late_type
+                            ]
+                        );
                     } else {
                         \App\Models\Attandence::create(
                             [
                                 "student_id" => $std->id,
-                                "is_late" => false
+                                "check_in_time" => $att_time,
+                                "attendence_late_type_id" => 1 // Tepat waktu
                             ]
                         );
-                        // success tidak terlambat
+                        $attendence_late_type = \App\Models\Attandence_Late_Type::find(1);
                         return response()->json(
                             [
-                                "message" => "Sukses melakukan absensi",
-                                "status" => true
+                                "message" => "Sukses melakukan presensi masuk, tepat waktu",
+                                "status" => true,
+                                "attendence_late_type" => $attendence_late_type
                             ]
                         );
-                    }
-                    
+                    }   
                 }
                 
             } else {
@@ -387,6 +407,134 @@ class AttandenceServices
                     "error" => $th->getMessage()
                 ],
                 500
+            );
+        }
+    }
+
+    public static function checkStudentPresenceOut(Request $req) 
+    {
+        try {
+            $date = \Carbon\Carbon::now(); 
+            $std = \App\Models\Student::where("nis", $req->nis)->first();
+            
+            if ($std) {
+                $att_std = \App\Models\Attandence::where('student_id', $std->id)
+                    ->whereDate('created_at', $date) 
+                    ->whereNull('check_out_time')
+                    ->first();
+
+                if ($att_std) { 
+                    $att_time_data = \App\Models\Attandence_Time::where("id", 2)->first();
+                    $att_time = \Carbon\Carbon::now();
+                    $att_time->hours($att_time_data->hours);
+                    $att_time->minutes($att_time_data->minutes);
+
+                    if ($att_time > $att_time_data){
+                        $att_std->update(
+                            [
+                            'check_out_time' => $att_time
+                            ]
+                        );
+                        return response()->json(
+                            [
+                                "message" => "Sukses melakukan presensi keluar",
+                                "status" => true
+                            ]
+                        ); 
+                    } else {
+                        return response()->json(
+                            [
+                                "message" => "Anda belum memenuhi waktu presensi keluar",
+                                "status" => false,
+                                "error" => "Belum memenuhi waktu presensi keluar"
+                            ]
+                        );    
+                    } 
+                } else {
+                    return response()->json(
+                        [
+                            "message" => "Anda belum melakukan presensi sebelumnya",
+                            "status" => false,
+                            "error" => "belum melakukan presensi masuk"
+                        ]
+                    );    
+                } 
+            } else {
+                return response()->json(
+                    [
+                        "message" => "Siswa tidak ditemukan",
+                        "status" => false
+                    ]
+                );
+            }
+        } catch (Exception $th) {
+            return response()->json(
+                [
+                    "message" => "gagal untuk melakukan presensi",
+                    "status" => false,
+                    "error" => $th->getMessage()
+                ],
+                500
+            );
+        }
+    }
+
+    public static function GetLatestStudentAttendances(Request $req)
+    {
+        try {
+            $filter = DB::raw("1");
+
+            if ($req->classroom_id == "null" || is_null($req->classroom_id)) {
+                $classroom_id = [$filter, "=", "1"];
+            } else {
+                $classroom_id = ["s.classroom_id", "=", $req->classroom_id];
+            }
+
+            $date_at = \Carbon\Carbon::parse($req->date_at)->toDateString() ?? \Carbon\Carbon::now()->toDateString();
+
+            $data = \App\Models\Attandence::select(
+                "attandences.student_id",
+                "attandences.check_in_time",
+                "s.name",
+                "s.NIS",
+                "s.NISN",
+                "g.code",
+                "c.name as classroom_name"
+            )
+                ->leftJoin("students as s", "s.id", "=", "attandences.student_id")
+                ->leftJoin("genders as g", "g.id", "=", "s.gender_id")
+                ->leftJoin("classrooms as c", "c.id", "=", "s.classroom_id")
+                ->where([$classroom_id])
+                ->where("s.active_status", true)
+                ->whereDate("attandences.created_at", $date_at)
+                ->groupBy([
+                    "attandences.student_id",
+                    "attandences.check_in_time",
+                    "s.name",
+                    "s.NIS",
+                    "s.NISN",
+                    "g.code",
+                    "c.name"
+                ])
+                ->distinct()
+                ->orderBy("attandences.check_in_time", "DESC")
+                ->take(5)
+                ->get();
+
+            return response()->json(
+                [
+                    "message" => "Success on getting data",
+                    "status" => true,
+                    "data" => $data
+                ]
+            );
+        } catch (Exception $th) {
+            return response()->json(
+                [
+                    "message" => "Failed to get attendance data",
+                    "status" => false,
+                    "error" => $th->getMessage()
+                ]
             );
         }
     }
