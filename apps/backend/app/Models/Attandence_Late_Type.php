@@ -6,16 +6,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Attandence extends Model
+class AttandenceLateType extends Model
 {
     use HasFactory, SoftDeletes;
-    protected $table = "attandences";
+    
+    protected $table = "attandence_late_types";
     protected $fillable = [
-        "student_id",
-        //"is_late",
-        "check_in_time",
-        "check_out_time",
-        "attandence_late_type_id"
+        "name",
+        "description",
+        "active_status"
     ];
-    protected $primaryKey = "id";
 }

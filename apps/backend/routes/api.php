@@ -28,7 +28,9 @@ Route::get("/login", function(){
 
 Route::group([
     "prefix" => "v1",
-    "middleware" => []
+    "middleware" => [
+        "cors"
+    ]
 ], function(){
     Route::prefix("public")->middleware("public")->group(function(){
         Route::get("students/active", [App\Http\Controllers\ReadController::class, "getAllStudentActivceData"]);
@@ -74,6 +76,7 @@ Route::group([
 
         Route::prefix("attandence")->group(function(){
             Route::get("/records", [\App\Http\Controllers\ReadController::class, "getAllAttadenceRecords"]);
+            Route::get("/latest", [\App\Http\Controllers\ReadController::class, "GetLatestStudentAttendances"]);
             Route::post("/generate", [\App\Http\Controllers\CreateController::class, "geneateStudentAttandenceIsNotTapping"]);
             Route::get("/time", [\App\Http\Controllers\ReadController::class, "GetAttandenceTime"]);
             Route::put("/time", [\App\Http\Controllers\UpdateController::class, "UpdateAttandenceTime"]);
@@ -85,7 +88,8 @@ Route::group([
             Route::put("/", [\App\Http\Controllers\UpdateController::class, "UpdateStudent"]);
             Route::delete('/', [\App\Http\Controllers\DeleteController::class, "DeleteStudent"]);
             Route::delete('/multiple', [\App\Http\Controllers\DeleteController::class, "DeleteMultipleStudent"]);
-            Route::post("/attandence", [\App\Http\Controllers\CreateController::class, "generateStudentAttandence"]);
+            Route::post("/attandence/in", [\App\Http\Controllers\CreateController::class, "generateStudentAttandenceIn"]);
+            Route::post("/attandence/out", [\App\Http\Controllers\CreateController::class, "generateStudentAttandenceOut"]);
         });
 
         Route::prefix("violations")->group(function(){

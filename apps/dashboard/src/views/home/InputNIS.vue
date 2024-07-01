@@ -1,6 +1,6 @@
-<script setup lang="ts">
+<script setup>
 import { ref, onMounted, watch, computed } from 'vue';
-import Swal from 'sweetalert2';
+import Swal from "sweetalert2";
 
 const isDisabled = ref(true);
 const nis = ref('');
@@ -19,6 +19,10 @@ const TelkomLogo = computed(() => {
 const caatisLogo = computed(() => {
   return '/caatisLogo.png'
 })
+
+const logoUrl = computed(() => {
+    return `layout/images/${layoutConfig.darkTheme.value ? 'logo-white' : 'logo-dark'}.svg`;
+});
 
 onMounted(() => {
   document.title = "Absensi SMAN 24";
@@ -62,7 +66,7 @@ const handleSubmit = async () => {
 
 <template>
   <div>
-    <img class='smanLogo' src=../../../public/sman24Logo.png alt="SMAN BANDUNG 24 logo" />
+    <img class='smanLogo' :src="logoUrl" alt="SMAN BANDUNG 24 logo" />
   </div>
 
    <h1 class="size">PRESENSI SMA 24 BANDUNG</h1>
