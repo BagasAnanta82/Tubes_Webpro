@@ -11,8 +11,11 @@ class Attandence extends Model
     use HasFactory, SoftDeletes;
     protected $table = "attandences";
     protected $fillable = [
-        "student_id"
-        //"is_late"
+        "student_id",
+        //"is_late",
+        "check_in_time",
+        "check_out_time",
+        "attandence_late_type_id"
     ];
     protected $primaryKey = "id";
 }

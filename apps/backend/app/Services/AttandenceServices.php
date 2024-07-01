@@ -332,12 +332,12 @@ class AttandenceServices
                         ]
                     );    
                 } else {
-                    $att_time_data = \App\Models\Attandence_Time::where("id", 1)->first();
+                    $att_time_data_in = \App\Models\Attandence_Time::where("id", 1)->first();
                     $att_time = \Carbon\Carbon::now();
                     $att_time->hours($att_time_data_in->hours);
                     $att_time->minutes($att_time_data_in->minutes);
 
-                    $late_limit = $att_time_data->copy()->addMinutes(30);
+                    $late_limit = $att_time_data_in->copy()->addMinutes(30);
 
                     if ($att_time > $late_limit) {
                         \App\Models\Attandence::create( 
@@ -347,7 +347,7 @@ class AttandenceServices
                                 "attendence_late_type_id" => 3 // Sangat terlambat
                             ]
                         );
-                        $attendence_late_type = \App\Models\Attandence_Late_Type::find(3);
+                        $attendence_late_type = \App\Models\AttandenceLateType::find(3);
                         return response()->json(
                             [
                                 "message" => "Sukses melakukan presensi masuk, sangat terlambat",
@@ -364,7 +364,7 @@ class AttandenceServices
                                 "attendence_late_type_id" => 2 // Terlambat
                             ]
                         );
-                        $attendence_late_type = \App\Models\Attandence_Late_Type::find(2);
+                        $attendence_late_type = \App\Models\AttandenceLateType::find(2);
                         return response()->json(
                             [
                                 "message" => "Sukses melakukan presensi masuk, Terlambat",
@@ -380,7 +380,7 @@ class AttandenceServices
                                 "attendence_late_type_id" => 1 // Tepat waktu
                             ]
                         );
-                        $attendence_late_type = \App\Models\Attandence_Late_Type::find(1);
+                        $attendence_late_type = \App\Models\AttandenceLateType::find(1);
                         return response()->json(
                             [
                                 "message" => "Sukses melakukan presensi masuk, tepat waktu",
