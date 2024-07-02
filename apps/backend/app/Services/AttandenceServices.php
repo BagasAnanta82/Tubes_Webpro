@@ -156,7 +156,8 @@ class AttandenceServices
             $date_at = \Carbon\Carbon::parse($req->date_at)->toDateTime() ?? \Carbon\Carbon::now()->toDateString();
 
             $data = \App\Models\Attandence::select(
-                "attandences.is_late",
+                "attandences.check_in_time",
+                "attandences.check_out_time",
                 "attandences.student_id",
                 "s.name",
                 "s.NIS",
@@ -172,7 +173,8 @@ class AttandenceServices
                 ->where("s.active_status", true)
                 ->whereDate("attandences.created_at", $date_at)
                 ->groupBy([
-                    "attandences.is_late",
+                    "attandences.check_in_time",
+                    "attandences.check_out_time",
                     "attandences.student_id",
                     "s.name",
                     "s.NIS",
