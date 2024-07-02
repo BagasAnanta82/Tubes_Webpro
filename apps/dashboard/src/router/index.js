@@ -93,6 +93,11 @@ const router = createRouter({
             name : "studentAttandenceIn",
             component : () => import("@/views/home/InputNIS.vue")
         },
+        {
+            path : "/student/attandence/out",
+            name : "studentAttandenceOut",
+            component : () => import("@/views/home/InputNISCheckOut.vue")
+        },
     ]
 });
 

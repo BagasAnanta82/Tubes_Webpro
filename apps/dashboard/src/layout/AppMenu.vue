@@ -13,7 +13,9 @@ const model = ref([
     {
         label: 'Siswa',
         items: [
-            { label: 'Daftar Siswa', icon: 'pi pi-users', to: '/student'}
+            { label: 'Daftar Siswa', icon: 'pi pi-users', to: '/student'},
+            { label: "Kedatangan Presensi Siswa", icon: "pi pi-users", url: `${window.origin}#/student/attandence/in` , target: '_blank' },
+            { label: "Kepulangan Presensi Siswa", icon: "pi pi-users", url: `${window.origin}#/student/attandence/out` , target: '_blank' }
         ]
     },
     {
