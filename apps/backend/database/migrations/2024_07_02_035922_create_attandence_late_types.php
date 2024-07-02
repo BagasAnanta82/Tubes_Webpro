@@ -17,7 +17,7 @@ class CreateAttandenceLateTypes extends Migration
         Schema::create('attandence_late_types', function (Blueprint $table) {
             $table->id();
             $table->string("name");
-            $table->string("description");
+            $table->string("description")->nullable();
             $table->boolean("active_status");
             $table->timestamps();
             $table->softDeletes();

@@ -55,7 +55,7 @@ const handleSubmit = async (event) => {
   })
 
 
-  isDisabled.value = true;
+  isDisabled.value = false;
   nis.value = "";
   document.getElementById("overlay").style.display = "none";
 };
