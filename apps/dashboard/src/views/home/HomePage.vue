@@ -189,8 +189,8 @@ watch(
 
 <template>
     <div class="card">
-        <h1>Selamat Datang Di Dashboard SMAN 24 Bandung</h1>
-        <p>Jl. Baturaden VIII No.21, Mekarjaya, Kec. Rancasari, Kota Bandung, Jawa Barat 40292</p>
+        <h1>Selamat Datang Di Dashboard SMK Telkom Bandung</h1>
+        <p>Jl. Radio Palasari Road, Citeureup, Kec. Dayeuhkolot, Kabupaten Bandung, Jawa Barat 40257</p>
     </div>
     <div class="grid">
         <div class="col-12 lg:col-6 xl:col-3">
