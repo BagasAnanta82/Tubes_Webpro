@@ -38,7 +38,7 @@ const handleSubmit = async (event) => {
   isDisabled.value = true;
   document.getElementById("overlay").style.display = "block";
 
-  await presensiService.studentCheckIn(nis.value).then((res) => {
+  await presensiService.studentCheckOut(nis.value).then((res) => {
     if (res.status === false) {
       Swal.fire({
         title: "gagal untuk melakukan presensi",
