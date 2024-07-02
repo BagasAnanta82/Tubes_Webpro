@@ -50,7 +50,7 @@ Route::group([
     "prefix" => "v1",
     "middleware" => [
         "cors", 
-        // "auth:sanctum"
+        "auth:sanctum"
     ]
 ], function(){
     Route::group(
