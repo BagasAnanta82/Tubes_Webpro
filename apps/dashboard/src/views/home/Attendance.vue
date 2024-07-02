@@ -180,12 +180,7 @@ watch(classroomSelect, async (newClass, oldClass) => {
             </Column>
             <Column field="is_late" header="Status" style="min-width: 12rem">
                 <template #body="{ data }">
-                    <div v-if="data.is_late == true">
-                        Terlambat
-                    </div>
-                    <div v-else>
-                        Tepat Waktu
-                    </div>
+                    {{ data.status }}
                 </template>
                 <template #filter="{ filterModel }">
                     <InputText type="text" v-model="filterModel.value" class="p-column-filter"

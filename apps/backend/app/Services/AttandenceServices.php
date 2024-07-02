@@ -164,11 +164,13 @@ class AttandenceServices
                 "s.NISN",
                 "g.code",
                 "c.name as classroom_name",
-                "attandences.created_at as timestamp"
+                "attandences.created_at as timestamp",
+                "a.name as status"
             )
                 ->leftJoin("students as s", "s.id", "=", "attandences.student_id")
                 ->leftJoin("genders as g", "g.id", "=", "s.gender_id")
                 ->leftJoin("classrooms as c", "c.id", "=", "s.classroom_id")
+                ->leftJoin("attandence_late_types as a", "a.id", "=", "attandences.attandence_late_type_id")
                 ->where([$classroom_id])
                 ->where("s.active_status", true)
                 ->whereDate("attandences.created_at", $date_at)
@@ -181,7 +183,8 @@ class AttandenceServices
                     "s.NISN",
                     "g.code",
                     "c.name",
-                    "attandences.created_at"
+                    "attandences.created_at",
+                    "a.name"
                 ])
                 ->distinct()
                 ->orderBy("attandences.created_at", "DESC")
