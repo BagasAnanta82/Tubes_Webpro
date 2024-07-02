@@ -417,52 +417,10 @@ class AttandenceServices
     public static function checkStudentPresenceOut(Request $req) 
     {
         try {
-            $date = \Carbon\Carbon::now(); 
+            $date = \Carbon\Carbon::now("Asia/Jakarta");
             $std = \App\Models\Student::where("nis", $req->nis)->first();
             
-            if ($std) {
-                $att_std = \App\Models\Attandence::where('student_id', $std->id)
-                    ->whereDate('created_at', $date) 
-                    ->whereNull('check_out_time')
-                    ->first();
-
-                if ($att_std) { 
-                    $att_time_data = \App\Models\Attandence_Time::where("id", 2)->first();
-                    $att_time = \Carbon\Carbon::now();
-                    $att_time->hours($att_time_data->hours);
-                    $att_time->minutes($att_time_data->minutes);
-
-                    if ($att_time > $att_time_data){
-                        $att_std->update(
-                            [
-                            'check_out_time' => $att_time
-                            ]
-                        );
-                        return response()->json(
-                            [
-                                "message" => "Sukses melakukan presensi keluar",
-                                "status" => true
-                            ]
-                        ); 
-                    } else {
-                        return response()->json(
-                            [
-                                "message" => "Anda belum memenuhi waktu presensi keluar",
-                                "status" => false,
-                                "error" => "Belum memenuhi waktu presensi keluar"
-                            ]
-                        );    
-                    } 
-                } else {
-                    return response()->json(
-                        [
-                            "message" => "Anda belum melakukan presensi sebelumnya",
-                            "status" => false,
-                            "error" => "belum melakukan presensi masuk"
-                        ]
-                    );    
-                } 
-            } else {
+            if (is_null($std)) {
                 return response()->json(
                     [
                         "message" => "Siswa tidak ditemukan",
@@ -470,6 +428,58 @@ class AttandenceServices
                     ]
                 );
             }
+
+            $att_std = \App\Models\Attandence::where('student_id', $std->id)
+                ->whereDate('created_at', $date) 
+                ->whereNotNull('check_in_time')
+                ->first();
+
+            if (is_null($att_std)) {
+                return response()->json(
+                    [
+                        "message" => "Anda belum melakukan presensi sebelumnya",
+                        "status" => false,
+                        "error" => "belum melakukan presensi masuk"
+                    ]
+                );
+            }
+
+            if (!is_null($att_std->check_out_time)) {
+                return response()->json(
+                    [
+                        "message" => "Anda telah melakukan presensi sebelumnya",
+                        "status" => false
+                    ]
+                );
+            }
+
+            $att_time_data = \App\Models\Attandence_Time::where("id", 2)->first();
+            $att_time = \Carbon\Carbon::now("Asia/Jakarta")
+                    ->hours($att_time_data->hours)
+                    ->minutes($att_time_data->minutes)
+                    ->seconds(0);
+
+            if ($date < $att_time) {
+                return response()->json(
+                    [
+                        "message" => "Mohon Maaf, saat ini belum waktu presensi, presensi dapat dilakukan pada pukul " . $att_time->toTimeString(),
+                        "status" => false
+                    ]
+                );
+            }
+
+            $att_std->update(
+                [
+                'check_out_time' => now("Asia/Jakarta")
+                ]
+            );
+
+            return response()->json(
+                [
+                    "message" => "Berhasil melakukan presensi keluar",
+                    "status" => true
+                ]
+            );
         } catch (Exception $th) {
             return response()->json(
                 [

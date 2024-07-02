@@ -29,6 +29,15 @@ class CreateAttandeceTime extends Migration
                 "updated_at" => now()
             ]
         );
+
+        DB::table("attandece_time")->insert(
+            [
+                "hours" => 15,
+                "minutes" => 30,
+                "created_at" => now(),
+                "updated_at" => now()
+            ]
+        );
     }
 
     /**
