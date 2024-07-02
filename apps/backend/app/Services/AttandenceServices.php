@@ -358,7 +358,7 @@ class AttandenceServices
                 \App\Models\Attandence::create(
                     [
                         "student_id" => $std->id,
-                        "check_in_time" => now(),
+                        "check_in_time" => now("Asia/Jakarta"),
                         "attandence_late_type_id" => 3 // Terlambat
                     ]
                 );
@@ -375,7 +375,7 @@ class AttandenceServices
                 \App\Models\Attandence::create(
                     [
                         "student_id" => $std->id,
-                        "check_in_time" => now(),
+                        "check_in_time" => now("Asia/Jakarta"),
                         "attandence_late_type_id" => 2 // Terlambat
                     ]
                 );
@@ -391,7 +391,7 @@ class AttandenceServices
             \App\Models\Attandence::create(
                 [
                     "student_id" => $std->id,
-                    "check_in_time" => now(),
+                    "check_in_time" => now("Asia/Jakarta"),
                     "attandence_late_type_id" => 1 // Tepat waktu
                 ]
             );
