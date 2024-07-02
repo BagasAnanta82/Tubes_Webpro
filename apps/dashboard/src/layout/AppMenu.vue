@@ -31,20 +31,20 @@ const model = ref([
             { label: 'Daftar Kelas', icon: 'pi pi-book', to: '/classroom'},
         ]
     },
-    {
-        label: 'Pencapaian',
-        items: [
-            { label: 'Daftar Pencapaian', icon: 'pi pi-book', to: '/achievement'},
-            { label: 'Data Pencapaian Siswa', icon: 'pi pi-book', to: '/achievement/student'}
-        ]
-    },
-    {
-        label: 'Pelanggaran',
-        items: [
-            { label: 'Daftar Pelanggaran', icon: 'pi pi-book', to: '/violation'},
-            { label: 'Data Pelanggaran Siswa', icon: 'pi pi-book', to: '/violation/student'}
-        ]
-    },
+    // {
+    //     label: 'Pencapaian',
+    //     items: [
+    //         { label: 'Daftar Pencapaian', icon: 'pi pi-book', to: '/achievement'},
+    //         { label: 'Data Pencapaian Siswa', icon: 'pi pi-book', to: '/achievement/student'}
+    //     ]
+    // },
+    // {
+    //     label: 'Pelanggaran',
+    //     items: [
+    //         { label: 'Daftar Pelanggaran', icon: 'pi pi-book', to: '/violation'},
+    //         { label: 'Data Pelanggaran Siswa', icon: 'pi pi-book', to: '/violation/student'}
+    //     ]
+    // },
 ]);
 </script>
 
