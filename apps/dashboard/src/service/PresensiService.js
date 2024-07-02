@@ -55,4 +55,36 @@ export default class PresensiService{
         .then(res => res.json())
         .then(d => d)
     }
+
+    studentCheckIn(nis = null){
+        return fetch(`${this.url}students/attandence/in`, {
+            method : "POST",
+            headers : {
+                "Content-Type" : "application/json",
+                "Accept" : "application/json",
+                "Authorization" : `Bearer ${this.token}`
+            },
+            body : JSON.stringify({
+                "nis" : nis
+            })
+        })
+         .then(res => res.json())
+         .then(d => d)
+    }
+
+    studentCheckOut(nis = null){
+        return fetch(`${this.url}students/attandence/out`, {
+            method : "POST",
+            headers : {
+                "Content-Type" : "application/json",
+                "Accept" : "application/json",
+                "Authorization" : `Bearer ${this.token}`
+            },
+            body : JSON.stringify({
+                "nis" : nis
+            })
+        })
+         .then(res => res.json())
+         .then(d => d)
+    }
 }
