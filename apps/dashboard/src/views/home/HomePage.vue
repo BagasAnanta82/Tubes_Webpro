@@ -10,6 +10,7 @@ let textColor = documentStyle.getPropertyValue('--text-color');
 
 
 const dataHome = ref({});
+const dataTopStudents = ref([]);
 const studentActiveChart = ref({});
 const studentActiveChartOption = ref({});
 const studentGenderChart = ref({});
@@ -19,12 +20,14 @@ const studentAchVlnChartOption = ref({});
 const studentAttandenceChart = ref({});
 const studentAttandenceChartOption = ref({});
 const lineOptions = ref(null);
+const loading = ref(true);
 
 const homePageService = new HomePageService();
 
 onMounted(async () => {
     await homePageService.getDashboardData().then((data) => (dataHome.value = data))
-
+    await homePageService.getTopStudentsData().then((data) => (dataTopStudents.value = data))
+    
     studentActiveChart.value = {
         labels: ['Siswa Aktif', "Siswa Tidak Aktif"],
         datasets: [
@@ -112,6 +115,8 @@ onMounted(async () => {
             }
         }
     };
+
+    loading.value = false;
 });
 
 const applyLightTheme = () => {
@@ -193,6 +198,54 @@ watch(
         <p>Jl. Baturaden VIII No.21, Mekarjaya, Kec. Rancasari, Kota Bandung, Jawa Barat 40292</p>
     </div>
     <div class="grid">
+        <div class="col-12">
+            <div class="card">
+                <DataTable ref="dt" 
+                    :value="dataTopStudents" 
+                    dataKey="student_id"
+                    :loading="loading"
+                    responsiveLayout="scroll">
+                    <template #header>
+                        <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
+                            <h5 class="m-0">Top 5 Presensi Siswa</h5>
+                        </div>
+                    </template>
+
+                    <Column field="name" header="Name" :sortable="true" headerStyle="width:14%; min-width:10rem;">
+                        <template #body="slotProps">
+                            <span class="p-column-title">Name</span>
+                            {{ slotProps.data.name }}
+                        </template>
+                    </Column>
+                    <Column field="NIS" header="NIS" :sortable="true" headerStyle="width:14%; min-width:8rem;">
+                        <template #body="slotProps">
+                            <span class="p-column-title">NIS</span>
+                            {{ slotProps.data.NIS }}
+                        </template>
+                    </Column>
+                    <Column field="NISN" header="NISN" :sortable="true" headerStyle="width:14%; min-width:10rem;">
+                        <template #body="slotProps">
+                            <span class="p-column-title">NISN</span>
+                            {{ slotProps.data.NISN }}
+                        </template>
+                    </Column>
+                    <Column field="classroom_name" header="Kelas" :sortable="true"
+                        headerStyle="width:14%; min-width:10rem;">
+                        <template #body="slotProps">
+                            <span class="p-column-title">Kelas</span>
+                            {{ slotProps.data.classroom_name }}
+                        </template>
+                    </Column>
+                    <Column field="check_in_time" header="Waktu Presensi" :sortable="true"
+                        headerStyle="width:14%; min-width:10rem;">
+                        <template #body="slotProps">
+                            <span class="p-column-title">Waktu Presensi</span>
+                            {{ slotProps.data.check_in_time }}
+                        </template>
+                    </Column>
+                </DataTable>
+            </div>
+        </div>
         <div class="col-12 lg:col-6 xl:col-3">
             <div class="card mb-0">
                 <div class="flex justify-content-between mb-3">
