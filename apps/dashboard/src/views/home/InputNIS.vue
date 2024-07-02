@@ -1,16 +1,16 @@
 <script setup>
 import { ref, onMounted, watch, computed } from 'vue';
 import Swal from "sweetalert2";
+import { useLayout } from '@/layout/composables/layout';
+import PresensiService from '@/service/PresensiService'
 
-const isDisabled = ref(true);
+
+const { layoutConfig } = useLayout();
+
+const isDisabled = ref(false);
 const nis = ref('');
-const nisInput = ref(null);
 
-watch(isDisabled, (newVal) => {
-  if (newVal) {
-    nisInput.value.focus();
-  }
-});
+const presensiService = new PresensiService();
 
 const TelkomLogo = computed(() => {
   return '/telkomuniversityLogo.png'
@@ -28,35 +28,32 @@ onMounted(() => {
   document.title = "Absensi SMAN 24";
 });
 
-const handleSubmit = async () => {
-  isDisabled.value = false;
+const handleSubmit = async (event) => {
+  event.preventDefault()
+
+  isDisabled.value = true;
   document.getElementById("overlay").style.display = "block";
 
-  const formData = new FormData();
-  formData.append("nis", nis.value);
-  
-  const response = await fetch("url", {
-    method: "POST",
-    body: formData
-  });
-  const res = await response.json();
+  await presensiService.studentCheckIn(nis.value).then((res) => {
+    if (res.status === false) {
+      Swal.fire({
+        title: "gagal untuk melakukan presensi",
+        text: res.message,
+        icon: "error",
+        timer: 1000,
+        showConfirmButton: false
+      });
+    } else {
+      Swal.fire({
+        title: "berhasil melakukan absesi",
+        text : res.message,
+        icon: "success",
+        timer: 1000,
+        showConfirmButton: false
+      });
+    }
+  })
 
-  if (res.status === false) {
-    await Swal.fire({
-      title: "gagal untuk melakukan presensi",
-      text: "telah melakukan presensi sebelumnya",
-      icon: "error",
-      timer: 1000,
-      showConfirmButton: false
-    });
-  } else {
-    await Swal.fire({
-      title: "berhasil melakukan absesi",
-      icon: "success",
-      timer: 1000,
-      showConfirmButton: false
-    });
-  }
 
   isDisabled.value = true;
   nis.value = "";
@@ -65,75 +62,128 @@ const handleSubmit = async () => {
 </script>
 
 <template>
-  <div>
-    <img class='smanLogo' :src="logoUrl" alt="SMAN BANDUNG 24 logo" />
-  </div>
-
-   <h1 class="size">PRESENSI SMA 24 BANDUNG</h1>
-      
-  <div v-show="!isDisabled"></div>
-    <form @submit.prevent="handleSubmit">
-      <input 
-        type="text" 
-        name="nis" 
-        id="nameInput" 
-        v-model="nis" 
-        ref="nisInput" 
-        :disabled="!isDisabled" 
-        autofocus 
-      />
-    </form>
-
-  <p>Created And Supported By</p>
-
-  <img class='teluLogo' :src="TelkomLogo" alt="Telkom University"/>
-
-  <img class='caatisLogo' :src="caatisLogo" alt="CAATIS-RA"/>
-   
-  <div id="overlay">
-    <div class="spinner"></div>
-  </div>
-  <RouterView />
+<div>
+        <a href="https://sman24bdg.sch.id/" target="_blank">
+          <img :src="logoUrl" className="logo react" alt="SMAN BANDUNG 24 logo" />
+        </a>
+      </div>
+      <h1>Presensi SMAN 24 Bandung</h1>
+      <div className="card">
+        <form @submit="handleSubmit">
+          <input type="text" name="nis" id="nameInput" :disabled="isDisabled" v-model="nis" autoFocus />
+        </form>
+        <p>Created And Supported By</p>
+        <div>
+          <a href="https://telkomuniversity.ac.id" target='_blank'>
+            <img :src="TelkomLogo" alt="Telkom University" style="height: 20%; width : 20%; margin-right: 5px" />
+          </a>
+          <img :src="caatisLogo" alt="CAATIS-RA" style="height : 30%; width : 30%; margin-left : 5px" />
+        </div>
+      </div>
+      <div id="overlay">
+        <div className="spinner"></div>
+      </div>
 </template>
 
 <style scoped>
 
-@keyframes rotation {
-  from {
-    transform: rotate(0deg);
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color: "#00000000";
+  background-color: #ffffff;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+}
+
+a {
+  font-weight: 500;
+  color: #646cff;
+  text-decoration: inherit;
+}
+a:hover {
+  color: #535bf2;
+}
+
+body {
+  margin: 0;
+  display: flex;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #1a1a1a;
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+button:hover {
+  border-color: #646cff;
+}
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
   }
-  to {
-    transform: rotate(360deg);
+  a:hover {
+    color: #747bff;
+  }
+  button {
+    background-color: #f9f9f9;
   }
 }
 
-.smanLogo {
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.logo {
   height: 15em;
-  padding: 1,5em;
+  padding: 1.5em;
   will-change: filter;
   transition: filter 300ms;
 }
 
-.smanLogo:hover {
+.logo:hover {
   filter: drop-shadow(0 0 2em #646cffaa);
 }
 
-.smanLogo.react:hover {
+.logo.react:hover {
   filter: drop-shadow(0 0 2em #61dafbaa);
 }
 
 #nameInput {
-  box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
-  border-color: #1E90FF;
   border-radius: 12px;
   height: 60px;
   width: 500px;
   font-size: large;
   text-align: center;
-}
-
-.card {
-  padding: 2em;
 }
 
 #overlay {
@@ -152,8 +202,8 @@ const handleSubmit = async () => {
 
 .spinner {
   position: absolute;
-  top: 44%;
-  left: 47%;
+  top: 50%;
+  left: 50%;
   height: 60px;
   width: 60px;
   margin: auto;
@@ -168,25 +218,58 @@ const handleSubmit = async () => {
   border-top: 6px solid rgba(0, 174, 239, .8);
   border-radius: 100%;
 }
-.smanLogo{
-  height: "20%";
-  width: "20%"; 
-  margin-right:"5px"
+
+@-webkit-keyframes rotation {
+  from {
+    -webkit-transform: rotate(0deg);
+  }
+
+  to {
+    -webkit-transform: rotate(359deg);
+  }
 }
 
-.teluLogo {
-  height : "20%";
-  width : "20%";
-  margin-right : "5px"
+@-moz-keyframes rotation {
+  from {
+    -moz-transform: rotate(0deg);
+  }
+
+  to {
+    -moz-transform: rotate(359deg);
+  }
 }
 
-.caatisLogo {
-  height : "30%"; 
-  width : "30%";
-  margin-left: "5px"
+@-o-keyframes rotation {
+  from {
+    -o-transform: rotate(0deg);
+  }
+
+  to {
+    -o-transform: rotate(359deg);
+  }
 }
 
-.size {
-  font-size:4ch;
+@keyframes rotation {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(359deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
 }
 </style>
