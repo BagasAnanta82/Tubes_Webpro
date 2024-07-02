@@ -19,13 +19,13 @@ export default class HomePageService{
     }
 
     getTopStudentsData(){
-        return fetch(`${this.url}students`, {
+        return fetch(`${this.url}attandence/latest`, {
             "method" : "GET",
             "headers" : {
                 "Authorization" : `Bearer ${this.token}`
             }
         })
          .then((res) => res.json())
-         .then((data) => data.data.slice(0,5))
+         .then((data) => data.data)
     }
 }

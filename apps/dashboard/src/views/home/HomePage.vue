@@ -10,7 +10,7 @@ let textColor = documentStyle.getPropertyValue('--text-color');
 
 
 const dataHome = ref({});
-const dataTopStudents = ref({});
+const dataTopStudents = ref([]);
 const studentActiveChart = ref({});
 const studentActiveChartOption = ref({});
 const studentGenderChart = ref({});
@@ -229,12 +229,6 @@ watch(
                             {{ slotProps.data.NISN }}
                         </template>
                     </Column>
-                    <Column field="code" header="Kelamin" :sortable="true" headerStyle="width:14%; min-width:10rem;">
-                        <template #body="slotProps">
-                            <span class="p-column-title">kelamin</span>
-                            {{ slotProps.data.code }}
-                        </template>
-                    </Column>
                     <Column field="classroom_name" header="Kelas" :sortable="true"
                         headerStyle="width:14%; min-width:10rem;">
                         <template #body="slotProps">
@@ -242,16 +236,11 @@ watch(
                             {{ slotProps.data.classroom_name }}
                         </template>
                     </Column>
-                    <Column field="active_status" header="Status" :sortable="true"
+                    <Column field="check_in_time" header="Waktu Presensi" :sortable="true"
                         headerStyle="width:14%; min-width:10rem;">
                         <template #body="slotProps">
-                            <span class="p-column-title">Status</span>
-                            <template v-if="slotProps.data.active_status">
-                                Aktif
-                            </template>
-                            <template v-else>
-                                Tidak Aktif
-                            </template>
+                            <span class="p-column-title">Waktu Presensi</span>
+                            {{ slotProps.data.check_in_time }}
                         </template>
                     </Column>
                 </DataTable>
