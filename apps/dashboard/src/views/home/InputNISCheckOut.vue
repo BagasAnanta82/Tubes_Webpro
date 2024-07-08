@@ -25,7 +25,7 @@ const logoUrl = computed(() => {
 });
 
 onMounted(() => {
-  document.title = "Absensi SMK Telkom Bandung";
+  document.title = "Absensi SMAN 24 Bandung";
 });
 
 watch(isDisabled, (newVal, old) => {
@@ -69,11 +69,11 @@ const handleSubmit = async (event) => {
 <template>
   <div class="container">
     <div>
-      <a href="https://smktelkom-bdg.sch.id/" target="_blank">
-        <img :src="logoUrl" className="logo react" alt="SMK Telkom Bandung" />
+      <a href="https://sman24bdg.sch.id/" target="_blank">
+        <img :src="logoUrl" className="logo react" alt="SMAN 24 Bandung" />
       </a>
     </div>
-    <h1>Presensi SMK Telkom Bandung</h1>
+    <h1>Presensi SMAN 24 Bandung</h1>
     <div className="card">
       <form @submit="handleSubmit">
         <input type="text" name="nis" id="nameInput" autofocus v-model="nis" />
